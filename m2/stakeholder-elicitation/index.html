@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M2 Simulation — Stakeholder Elicitation Under Pressure</title>
+  <style>
+    :root{--navy:#17324d;--teal:#0b6f73;--gold:#b7791f;--bg:#f5f7fa;--text:#1f2933;--muted:#5b6673;--border:#d7dee6}
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}.hero{background:var(--navy);color:white;padding:24px;border-radius:12px;margin-bottom:18px}.hero h1{margin:0 0 8px;font-size:28px}.hero p{margin:0;color:#e6edf3}
+    .grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}.panel{background:white;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px}.panel h2,.panel h3{margin-top:0;color:var(--navy)}
+    .budget{font-weight:700;color:var(--teal)}.choices{display:grid;gap:10px}.choice{width:100%;text-align:left;padding:14px 16px;border:1px solid var(--border);background:white;border-radius:9px;font-size:16px;cursor:pointer}.choice:hover,.choice:focus{border-color:var(--teal);outline:3px solid rgba(11,111,115,.15)}.choice[disabled]{opacity:.55;cursor:not-allowed}
+    .evidence{border-left:5px solid var(--teal);background:#f0f8f8;padding:14px 16px;margin:12px 0;border-radius:7px}.evidence strong{display:block;margin-bottom:4px}.history{font-size:14px;color:var(--muted)}
+    label{display:block;font-weight:700;margin:14px 0 6px}textarea{width:100%;min-height:90px;padding:12px;border:1px solid var(--border);border-radius:8px;font:inherit}
+    .btn{display:inline-block;border:0;border-radius:8px;padding:12px 16px;font-weight:700;cursor:pointer;font-size:15px}.primary{background:var(--teal);color:white}.secondary{background:#e8edf2;color:var(--navy)}.btn:focus{outline:3px solid rgba(11,111,115,.25)}
+    .callout{background:#fff8eb;border-left:5px solid var(--gold);padding:14px 16px;border-radius:7px;margin:14px 0}.complication{background:#fff3e6;border:1px solid #e7c594;padding:16px;border-radius:9px}
+    .hidden{display:none}.record{white-space:pre-wrap;background:#111827;color:#f9fafb;padding:16px;border-radius:9px;font-family:Consolas,Monaco,monospace;font-size:13px;max-height:420px;overflow:auto}
+    .status{padding:10px 12px;background:#eef2f6;border-radius:8px;margin-bottom:12px}.tag{display:inline-block;padding:3px 8px;border-radius:999px;background:#e7f3f3;color:var(--teal);font-size:12px;font-weight:700;margin-right:6px}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}.wrap{padding:14px}.hero h1{font-size:23px}}
+  </style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <section class="hero">
+    <div class="tag">Module 2</div><div class="tag">Systems Analyst</div>
+    <h1>Stakeholder Elicitation Under Pressure</h1>
+    <p>You have incomplete stakeholder information and a limited investigation window. Your job is to gather useful evidence, avoid premature assumptions, and make a defensible requirements decision.</p>
+  </section>
+
+  <div class="grid">
+    <main>
+      <section class="panel" id="phase1">
+        <h2>Mission Brief</h2>
+        <p>The team is modernizing the DataMan learning experience as a web application. Stakeholders agree that the new version should preserve the spirit of the original while making sense for current users.</p>
+        <div class="callout"><strong>Initial stakeholder statements</strong><br>“Make DataMan modern.”<br>“Keep it simple.”<br>“Students shouldn’t lose their work.”<br>“Parents should still understand what the child is doing.”</div>
+        <p>You may investigate only <strong>three</strong> questions before you must draft an initial position.</p>
+        <p class="budget" id="budget">Questions remaining: 3</p>
+        <div class="choices" id="questions"></div>
+      </section>
+
+      <section class="panel hidden" id="phase2">
+        <h2>Draft Your Initial Position</h2>
+        <p>Use the evidence you chose to gather. There may be more than one defensible answer; your reasoning must show what is supported and what is still uncertain.</p>
+        <label for="know">What do you now know that you can support with evidence?</label>
+        <textarea id="know"></textarea>
+        <label for="uncertain">What remains uncertain?</label>
+        <textarea id="uncertain"></textarea>
+        <label for="functional">Draft one likely functional requirement.</label>
+        <textarea id="functional"></textarea>
+        <label for="nonfunctional">Draft one likely non-functional requirement or quality constraint.</label>
+        <textarea id="nonfunctional"></textarea>
+        <label for="avoid">Name one assumption or proposed solution you are intentionally NOT treating as a confirmed requirement.</label>
+        <textarea id="avoid"></textarea>
+        <label for="rationale">Why is your initial position defensible?</label>
+        <textarea id="rationale"></textarea>
+        <p><button class="btn primary" id="revealComplication">Lock Initial Position &amp; Reveal Complication</button></p>
+      </section>
+
+      <section class="panel hidden" id="phase3">
+        <h2>New Information Arrives</h2>
+        <div class="complication"><strong>Complication:</strong> The project team learns that students may use DataMan on school Chromebooks, phones, tablets, and home computers. Some sessions may be interrupted before students intentionally sign out.</div>
+        <label for="impact">What does this new information affect?</label>
+        <textarea id="impact"></textarea>
+        <label for="revise">What, if anything, will you revise in your requirement(s)?</label>
+        <textarea id="revise"></textarea>
+        <label for="decision">What is your final decision: revise, keep, defer, or reopen an assumption? Explain why.</label>
+        <textarea id="decision"></textarea>
+        <p><button class="btn primary" id="generate">Generate Decision Record</button></p>
+      </section>
+
+      <section class="panel hidden" id="phase4">
+        <h2>Your Decision Record</h2>
+        <p>Copy this Markdown into your CTS-285 repository at <code>docs/decisions/m2-elicitation-decision-record.md</code>. Then use the evidence to update your requirements work.</p>
+        <div class="record" id="record"></div>
+        <p><button class="btn primary" id="copy">Copy Decision Record</button> <button class="btn secondary" id="restart">Restart Simulation</button></p>
+        <p class="status" id="copyStatus" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <aside>
+      <section class="panel"><h3>Evidence Board</h3><div id="evidence"><p class="history">No investigation evidence unlocked yet.</p></div></section>
+      <section class="panel"><h3>Your Investigation Path</h3><ol id="history" class="history"><li>No questions selected yet.</li></ol></section>
+      <section class="panel"><h3>Professional Reminder</h3><p class="history">Your goal is not to guess what the developer should build. Your goal is to distinguish evidence, need, uncertainty, and proposed solutions clearly enough that the next project decision can be justified.</p></section>
+    </aside>
+  </div>
+</div>
+<script>
+const options=[
+ {q:'What does “modern” need to mean from a user perspective?',e:'Stakeholders say modern means the experience should work reliably in a browser, be understandable without a printed manual, and avoid making the learner navigate unnecessary screens. They do not specify a visual style or framework.'},
+ {q:'What exactly do stakeholders mean by “students shouldn’t lose their work”?',e:'Teachers report that students may pause practice and return later. They want a learner’s saved practice state to remain available after leaving and returning to the application.'},
+ {q:'Which original DataMan behaviors are considered essential to preserve?',e:'Stakeholders identify immediate answer feedback, repeated practice after an incorrect response, and a clear way for learners to see progress as central to the original experience.'},
+ {q:'What do parents or teachers need to understand about learner activity?',e:'Adults want to understand what the learner practiced and whether progress is occurring, but stakeholders have not yet agreed on a detailed reporting dashboard.'},
+ {q:'Which database technology should the team use?',e:'The stakeholder says, “I do not know. I expected the development team to decide that.” This does not establish a user or business requirement.'},
+ {q:'What colors and visual theme should the new version use?',e:'Stakeholders have preferences, but no evidence shows that a specific color scheme is required for the system to meet the project need.'},
+ {q:'Who will use the system and in what setting?',e:'The primary learner is a student practicing independently, often with a teacher or parent nearby. Exact device and access conditions have not yet been confirmed.'}
+];
+let remaining=3,selected=[];
+const qs=document.getElementById('questions'),ev=document.getElementById('evidence'),hist=document.getElementById('history');
+function renderQuestions(){qs.innerHTML='';options.forEach((o,i)=>{const b=document.createElement('button');b.type='button';b.className='choice';b.textContent=o.q;b.disabled=selected.includes(i)||remaining===0;b.addEventListener('click',()=>choose(i));qs.appendChild(b);});}
+function choose(i){if(remaining<=0||selected.includes(i))return;selected.push(i);remaining--;document.getElementById('budget').textContent='Questions remaining: '+remaining;renderQuestions();renderEvidence();if(remaining===0)document.getElementById('phase2').classList.remove('hidden');}
+function renderEvidence(){ev.innerHTML='';hist.innerHTML='';selected.forEach((i,n)=>{const d=document.createElement('div');d.className='evidence';d.innerHTML='<strong>Evidence '+(n+1)+'</strong>'+options[i].e;ev.appendChild(d);const li=document.createElement('li');li.textContent=options[i].q;hist.appendChild(li);});}
+document.getElementById('revealComplication').addEventListener('click',()=>document.getElementById('phase3').classList.remove('hidden'));
+function val(id){return document.getElementById(id).value.trim()||'[Not entered]'}
+function buildRecord(){const path=selected.map((i,n)=>`${n+1}. ${options[i].q}\n   Evidence revealed: ${options[i].e}`).join('\n');return `# M2 Elicitation Decision Record\n\n## Investigation Path\n${path}\n\n## Initial Position\n**Supported evidence:**\n${val('know')}\n\n**Remaining uncertainty:**\n${val('uncertain')}\n\n**Likely functional requirement:**\n${val('functional')}\n\n**Likely non-functional requirement / quality constraint:**\n${val('nonfunctional')}\n\n**Assumption or proposed solution I am not treating as confirmed:**\n${val('avoid')}\n\n**Why my initial position is defensible:**\n${val('rationale')}\n\n## Complication\nStudents may use DataMan on school Chromebooks, phones, tablets, and home computers. Some sessions may be interrupted before intentional sign-out.\n\n**What this affects:**\n${val('impact')}\n\n**What I revised, if anything:**\n${val('revise')}\n\n**Final decision and reasoning:**\n${val('decision')}\n\n## Next Project Action\nUse this evidence to update the DataMan Requirements Register and preserve any unresolved questions as open assumptions or follow-up items.\n`;}
+document.getElementById('generate').addEventListener('click',()=>{document.getElementById('record').textContent=buildRecord();document.getElementById('phase4').classList.remove('hidden');});
+document.getElementById('copy').addEventListener('click',async()=>{const text=document.getElementById('record').textContent;try{await navigator.clipboard.writeText(text);document.getElementById('copyStatus').textContent='Decision record copied. Paste it into your CTS-285 repository.';}catch(e){document.getElementById('copyStatus').textContent='Copy was blocked by the browser. Select the record text and copy it manually.';}});
+document.getElementById('restart').addEventListener('click',()=>location.reload());
+renderQuestions();
+</script>
+</body>
+</html>
