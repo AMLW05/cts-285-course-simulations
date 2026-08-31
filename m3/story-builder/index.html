@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>M3 Story Builder Lab</title>
+<style>
+:root{--navy:#17324d;--teal:#0b6f73;--gold:#b7791f;--bg:#f5f7fa;--text:#1f2933;--muted:#5b6673;--border:#d7dee6;--good:#eaf7ef;--warn:#fff8eb;--bad:#fff2ef}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}.wrap{max-width:1100px;margin:0 auto;padding:24px}.hero{background:var(--navy);color:#fff;padding:24px;border-radius:12px;margin-bottom:18px}.hero h1{margin:0 0 8px;font-size:28px}.hero p{margin:0;color:#e6edf3}.panel{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px}.panel h2,.panel h3{margin-top:0;color:var(--navy)}.req{background:#eef4f8;border-left:5px solid var(--navy);padding:14px 16px;border-radius:7px;margin:12px 0 18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.choice{border:1px solid var(--border);border-radius:10px;padding:14px;background:#fff}.choice h3{font-size:16px;margin:0 0 8px}.buttons{display:grid;gap:8px}.btn{border:1px solid #bdc8d3;background:#f6f8fa;color:var(--navy);border-radius:8px;padding:10px 12px;text-align:left;font-weight:700;cursor:pointer}.btn:hover,.btn:focus{border-color:var(--teal);outline:3px solid rgba(11,111,115,.15)}.btn.selected{background:#e7f3f3;border-color:var(--teal)}.action{border:0;border-radius:8px;padding:11px 15px;font-weight:700;cursor:pointer;background:var(--teal);color:#fff}.action.secondary{background:#e8edf2;color:var(--navy)}.feedback{margin-top:14px;padding:14px 16px;border-radius:8px}.good{background:var(--good);border-left:5px solid #2f855a}.warn{background:var(--warn);border-left:5px solid var(--gold)}.bad{background:var(--bad);border-left:5px solid #b24a3a}.hidden{display:none}.storybox{background:#f8fafc;border:1px solid var(--border);padding:16px;border-radius:9px;font-size:17px}.repair{display:grid;gap:10px}.repair button{border:1px solid var(--border);background:#fff;padding:12px;border-radius:8px;text-align:left;cursor:pointer}.repair button:hover,.repair button:focus{border-color:var(--teal);outline:3px solid rgba(11,111,115,.15)}.transfer{background:#eef4f8;border:1px solid #c7d7e3;padding:18px;border-radius:10px}code{background:#eef2f6;padding:2px 5px;border-radius:4px}@media(max-width:820px){.grid{grid-template-columns:1fr}.wrap{padding:14px}.hero h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+<h1>Story Builder Lab</h1>
+<p>Build a product story from an established requirement. The goal is not to guess a template answer; it is to preserve the requirement while making the user, need, and value visible.</p>
+</section>
+<section class="panel">
+<h2>Round 1 — Build the story</h2>
+<div class="req"><strong>Validated requirement:</strong> The system shall provide feedback after a learner submits an answer.</div>
+<p>Choose one option from each column. Your choices will be assembled into a story.</p>
+<div class="grid">
+<div class="choice"><h3>1. Who receives the value?</h3><div class="buttons" id="userChoices"></div></div>
+<div class="choice"><h3>2. What capability is needed?</h3><div class="buttons" id="needChoices"></div></div>
+<div class="choice"><h3>3. Why does it matter?</h3><div class="buttons" id="valueChoices"></div></div>
+</div>
+<p><button class="action" id="buildBtn">Build My Story</button></p>
+<div id="storyResult" class="hidden"></div>
+</section>
+<section class="panel hidden" id="repairPanel">
+<h2>Round 2 — Repair the weak story</h2>
+<p>A team drafts this story:</p>
+<div class="storybox"><strong>As a developer, I want a blue Feedback button so that the feedback feature is implemented.</strong></div>
+<p>Which revision improves the story most while preserving the validated requirement?</p>
+<div class="repair" id="repairChoices"></div>
+<div id="repairFeedback" class="hidden"></div>
+</section>
+<section class="panel hidden" id="splitPanel">
+<h2>Round 3 — Decide whether to keep or split</h2>
+<div class="req"><strong>Validated requirement:</strong> The system shall provide a learner with feedback after an answer and allow another attempt after an incorrect answer.</div>
+<p>The team proposes one story that includes feedback, retry behavior, score tracking, and a redesigned results screen. What should the team do first?</p>
+<div class="repair" id="splitChoices"></div>
+<div id="splitFeedback" class="hidden"></div>
+</section>
+<section class="panel hidden" id="transferPanel">
+<h2>Transfer to your DataMan backlog</h2>
+<div class="transfer">
+<p><strong>Open <code>docs/requirements.md</code>.</strong> Choose one validated requirement you expect to carry into your product backlog.</p>
+<p>Before writing the full story, identify three things privately in your notes or directly in <code>docs/product-backlog.md</code>:</p>
+<ul>
+<li>Who receives the value?</li>
+<li>What capability or outcome is actually needed?</li>
+<li>Why does that capability matter?</li>
+</ul>
+<p style="margin-bottom:0;">Then draft the story and preserve the requirement ID for traceability. You do not submit anything from this lab separately.</p>
+</div>
+<p><button class="action secondary" onclick="location.reload()">Restart Lab</button></p>
+</section>
+</div>
+<script>
+const users=[['learner','a learner'],['developer','a developer'],['parent','a parent or guardian']];
+const needs=[['feedback','receive feedback after submitting an answer'],['button','use a blue Feedback button'],['database','store answer results in a database']];
+const values=[['next','know whether to continue or try again'],['done','complete the feedback feature'],['color','see a consistent interface color']];
+let picks={user:null,need:null,value:null};
+function renderChoices(id,items,key){const box=document.getElementById(id);items.forEach(([v,t])=>{const b=document.createElement('button');b.className='btn';b.textContent=t;b.onclick=()=>{picks[key]=v;[...box.children].forEach(x=>x.classList.remove('selected'));b.classList.add('selected')};box.appendChild(b)})}
+renderChoices('userChoices',users,'user');renderChoices('needChoices',needs,'need');renderChoices('valueChoices',values,'value');
+document.getElementById('buildBtn').onclick=()=>{const out=document.getElementById('storyResult');if(!picks.user||!picks.need||!picks.value){out.className='feedback warn';out.textContent='Choose one user, one capability, and one value before building the story.';return;}const u=users.find(x=>x[0]===picks.user)[1],n=needs.find(x=>x[0]===picks.need)[1],v=values.find(x=>x[0]===picks.value)[1];const story=`As ${u}, I want to ${n} so that I can ${v}.`;const strong=picks.user==='learner'&&picks.need==='feedback'&&picks.value==='next';out.className='feedback '+(strong?'good':'warn');out.innerHTML=`<strong>Your story:</strong><br>${story}<br><br>${strong?'This preserves the validated need, centers the learner, and states useful value without prescribing implementation.':'This is a valid combination to inspect, but one or more choices shifts away from the validated need or adds implementation detail. Rebuild it so the story centers the learner, the required feedback capability, and the value of knowing whether to continue or retry.'}`;document.getElementById('repairPanel').classList.remove('hidden');document.getElementById('repairPanel').scrollIntoView({behavior:'smooth'});};
+const repairs=[
+['As a learner, I want feedback after I submit an answer so that I know whether to continue or try again.',true,'This keeps the user, required capability, and value visible without locking the team into a specific interface or technology.'],
+['As a developer, I want to code feedback logic so that the requirement can be marked complete.',false,'This centers internal development work rather than the user who receives value.'],
+['As a learner, I want a blue Feedback button so that I can see feedback.',false,'This adds an interface decision that the requirement does not require.'],
+['As a product owner, I want feedback implemented so that the backlog item can be closed.',false,'This describes project administration, not the user need represented by the requirement.']
+];
+const rbox=document.getElementById('repairChoices');repairs.forEach(([t,ok,msg])=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>{const f=document.getElementById('repairFeedback');f.className='feedback '+(ok?'good':'warn');f.innerHTML=`<strong>${ok?'Strong repair.':'Keep refining.'}</strong> ${msg}`;document.getElementById('splitPanel').classList.remove('hidden');if(ok)document.getElementById('splitPanel').scrollIntoView({behavior:'smooth'});};rbox.appendChild(b)});
+const splits=[
+['Keep the large story because more functionality means more value.',false,'More scope does not automatically create more value. The team should first examine whether the story is too broad to discuss, test, or estimate.'],
+['Split the work around distinct user-visible outcomes while keeping each piece traceable to the validated requirement.',true,'Correct. Splitting can make work clearer and more manageable without losing traceability to the validated need.'],
+['Remove retry behavior because acceptance criteria can cover it later.',false,'Acceptance criteria clarify a story; they should not erase a validated capability that may deserve its own product work.'],
+['Choose the screen design first and then rewrite the requirement around it.',false,'Design choices should not replace the validated need. Product work should preserve the requirement before implementation decisions are made.']
+];
+const sbox=document.getElementById('splitChoices');splits.forEach(([t,ok,msg])=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>{const f=document.getElementById('splitFeedback');f.className='feedback '+(ok?'good':'warn');f.innerHTML=`<strong>${ok?'Defensible decision.':'Reconsider.'}</strong> ${msg}`;if(ok){document.getElementById('transferPanel').classList.remove('hidden');document.getElementById('transferPanel').scrollIntoView({behavior:'smooth'});}};sbox.appendChild(b)});
+</script>
+</body>
+</html>
