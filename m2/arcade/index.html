@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DATAMAN FIELD CHECK — Requirements Survey</title>
+<style>
+/* Palette traced to the device, not to a generic retro terminal.
+   DataMan's display is a vacuum fluorescent tube (Itron FG105H1) behind a
+   dark face-mask filter. The 1977 manual calls it blue, green, and
+   "a blue-green flash" in three different places — see item s21.
+   Body is grey; the twenty-four keys are orange hexagons. */
+:root{
+  --paper:#080c0b; --panel:#101816; --panel-2:#16221f; --line:#2c4a44; --line-dim:#1b302c;
+  --ink:#d8fff4; --dim:#5f8f86; --amber:#5ce8c8; --amber-hi:#9dfde6; --orange:#e08a3c;
+  --go:#5ce8c8; --go-deep:#0d3a33; --halt:#e0684a; --halt-deep:#3a1a14; --near:#e0b23c; --near-deep:#3a2c10;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ease:180ms cubic-bezier(.2,.7,.3,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:820px;margin:0 auto;padding:20px 16px 64px}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin:0 0 .3rem}
+h1{font-size:1.5rem;line-height:1.15;margin:0 0 .4rem;color:var(--amber-hi);
+  font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+h2{font-size:1.05rem;margin:0 0 .5rem;color:var(--amber);font-weight:700;letter-spacing:.04em}
+p{margin:0 0 .9rem}
+.rule{height:3px;background:linear-gradient(90deg,var(--amber),var(--orange) 60%,transparent);margin:0 0 1.4rem;border:0}
+
+button{font:inherit;cursor:pointer;border-radius:5px;border:1px solid var(--line);
+  background:var(--panel);color:var(--ink);transition:background var(--ease),border-color var(--ease)}
+button:hover:not(:disabled){background:var(--panel-2);border-color:var(--amber)}
+button:focus-visible{outline:3px solid var(--amber-hi);outline-offset:2px}
+button:disabled{cursor:default;opacity:1}
+
+.btn{padding:.7rem 1.1rem;min-height:44px}
+.btn-primary{background:var(--amber);color:#1a1408;border-color:var(--amber);font-weight:700}
+.btn-primary:hover{background:var(--amber-hi);border-color:var(--amber-hi)}
+.btn-row{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.2rem}
+
+.stationcard{display:block;width:100%;text-align:left;padding:1rem 1.1rem;margin:0 0 .7rem;min-height:44px}
+.stationcard .nm{font-weight:700;color:var(--amber-hi);letter-spacing:.03em}
+.stationcard .sub{color:var(--dim);font-size:.9rem}
+.stationcard .stat{font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:.35rem}
+
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{padding:0;width:100%}
+.prompt{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--amber);
+  border-radius:0 6px 6px 0;padding:1.1rem 1.2rem;margin:0 0 1.1rem;font-size:1.05rem}
+.mlotag{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:3px;
+  padding:.15rem .45rem;margin:0 0 .6rem}
+.opt{display:block;width:100%;text-align:left;padding:.8rem 1rem;margin:0 0 .55rem;min-height:44px}
+.opt .glyph{font-family:var(--mono);font-weight:700;margin-right:.6rem;color:var(--dim)}
+.opt[data-state="correct"]{background:var(--go-deep);border-color:var(--go)}
+.opt[data-state="near"]{background:var(--near-deep);border-color:var(--near)}
+.opt[data-state="early"]{background:var(--near-deep);border-color:var(--orange)}
+.opt[data-state="wrong"]{background:var(--halt-deep);border-color:var(--halt)}
+.opt[data-chosen="1"]{box-shadow:inset 3px 0 0 var(--ink)}
+
+.fb{border:1px solid var(--line);border-radius:6px;padding:1rem 1.1rem;margin:1.1rem 0 0;background:var(--panel)}
+.fb .verdict{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
+  display:inline-block;padding:.2rem .55rem;border-radius:3px;margin:0 0 .5rem}
+.v-correct{background:var(--go);color:#0b1a0d}
+.v-near{background:var(--near);color:#1a1405}
+.v-early{background:var(--orange);color:#1a1005}
+.v-wrong{background:var(--halt);color:#1a0806}
+.fb p{margin:0}
+
+.meter{font-family:var(--mono);font-size:.72rem;color:var(--dim);letter-spacing:.1em;margin:0 0 1rem}
+
+/* The timer ring. The manual: "a string of lights moves in a clockwise circle
+   on the right hand side of DataMan's display whenever the timer is on."
+   Twelve discrete segments, because a segment display has no smooth arc. */
+.ringwrap{display:flex;align-items:center;gap:.8rem;margin:0 0 1rem}
+.ring{position:relative;width:44px;height:44px;flex:0 0 44px}
+.ring i{position:absolute;left:50%;top:50%;width:3px;height:7px;margin:-19px 0 0 -1.5px;
+  border-radius:1px;background:var(--line-dim);transform-origin:50% 19px}
+.ring i[data-on="1"]{background:var(--go)}
+.ring i[data-on="2"]{background:var(--amber-hi);box-shadow:0 0 5px var(--go)}
+
+/* Correct-answer flash, quoted from the Operating Notes: − − − − − − ⬡ */
+.flash{font-family:var(--mono);font-size:1.15rem;letter-spacing:.28em;color:var(--amber-hi);
+  margin:0 0 .5rem;text-shadow:0 0 8px var(--go)}
+.mlorow{display:flex;justify-content:space-between;gap:1rem;border:1px solid var(--line);
+  border-radius:5px;padding:.7rem .9rem;margin:0 0 .55rem;background:var(--panel)}
+.mlorow .lbl{color:var(--amber-hi)}
+.mlorow .sc{font-family:var(--mono);color:var(--dim)}
+.mlorow[data-weak="1"]{border-color:var(--orange)}
+.missed{border-left:3px solid var(--line);padding-left:1rem;margin:0 0 1.1rem}
+.missed .q{color:var(--amber-hi);margin:0 0 .3rem}
+.missed .a{color:var(--dim);font-size:.92rem;margin:0}
+
+.bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line-dim);padding:0 0 .7rem;margin:0 0 1.3rem}
+.rank{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--amber);text-transform:uppercase}
+.minibtn{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;padding:.4rem .7rem;
+  text-transform:uppercase;min-height:44px}
+
+.present .prompt{font-size:1.9rem;line-height:1.3;padding:1.6rem 1.7rem}
+.present .opt{font-size:1.35rem;padding:1.1rem 1.3rem}
+.present .fb{font-size:1.25rem}
+.present .fb .verdict{font-size:1rem}
+.present h1{font-size:1.9rem}
+.present .hint{font-family:var(--mono);font-size:.9rem;color:var(--dim);letter-spacing:.08em}
+
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+@media (max-width:640px){
+  .wrap{padding:14px 12px 48px}
+  h1{font-size:1.25rem}
+  .present .prompt{font-size:1.35rem}
+  .present .opt{font-size:1.1rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="live" class="sr" aria-live="polite" role="status"></div>
+  <main id="app"></main>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================================
+   BANK — content authors edit ONLY this object.
+   Contract: arcade-spec.md §2.
+     - A station uses optionSet (shared options) OR per-item options. Never both.
+       This survey station uses per-item options throughout, because item shapes
+       differ across the three outcomes it samples.
+     - answer names exactly one option id.
+     - EVERY option has a feedback entry. weight ∈ correct|near|early|wrong.
+     - weight sets tone AND banding. "near" is a defensible reading and is not
+       scored against the student — three bands, matching the green / yellow /
+       red relevance scale in the M1 cabinet. "early" and "wrong" are misses.
+     - mlo tags the item for the per-outcome debrief.
+   Answers are base64 at rest. This defeats View Source and nothing else;
+   it is not security and is not claimed to be.
+
+   EVIDENCE BASE — every prompt below traces to the 1977 manual:
+     m1/dataman-manual.md · m1/DataMan_US.pdf · m1/images/
+   The manual documents the same product twice, for two audiences, and the two
+   registers do not agree. That disagreement is the material.
+   ========================================================================= */
+const b = s => btoa(s);
+const u = s => atob(s);
+
+const MLOS = {
+  "2.1": "Classify requirements",
+  "2.2": "Elicit and clarify",
+  "2.3": "Evidence to requirement"
+};
+
+const BANK = {
+  cabinet: "m2",
+  title: "DataMan Field Check",
+  subtitle: "Requirements Survey",
+  stations: [{
+    id:"survey", name:"Field Check", subtitle:"Twenty items across all three outcomes.",
+    runLength:20,
+    items:[
+
+    /* ---------- MLO 2.1 · classify --------------------------------------- */
+    {id:"s01", mlo:"2.1", prompt:"From the manual: “DataMan will not display an incorrect answer.”", answer:b("nr"),
+     options:[{id:"fn",label:"Functional"},{id:"nfn",label:"Non-functional"},{id:"nr",label:"Not ready"},{id:"ps",label:"Proposed solution"}],
+     feedback:{
+       nr:{weight:b("correct"), text:"Two readings. It may mean the learner's wrong answer is never echoed, or that no wrong value is ever shown. The Operating Notes say the correct result appears after two tries, which fits the first reading. Clarify before it becomes work."},
+       fn:{weight:b("near"), text:"It does describe behavior. It describes two different behaviors depending on how you read it, and that is the problem."},
+       nfn:{weight:b("wrong"), text:"No quality or operating condition is set."},
+       ps:{weight:b("wrong"), text:"No mechanism is prescribed."}}},
+
+    {id:"s02", mlo:"2.1", prompt:"From the manual: “After about five minutes of non-use, he will automatically turn himself off.”", answer:b("nr"),
+     options:[{id:"fn",label:"Functional"},{id:"nfn",label:"Non-functional"},{id:"nr",label:"Not ready"},{id:"ps",label:"Proposed solution"}],
+     feedback:{
+       nr:{weight:b("correct"), text:"“About five minutes” cannot be tested against. Five minutes exactly, or four to six, are different requirements."},
+       fn:{weight:b("near"), text:"Strong instinct — the behavior is clear. The threshold is what blocks verification."},
+       nfn:{weight:b("near"), text:"Power management is a real quality area. On a web app the battery concern behind it may not survive at all."},
+       ps:{weight:b("wrong"), text:"No implementation is named."}}},
+
+    {id:"s03", mlo:"2.1", prompt:"From the manual: “The higher your score, the more the razzle dazzle.”", answer:b("fn"),
+     options:[{id:"fn",label:"Functional"},{id:"nfn",label:"Non-functional"},{id:"nr",label:"Not ready"},{id:"ps",label:"Proposed solution"}],
+     feedback:{
+       fn:{weight:b("correct"), text:"Reward output varies with score. That is behavior, and it is testable once the tiers are named."},
+       nr:{weight:b("near"), text:"The tiers are unstated, so you will have to ask. The rule itself is clear."},
+       nfn:{weight:b("wrong"), text:"It is not a quality condition on something else."},
+       ps:{weight:b("wrong"), text:"“Light show” is the 1977 realization, but the statement is about the rule, not the animation."}}},
+
+    {id:"s04", mlo:"2.1", prompt:"From the manual: “The actual speed of his clock may vary depending on how fresh the battery is, room temperature, etc.”", answer:b("ev"),
+     options:[{id:"fn",label:"Functional requirement"},{id:"nfn",label:"Non-functional requirement"},{id:"ev",label:"Evidence about the 1977 device"},{id:"nr",label:"Not ready"}],
+     feedback:{
+       ev:{weight:b("correct"), text:"Evidence of a trade, not a requirement. Ticks were free — the chip counts its own cycles. A real-time clock was a part someone would have to buy. The behavior you are reading is the price of a decision."},
+       nfn:{weight:b("near"), text:"Timing accuracy will become a requirement — the opposite of this one. Do not carry a purchased constraint forward as a spec."},
+       fn:{weight:b("wrong"), text:"Nothing is being asked of the new system."},
+       nr:{weight:b("near"), text:"It is clear. It is simply not a requirement, which is a different problem from vagueness."}}},
+
+    {id:"s05", mlo:"2.1", prompt:"From the Operating Notes: “DataMan will only accept problems with one or two digit numbers. Answers can be one, two, or three digits.”", answer:b("fn"),
+     options:[{id:"fn",label:"Functional"},{id:"nfn",label:"Non-functional"},{id:"nr",label:"Not ready"},{id:"ps",label:"Proposed solution"}],
+     feedback:{
+       fn:{weight:b("correct"), text:"What the system accepts is behavior, and this is precise enough to test."},
+       nfn:{weight:b("near"), text:"Defensible — it reads as a capacity limit. It defines what input is valid, which puts it on the behavior side."},
+       nr:{weight:b("wrong"), text:"Unusually specific for this manual."},
+       ps:{weight:b("wrong"), text:"No implementation is named."}}},
+
+    {id:"s06", mlo:"2.1", prompt:"Proposed for the modern build: “Feedback must reach the learner within one second of submitting an answer.”", answer:b("nfn"),
+     options:[{id:"fn",label:"Functional"},{id:"nfn",label:"Non-functional"},{id:"nr",label:"Not ready"},{id:"ps",label:"Proposed solution"}],
+     feedback:{
+       nfn:{weight:b("correct"), text:"A measurable timing condition on a behavior defined elsewhere."},
+       fn:{weight:b("near"), text:"Giving feedback is the capability. This constrains how quickly."},
+       nr:{weight:b("wrong"), text:"One second is a number anyone can test."},
+       ps:{weight:b("wrong"), text:"No mechanism prescribed."}}},
+
+    {id:"s07", mlo:"2.1", prompt:"Proposed for the modern build: “Use Flask and SQLite so scores persist between sessions.”", answer:b("ps"),
+     options:[{id:"fn",label:"Functional"},{id:"nfn",label:"Non-functional"},{id:"nr",label:"Not ready"},{id:"ps",label:"Proposed solution"}],
+     feedback:{
+       ps:{weight:b("correct"), text:"The need is persistence of a learner's score. Flask and SQLite are how this course happens to build it, which is a project constraint, not the requirement."},
+       fn:{weight:b("near"), text:"Persistence is the capability underneath. Strip the technology and you have the requirement."},
+       nfn:{weight:b("near"), text:"If the stack were genuinely mandated, that would be a constraint worth recording separately from the need."},
+       nr:{weight:b("wrong"), text:"Clear — clearly a solution."}}},
+
+    /* ---------- MLO 2.2 · elicit ----------------------------------------- */
+    {id:"s08", mlo:"2.2", prompt:"The Story says the Memory Bank score shows two numbers. The Operating Notes say it shows three, including elapsed time. What do you do?", answer:b("c"),
+     options:[{id:"a",label:"Treat the Operating Notes as authoritative and move on."},
+              {id:"b",label:"Ask Texas Instruments which is correct."},
+              {id:"c",label:"Record both readings and mark the conflict as an open question."},
+              {id:"d",label:"Choose the simpler version so the build stays small."}],
+     feedback:{
+       c:{weight:b("correct"), text:"You have one witness and it contradicts itself. Documenting the conflict is the honest position, and it is traceable later."},
+       a:{weight:b("near"), text:"Reasonable heuristic — the adult register is usually more precise. Applying it silently hides a decision someone may need to revisit."},
+       b:{weight:b("early"), text:"There is no one to ask. Document-only evidence is the situation, not a step on the way to a better one."},
+       d:{weight:b("wrong"), text:"Scope convenience is not evidence. It decides the question by preference."}}},
+
+    {id:"s09", mlo:"2.2", prompt:"The primary user is a child practicing arithmetic. Which technique gives the most reliable evidence about how they use it?", answer:b("b"),
+     options:[{id:"a",label:"Interview several children about what they want."},
+              {id:"b",label:"Observe a child using the current activity."},
+              {id:"c",label:"Interview a teacher who supervises the activity."},
+              {id:"d",label:"Re-read the manual."}],
+     feedback:{
+       b:{weight:b("correct"), text:"Children are poor narrators of their own process, and so is everyone else. Watching is the reliable source."},
+       c:{weight:b("near"), text:"Genuinely useful, and a teacher sees patterns across many children. They see the room, not the hands."},
+       a:{weight:b("near"), text:"Worth doing for preferences. Expect it to describe the experience they wish they had."},
+       d:{weight:b("wrong"), text:"The manual describes 1977 intent, not present behavior."}}},
+
+    {id:"s10", mlo:"2.2", prompt:"The Story never mentions the digit limits that the Operating Notes state plainly. What does that omission most likely tell you?", answer:b("c"),
+     options:[{id:"a",label:"The Story is wrong."},
+              {id:"b",label:"The limits were added after the Story was written."},
+              {id:"c",label:"Each register is written for a different audience and omits what that audience does not need."},
+              {id:"d",label:"The manual is unreliable and should be set aside."}],
+     feedback:{
+       c:{weight:b("correct"), text:"The transcript says so directly: neither part is complete, and each contains what the other omits. Omission is audience, not error."},
+       b:{weight:b("early"), text:"A real possibility worth noting as an assumption. Nothing in the evidence supports it yet."},
+       a:{weight:b("wrong"), text:"Silence is not contradiction. The Story does not deny the limits."},
+       d:{weight:b("wrong"), text:"An incomplete source read carefully is still the best evidence available."}}},
+
+    {id:"s11", mlo:"2.2", prompt:"A teacher says the modern version should “be fun like the original.” What do you ask next?", answer:b("b"),
+     options:[{id:"a",label:"“Should we keep the light show?”"},
+              {id:"b",label:"“What did you see children enjoying when they used it?”"},
+              {id:"c",label:"“Would animations and sound effects work?”"},
+              {id:"d",label:"“How much of the original should we copy?”"}],
+     feedback:{
+       b:{weight:b("correct"), text:"It asks for observed behavior rather than a preference, and it separates what was fun from how 1977 delivered it."},
+       a:{weight:b("early"), text:"It names the mechanism first. The light show may be the answer; it is not yet the need."},
+       c:{weight:b("wrong"), text:"Leading, and it offers two solutions to agree with."},
+       d:{weight:b("near"), text:"Scope is worth settling eventually. Ask what worked before deciding how much of it to carry."}}},
+
+    {id:"s12", mlo:"2.2", prompt:"You must decide whether the two-tries-then-reveal rule carries into the modern build. Where does the evidence live?", answer:b("d"),
+     options:[{id:"a",label:"The manual alone — it states the rule."},
+              {id:"b",label:"A teacher alone — they know learners."},
+              {id:"c",label:"Learning research alone — it is a pedagogy question."},
+              {id:"d",label:"All three, with any disagreement recorded."}],
+     feedback:{
+       d:{weight:b("correct"), text:"The manual gives the original rule, the teacher gives current practice, research gives whether it helps. One technique is not enough here."},
+       a:{weight:b("near"), text:"It establishes what the rule was. It cannot say whether it should persist."},
+       b:{weight:b("near"), text:"Valuable and partial. A teacher's experience is one classroom's worth of evidence."},
+       c:{weight:b("near"), text:"Useful, and it will not tell you what this product did or what this teacher needs."}}},
+
+    {id:"s13", mlo:"2.2", prompt:"The manual says the light show is “a reward for your good work.” In analyst terms, what is that sentence?", answer:b("b"),
+     options:[{id:"a",label:"A functional requirement."},
+              {id:"b",label:"Design rationale — the intent behind a behavior."},
+              {id:"c",label:"A proposed solution."},
+              {id:"d",label:"Marketing copy with no analytical value."}],
+     feedback:{
+       b:{weight:b("correct"), text:"It tells you why the behavior exists. Rationale is what lets you replace a mechanism without losing the purpose."},
+       a:{weight:b("near"), text:"The light show itself is a behavior. This sentence explains its reason."},
+       c:{weight:b("near"), text:"Close — a light show is one realization of reinforcement. The sentence is about the intent, not the mechanism."},
+       d:{weight:b("wrong"), text:"It is the most useful sentence in the section. It survives when the animation does not."}}},
+
+    {id:"s14", mlo:"2.2", prompt:"Nobody knows how long a child typically stays with the activity in one sitting. Which move first?", answer:b("b"),
+     options:[{id:"a",label:"Ask a parent to estimate."},
+              {id:"b",label:"Observe sessions in a classroom."},
+              {id:"c",label:"Check the manual."},
+              {id:"d",label:"Set a target and validate later."}],
+     feedback:{
+       b:{weight:b("correct"), text:"Session length is behavior over time. It is measured, not remembered."},
+       a:{weight:b("near"), text:"Fast and worth doing. Expect the estimate to be generous."},
+       c:{weight:b("wrong"), text:"The manual states a five-minute idle shutoff, which is not the same as session length."},
+       d:{weight:b("early"), text:"Setting a number before gathering evidence turns an assumption into a requirement."}}},
+
+    /* ---------- MLO 2.3 · evidence to requirement ------------------------ */
+    {id:"s15", mlo:"2.3", prompt:"Evidence: a wrong answer produces “EEE” and a blinking pattern, and the correct answer is not shown. Which is the strongest requirement?", answer:b("b"),
+     options:[{id:"a",label:"The system must display “EEE” after a wrong answer."},
+              {id:"b",label:"The system must indicate immediately that an answer is wrong, without revealing the correct answer."},
+              {id:"c",label:"The system must show a red flashing animation after a wrong answer."},
+              {id:"d",label:"The system must give clear feedback."}],
+     feedback:{
+       b:{weight:b("correct"), text:"It states the observable behavior and its constraint, and leaves the display choice to design."},
+       a:{weight:b("near"), text:"Traceable and too literal. “EEE” was a seven-segment display doing its best."},
+       c:{weight:b("early"), text:"A design decision wearing a requirement's clothes."},
+       d:{weight:b("wrong"), text:"“Clear” cannot be tested. This is weaker than the evidence you started with."}}},
+
+    {id:"s16", mlo:"2.3", prompt:"Evidence: after two wrong tries, the device shows the problem with the correct result. Which requirement follows?", answer:b("a"),
+     options:[{id:"a",label:"After a configurable number of incorrect attempts, the system must present the correct answer."},
+              {id:"b",label:"After exactly two incorrect attempts, the system must present the correct answer."},
+              {id:"c",label:"The system must never let a learner fail more than twice."},
+              {id:"d",label:"The system must use a two-attempt limit because the original did."}],
+     feedback:{
+       a:{weight:b("correct"), text:"It preserves the behavior and exposes the number as a decision, which is where the pedagogy argument belongs."},
+       b:{weight:b("near"), text:"Faithful to the evidence. It also freezes a 1977 choice nobody has re-examined for this audience."},
+       c:{weight:b("wrong"), text:"It restates the mechanism as a goal and reads as a promise the system cannot keep."},
+       d:{weight:b("early"), text:"Precedent is not rationale. Ask why two before carrying two."}}},
+
+    {id:"s17", mlo:"2.3", prompt:"Evidence: after ten problems, the display shows right answers beside problems attempted. Which requirement follows?", answer:b("c"),
+     options:[{id:"a",label:"The system must display two numbers after ten problems."},
+              {id:"b",label:"The system must store scores in a database table."},
+              {id:"c",label:"After a completed set, the system must report correct answers and attempts to the learner."},
+              {id:"d",label:"The system must motivate learners with scores."}],
+     feedback:{
+       c:{weight:b("correct"), text:"It states what must be reported and to whom, without fixing the format or the set size."},
+       a:{weight:b("near"), text:"Traceable, and it hard-codes a display shape from a seven-segment readout."},
+       b:{weight:b("early"), text:"Storage is design. The requirement is that the learner is told."},
+       d:{weight:b("wrong"), text:"Motivation is an outcome, not a behavior anyone can verify."}}},
+
+    {id:"s18", mlo:"2.3", prompt:"Evidence: the 1977 timer runs at a speed that varies with battery and temperature. What belongs in the register?", answer:b("b"),
+     options:[{id:"a",label:"The timer must vary with environmental conditions."},
+              {id:"b",label:"Timings must be comparable across sessions and learners."},
+              {id:"c",label:"The system must use the browser's high-resolution clock."},
+              {id:"d",label:"Nothing. The timer was a hardware detail."}],
+     feedback:{
+       b:{weight:b("correct"), text:"Ticks were chosen because a clock chip cost money and cycle-counting was free. The constraint that forced the trade is gone. Ask what it was protecting — children racing each other — and require that instead."},
+       a:{weight:b("wrong"), text:"It carries a purchased constraint forward as a specification, long after the purchase."},
+       c:{weight:b("early"), text:"Right instinct, wrong layer. Name the property first, then choose the clock."},
+       d:{weight:b("near"), text:"The mechanism was hardware and it is gone. The purpose it served is still a real need."}}},
+
+    {id:"s19", mlo:"2.3", prompt:"Evidence: the device refuses subtraction that would produce a negative answer. What does that support?", answer:b("c"),
+     options:[{id:"a",label:"The system must reject negative results because the original could not compute them."},
+              {id:"b",label:"The system must support negative numbers, since modern hardware can."},
+              {id:"c",label:"Problems presented must stay within the number range appropriate to the target learners."},
+              {id:"d",label:"The system must display an error when input is invalid."}],
+     feedback:{
+       c:{weight:b("correct"), text:"The hardware limit and the learning scope happen to agree here. State the pedagogical reason, because that is the one that survives the hardware."},
+       a:{weight:b("early"), text:"It inherits a constraint without asking whether the reason still holds."},
+       b:{weight:b("early"), text:"Capability is not justification. Whether these learners should meet negatives is a question for a teacher."},
+       d:{weight:b("near"), text:"True and generic. It would apply to any system and says nothing about this one."}}},
+
+    {id:"s20", mlo:"2.3", prompt:"Which of these is ready to enter the Requirements Register?", answer:b("b"),
+     options:[{id:"a",label:"The system must be fast, fun, and safe for children."},
+              {id:"b",label:"The system must preserve a learner's score between authenticated sessions."},
+              {id:"c",label:"The system must use Flask sessions to remember the learner."},
+              {id:"d",label:"The system must work like DataMan did."}],
+     feedback:{
+       b:{weight:b("correct"), text:"One capability, observable, testable, and neutral about how it is built."},
+       a:{weight:b("wrong"), text:"Three vague qualities bundled into one line. Split it, then elicit each."},
+       c:{weight:b("early"), text:"Close to the right behavior, expressed as a mechanism."},
+       d:{weight:b("wrong"), text:"It defers the whole analysis to a document that contradicts itself."}}},
+
+    {id:"s21", mlo:"2.2", prompt:"The manual calls the display “a blue face-mask display,” then “my green face mask,” then describes “a blue-green flash.” What colour is it?", answer:b("d"),
+     options:[{id:"a",label:"Blue — the illustration caption is the most literal description."},
+              {id:"b",label:"Green — the activity text is closest to the working device."},
+              {id:"c",label:"Blue-green — the narrative splits the difference."},
+              {id:"d",label:"Unresolved from this source. Get a photograph or the device."}],
+     feedback:{
+       d:{weight:b("correct"), text:"One document, three answers, on the most observable property the thing has. When a source contradicts itself about something you could simply look at, stop reading and go look."},
+       c:{weight:b("near"), text:"It is very likely correct — a vacuum fluorescent tube behind a tinted filter reads differently in different light, which is probably why all three appear. Likely is not established."},
+       a:{weight:b("near"), text:"Reasonable ranking of sources. It still picks one witness over two without a reason beyond preference."},
+       b:{weight:b("near"), text:"Also reasonable, and it reaches the opposite conclusion from the same kind of argument. That is the tell."}}}
+    ]
+  }]
+};
+
+const RANKS = ["Trainee","Field Analyst","Senior Analyst","Lead Analyst","Principal"];
+const VERDICT_WORD = {correct:"Strong", near:"Useful", early:"Too early", wrong:"Not this one"};
+const VERDICT_GLYPH = {correct:"✓", near:"△", early:"○", wrong:"✕"};
+
+/* ---------------------------------------------------------------- storage */
+const KEY = "cts285.arcade." + BANK.cabinet;
+const Store = {
+  read(){
+    try{ const r = localStorage.getItem(KEY); if(!r) return null;
+      const d = JSON.parse(r); return d && d.v === 1 ? d : null; }
+    catch(e){ return null; }
+  },
+  write(d){ try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){} },
+  clear(){ try{ localStorage.removeItem(KEY); }catch(e){} }
+};
+let mem = Store.read() || {v:1, rank:0, muted:false, stations:{}};
+const save = () => { if(!S.present) Store.write(mem); };
+
+/* ------------------------------------------------------------------ audio */
+const AudioKit = {
+  ctx:null,
+  tone(freq, ms){
+    if(mem.muted || S.present) return;
+    if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    try{
+      this.ctx = this.ctx || new (window.AudioContext||window.webkitAudioContext)();
+      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+      o.type = "square"; o.frequency.value = freq;
+      g.gain.value = .035; o.connect(g); g.connect(this.ctx.destination);
+      o.start(); o.stop(this.ctx.currentTime + ms/1000);
+    }catch(e){}
+  },
+  good(){ this.tone(680, 90); }, bad(){ this.tone(180, 130); }
+};
+
+/* ------------------------------------------------------------------ state */
+const params = new URLSearchParams(location.search);
+const S = {
+  screen: "boot",
+  present: params.get("present") === "1",
+  station: null, queue: [], idx: 0, missed: [], near: [], answered: false
+};
+
+const app  = document.getElementById("app");
+const live = document.getElementById("live");
+const say  = t => { live.textContent = ""; setTimeout(()=>{ live.textContent = t; }, 40); };
+const esc  = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const stationById = id => BANK.stations.find(s => s.id === id);
+const optionsFor  = (st, it) => it.options || BANK.optionSets[st.optionSet];
+
+/* Twelve segments. Filled ones mark items answered; the two at the leading
+   edge are brighter, which is the "string of lights" the manual describes. */
+function ring(idx, total){
+  const N = 12, lit = Math.round((idx / total) * N);
+  let segs = "";
+  for(let i = 0; i < N; i++){
+    const on = i < lit ? (i >= lit - 2 ? 2 : 1) : 0;
+    segs += '<i style="transform:rotate(' + (i * (360 / N)) + 'deg)"'
+          + (on ? ' data-on="' + on + '"' : '') + '></i>';
+  }
+  return '<div class="ringwrap"><div class="ring" aria-hidden="true">' + segs + '</div>'
+       + '<p class="meter" style="margin:0">item ' + (idx + 1) + ' of ' + total + '</p></div>';
+}
+
+function shuffle(a){ const r = a.slice();
+  for(let i=r.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; }
+  return r; }
+
+/* ----------------------------------------------------------------- screens */
+function bar(){
+  if(S.present) return "";
+  return '<div class="bar">'
+    + '<span class="rank">Rank &middot; ' + esc(RANKS[mem.rank] || RANKS[0]) + '</span>'
+    + '<span>'
+      + '<button class="minibtn" id="mute">' + (mem.muted ? "Sound off" : "Sound on") + '</button> '
+      + '<button class="minibtn" id="wipe">Clear progress</button>'
+    + '</span></div>';
+}
+
+function renderMenu(){
+  S.screen = "menu";
+  const cards = BANK.stations.map(st => {
+    const rec = mem.stations[st.id] || {runs:0, best:0};
+    return '<button class="stationcard" data-go="' + st.id + '">'
+      + '<span class="nm">' + esc(st.name) + '</span><br>'
+      + '<span class="sub">' + esc(st.subtitle) + '</span>'
+      + '<span class="stat">runs ' + rec.runs + ' &middot; best ' + rec.best + '/' + st.runLength + '</span>'
+      + '</button>';
+  }).join("");
+  app.innerHTML = bar()
+    + '<p class="eyebrow">' + esc(BANK.title) + '</p>'
+    + '<h1>' + esc(BANK.subtitle) + '</h1><hr class="rule">'
+    + '<p>Twenty items drawn from the 1977 DataMan manual. Nothing here is graded and nothing is submitted.</p>'
+    + '<p>The debrief tells you which outcome you are weakest on, while there is still time to revise your Requirements Register.</p>'
+    + cards;
+  document.body.classList.remove("present");
+  wire();
+}
+
+function startStation(id){
+  const st = stationById(id); if(!st) return renderMenu();
+  S.station = st;
+  S.queue = shuffle(st.items).slice(0, Math.min(st.runLength, st.items.length));
+  S.idx = 0; S.missed = []; S.near = [];
+  renderItem();
+}
+
+function renderItem(){
+  S.screen = "play"; S.answered = false;
+  const st = S.station, it = S.queue[S.idx], opts = optionsFor(st, it);
+  const buttons = shuffle(opts).map(o =>
+    '<button class="opt" data-opt="' + esc(o.id) + '">'
+      + '<span class="glyph" aria-hidden="true">&middot;</span>' + esc(o.label) + '</button>'
+  ).join("");
+
+  app.innerHTML = bar()
+    + (S.present ? '' : ring(S.idx, S.queue.length))
+    + '<fieldset>'
+    + '<legend><span class="mlotag">MLO ' + esc(it.mlo) + ' &middot; ' + esc(MLOS[it.mlo]) + '</span>'
+    + '<div class="prompt">' + esc(it.prompt) + '</div></legend>'
+    + '<div id="opts">' + buttons + '</div></fieldset>'
+    + '<div id="fb"></div>'
+    + (S.present ? '<p class="hint">Space or &rarr; reveals &middot; &larr; &rarr; move &middot; Esc exits</p>' : '');
+
+  document.body.classList.toggle("present", S.present);
+  wire();
+  const first = app.querySelector(".opt"); if(first && !S.present) first.focus();
+}
+
+function answer(chosen){
+  if(S.answered) return;
+  S.answered = true;
+  const st = S.station, it = S.queue[S.idx], opts = optionsFor(st, it);
+  const correct = u(it.answer);
+
+  opts.forEach(o => {
+    const btn = app.querySelector('.opt[data-opt="' + o.id + '"]'); if(!btn) return;
+    const w = u(it.feedback[o.id].weight);
+    btn.dataset.state = w;
+    btn.disabled = true;
+    if(chosen && o.id === chosen) btn.dataset.chosen = "1";
+    btn.querySelector(".glyph").textContent = VERDICT_GLYPH[w];
+  });
+
+  const shown = chosen || correct;
+  const w = u(it.feedback[shown].weight);
+  document.getElementById("fb").innerHTML =
+    (chosen && chosen === correct
+      ? '<p class="flash" aria-hidden="true">&minus; &minus; &minus; &minus; &minus; &minus; &#11041;</p>' : '')
+    + '<div class="fb"><span class="verdict v-' + w + '">' + esc(VERDICT_WORD[w]) + '</span>'
+    + '<p>' + esc(it.feedback[shown].text) + '</p></div>'
+    + (S.present ? '' : '<div class="btn-row"><button class="btn btn-primary" id="next">'
+        + (S.idx + 1 < S.queue.length ? "Next" : "Finish") + '</button></div>');
+
+  if(chosen){
+    /* Three bands, not two. There is rarely a 100% answer to a classification
+       question — input verification is input or processing depending on where
+       you stand. A "near" choice is defensible and is not scored as a miss.
+       Matches the green / yellow / red relevance scale used in the M1 cabinet. */
+    if(chosen === correct){ AudioKit.good(); }
+    else if(w === "near"){ AudioKit.good(); S.near.push({it, chosen}); }
+    else { AudioKit.bad(); S.missed.push({it, chosen}); }
+    say(VERDICT_WORD[w] + ". " + it.feedback[shown].text);
+  }
+  wire();
+  const nb = document.getElementById("next"); if(nb) nb.focus();
+}
+
+function advance(){
+  if(S.idx + 1 < S.queue.length){ S.idx++; renderItem(); }
+  else renderDebrief();
+}
+
+function renderDebrief(){
+  S.screen = "debrief";
+  const st = S.station, score = S.queue.length - S.missed.length;
+  const rec = mem.stations[st.id] || {runs:0, best:0};
+  rec.runs += 1;
+  rec.best = Math.max(rec.best, score);
+  rec.lastMissed = S.missed.map(m => m.it.id);
+  mem.stations[st.id] = rec;
+  mem.rank = Math.min(RANKS.length - 1, Math.floor(rec.best / 4));
+  save();
+
+  /* per-MLO breakdown — the point of a survey station */
+  const seen = {}, hit = {};
+  S.queue.forEach(it => { seen[it.mlo] = (seen[it.mlo]||0) + 1; });
+  S.queue.forEach(it => { if(!S.missed.some(m => m.it.id === it.id)) hit[it.mlo] = (hit[it.mlo]||0) + 1; }); /* near counts as held */
+  const rates = Object.keys(MLOS).map(k => ({k, got:hit[k]||0, of:seen[k]||0}));
+  const weakest = rates.filter(r => r.of).sort((a,c) => (a.got/a.of) - (c.got/c.of))[0];
+  const breakdown = rates.filter(r => r.of).map(r =>
+    '<div class="mlorow"' + (weakest && r.k === weakest.k && r.got < r.of ? ' data-weak="1"' : '') + '>'
+    + '<span class="lbl">MLO ' + esc(r.k) + ' &middot; ' + esc(MLOS[r.k]) + '</span>'
+    + '<span class="sc">' + r.got + '/' + r.of + '</span></div>').join("");
+
+  const steer = (weakest && weakest.got < weakest.of)
+    ? '<p>Weakest outcome this run: <strong>MLO ' + esc(weakest.k) + ' &mdash; ' + esc(MLOS[weakest.k])
+      + '</strong>. Reread that section before you revise <code>docs/requirements.md</code>.</p>'
+    : '<p>Even across all three outcomes. Take the register to M2.5 and review it against the quality checks.</p>';
+
+  const nearNote = S.near.length
+    ? '<p class="meter" style="margin:0 0 1rem">' + S.near.length
+      + ' defensible near-miss' + (S.near.length===1?'':'es')
+      + ' &mdash; not counted against you. Read why the other reading is stronger.</p>'
+    : '';
+
+  const list = S.missed.length
+    ? S.missed.map(m => {
+        const opts = optionsFor(st, m.it);
+        const right = opts.find(o => o.id === u(m.it.answer));
+        return '<div class="missed"><p class="q">[MLO ' + esc(m.it.mlo) + '] ' + esc(m.it.prompt) + '</p>'
+          + '<p class="a">' + esc(right.label) + ' &mdash; ' + esc(m.it.feedback[u(m.it.answer)].text) + '</p></div>';
+      }).join("")
+    : '<p>Nothing missed.</p>';
+
+  app.innerHTML = bar()
+    + '<p class="eyebrow">Debrief</p><h1>Field Check</h1><hr class="rule">'
+    + '<p class="meter">' + score + ' of ' + S.queue.length + ' &middot; best ' + rec.best + ' &middot; rank ' + esc(RANKS[mem.rank]) + '</p>'
+    + '<h2>By outcome</h2>' + breakdown + steer + nearNote
+    + '<h2>Run it back on these</h2>' + list
+    + '<div class="btn-row"><button class="btn btn-primary" id="again">Run it back</button>'
+    + '<button class="btn" id="menu">Main menu</button></div>';
+  say("Debrief. " + score + " of " + S.queue.length + " correct."
+      + (weakest && weakest.got < weakest.of ? " Weakest outcome: MLO " + weakest.k + ", " + MLOS[weakest.k] + "." : ""));
+  wire();
+}
+
+/* ------------------------------------------------------------------- wiring */
+function wire(){
+  const on = (sel, fn) => { const el = document.getElementById(sel); if(el) el.onclick = fn; };
+  app.querySelectorAll("[data-go]").forEach(b => b.onclick = () => startStation(b.dataset.go));
+  app.querySelectorAll(".opt").forEach(b => b.onclick = () => { if(!S.present) answer(b.dataset.opt); });
+  on("next", advance); on("again", () => startStation(S.station.id)); on("menu", renderMenu);
+  on("mute", () => { mem.muted = !mem.muted; save(); (S.screen === "menu" ? renderMenu : renderItem)(); });
+  on("wipe", () => {
+    if(confirm("Clear your saved progress for this cabinet? This cannot be undone.")){
+      Store.clear(); mem = {v:1, rank:0, muted:mem.muted, stations:{}}; renderMenu();
+    }
+  });
+}
+
+document.addEventListener("keydown", e => {
+  if(!S.present || S.screen !== "play") return;
+  if(e.key === " " || e.key === "ArrowRight"){
+    e.preventDefault();
+    if(!S.answered) answer(null); else advance();
+  }
+  if(e.key === "ArrowLeft"){ e.preventDefault(); if(S.idx > 0){ S.idx--; renderItem(); } }
+  if(e.key === "Escape"){ e.preventDefault(); S.present = false; renderMenu(); }
+});
+
+/* --------------------------------------------------------------------- boot */
+(function boot(){
+  if(S.present){
+    const st = stationById(params.get("station")) || BANK.stations[0];
+    S.station = st;
+    S.queue = st.items.slice();
+    const want = params.get("item");
+    const at = want ? S.queue.findIndex(i => i.id === want) : 0;
+    S.idx = at >= 0 ? at : 0;
+    S.missed = []; S.near = [];
+    renderItem();
+  } else {
+    renderMenu();
+  }
+})();
+</script>
+</body>
+</html>
