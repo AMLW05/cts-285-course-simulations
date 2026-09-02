@@ -8,9 +8,14 @@
     body{font-family:Arial,Helvetica,sans-serif;line-height:1.6;margin:0;background:#f5f7fa;color:#1f2933}
     main{max-width:900px;margin:0 auto;padding:32px 20px}
     .hero{border-top:8px solid #1f4e79;background:#fff;padding:24px 28px;margin-bottom:24px}
-    .card{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:20px}
+    .card{background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:20px;margin-bottom:18px}
+    .note{background:#f8fafc;border:1px solid #cbd5e1;border-left:6px solid #4a5568;border-radius:8px;padding:16px 20px;margin-bottom:18px}
+    h2{margin-top:0}
+    .tag{display:inline-block;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:#4a5568;margin-bottom:6px}
     a.button{display:inline-block;background:#1f4e79;color:#fff;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:5px}
     a.button:focus{outline:3px solid #111827;outline-offset:3px}
+    a.plain{color:#1f4e79;font-weight:700}
+    a.plain:focus{outline:3px solid #111827;outline-offset:3px}
   </style>
 </head>
 <body>
@@ -20,10 +25,48 @@
     <h1>Course Simulations</h1>
     <p>Interactive decision practice used with the CTS-285 Canvas course.</p>
   </section>
+
+  <div class="note">
+    <p style="margin:0"><strong>Graded simulations generate a decision record.</strong> Copy it into your own GitHub repository at the path the Canvas page names. The arcades are optional, ungraded, and submit nothing.</p>
+  </div>
+
   <section class="card">
-    <h2>Module 2 — Stakeholder Elicitation Under Pressure</h2>
+    <p class="tag">Module 2 &middot; Graded</p>
+    <h2>Stakeholder Elicitation Under Pressure</h2>
     <p>Gather evidence under a limited investigation budget, distinguish supported needs from assumptions, respond to new information, and generate a project decision record.</p>
-    <p><a class="button" href="m2/stakeholder-elicitation/">Open Module 2 Simulation</a></p>
+    <p><a class="button" href="m2/stakeholder-elicitation/">Open simulation</a></p>
+  </section>
+
+  <section class="card">
+    <p class="tag">Module 3 &middot; Graded</p>
+    <h2>Backlog Triage &mdash; What Moves Forward?</h2>
+    <p>Judge individual backlog items for readiness and priority, see the consequence of each call, then revise when new information arrives.</p>
+    <p><a class="button" href="m3/backlog-triage/">Open simulation</a></p>
+  </section>
+
+  <section class="card">
+    <p class="tag">Module 3 &middot; Graded</p>
+    <h2>Product Owner Sprint Simulation</h2>
+    <p>Choose a defensible release slice within a limited capacity, then revise when capacity drops and a release-critical defect appears.</p>
+    <p><a class="button" href="m3/product-owner-sprint/">Open simulation</a></p>
+  </section>
+
+  <section class="card">
+    <p class="tag">Module 3 &middot; Practice</p>
+    <h2>Story Builder Lab</h2>
+    <p>Find the user, the need, and the value inside a validated requirement before writing complete stories.</p>
+    <p><a class="button" href="m3/story-builder/">Open lab</a></p>
+  </section>
+
+  <section class="card">
+    <p class="tag">Arcades &middot; Optional and ungraded</p>
+    <h2>Practice cabinets</h2>
+    <p>Short self-paced drills. Nothing is submitted, nothing is recorded, and nothing here affects a grade. Use one to find your weak spots before an assignment, or skip it.</p>
+    <p>
+      <a class="plain" href="m1/arcade/">Field Analyst Arcade &mdash; DataMan Case Prep</a><br>
+      <a class="plain" href="m2/arcade/">DataMan Field Check &mdash; Requirements Survey</a><br>
+      <a class="plain" href="m3/arcade/">Backlog Bench &mdash; Product Work Survey</a>
+    </p>
   </section>
 </main>
 </body>
