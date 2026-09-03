@@ -1,892 +1,403 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>FIELD ANALYST ARCADE — DataMan Case Prep</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field Analyst — CTS-285 Module 1 Arcade</title>
 <style>
-  :root {
-    --ink:      #050b14;
-    --panel:    #0c1826;
-    --panel-2:  #13233a;
-    --line:     #2f7ec2;
-    --line-dim: #1c3350;
-    --amber:    #4fc9ff;
-    --amber-hi: #c9f0ff;
-    --paper:    #eef5fa;
-    --dim:      #6f96b8;
-    --go:       #5be08a;
-    --go-deep:  #123a26;
-    --halt:     #ff8a7a;
-    --halt-deep:#46160f;
-    --chips:    #7dd8ff;
-    --orange:   #ff9d3d;
-    --mult:     var(--orange);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; }
-  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-  body {
-    background: var(--ink);
-    color: var(--paper);
-    font-family: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-    font-size: 15px;
-    line-height: 1.45;
-    -webkit-user-select: none;
-    user-select: none;
-    overscroll-behavior-y: none;
-  }
-  body::before {
-    content: ""; position: fixed; inset: -60%; pointer-events: none; z-index: 0;
-    background: conic-gradient(from 0deg at 50% 45%,
-      transparent 0deg, rgba(79,201,255,.07) 40deg, transparent 90deg,
-      rgba(255,157,61,.045) 160deg, transparent 220deg,
-      rgba(91,224,138,.03) 300deg, transparent 360deg);
-    animation: swirl 80s linear infinite;
-  }
-  @keyframes swirl { to { transform: rotate(360deg); } }
-  #app { position: relative; z-index: 1; }
+:root{
+  --bg:#0d1117; --panel:#161b22; --panel2:#1c2230; --edge:#2b3441;
+  --ink:#e6edf3; --dim:#8b949e; --accent:#7dd8ff; --good:#3fb950; --bad:#f85149;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  line-height:1.55;padding:24px 16px 64px}
+main{max-width:840px;margin:0 auto}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-  body::after {
-    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 90;
-    background: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.18) 50%);
-    background-size: 100% 4px; opacity: .5;
-  }
-  #app { max-width: 27rem; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; gap: 10px;
-    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
+/* --- the narrator. A layer, not a scoreboard: it reacts, it never tallies. --- */
+.dm{display:flex;gap:14px;align-items:flex-start;background:var(--panel);border:1px solid var(--edge);
+  border-radius:10px;padding:14px 16px;margin-bottom:18px}
+.dm .face{flex:0 0 auto;width:54px;height:54px;border-radius:8px;background:#0b1220;border:1px solid var(--edge);
+  display:grid;place-items:center;font-family:var(--mono);font-size:1.5rem;color:var(--accent)}
+.dm[data-mood="HAPPY"] .face{color:var(--good)}
+.dm[data-mood="GLITCH"] .face{color:var(--bad)}
+.dm[data-mood="SMUG"] .face,.dm[data-mood="OVERCLOCK"] .face{color:#ffd479}
+.dm .line{flex:1 1 auto;min-width:0}
+.dm .who{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 4px}
+.dm .say{margin:0;font-size:1rem}
 
-  .bar {
-    display: flex; justify-content: space-between; align-items: center; gap: 8px;
-    border: 1px solid var(--line-dim); background: var(--panel); border-radius: 8px;
-    padding: 7px 10px; font-size: 12px; color: var(--dim);
-  }
-  .bar strong { color: var(--amber); font-family: 'VT323', ui-monospace, monospace; font-size: 17px; }
-  .pips { display: flex; gap: 4px; align-items: center; }
-  .pip { width: 13px; height: 13px; border-radius: 3px; background: var(--go); box-shadow: 0 0 7px rgba(91,224,138,.55); }
-  .pip.gone { background: var(--panel-2); border: 1px solid var(--line-dim); box-shadow: none; }
-
-  .bot {
-    display: flex; gap: 10px; align-items: center;
-    border: 2px solid var(--line); border-radius: 10px; background: var(--panel);
-    padding: 9px; box-shadow: 0 0 16px rgba(79,201,255,.12);
-  }
-  .bot .face { width: 66px; height: 66px; flex: none; border: 2px solid var(--amber); border-radius: 8px; background: var(--panel-2); padding: 3px; position: relative; overflow: hidden; }
-  .scanbar {
-    position: absolute; top: 0; bottom: 0; width: 12px; left: 8%;
-    background: linear-gradient(180deg, transparent, var(--orange) 45%, var(--orange) 55%, transparent);
-    filter: blur(1px); box-shadow: 0 0 10px 2px var(--orange); opacity: .85;
-    animation: scanSweep 1.6s ease-in-out infinite; pointer-events: none;
-  }
-  @keyframes scanSweep { 0%, 100% { left: 6%; } 50% { left: 80%; } }
-  .bot .who { font-size: 10px; color: var(--amber); letter-spacing: .06em; margin-bottom: 2px; display:flex; justify-content:space-between; }
-  .bot .who .mood { color: var(--dim); }
-  .bot .says { font-size: 12.5px; color: var(--amber-hi); min-height: 2.6em; }
-
-  .panel {
-    border: 3px solid var(--line); border-radius: 14px; background: var(--panel);
-    padding: 14px; position: relative; overflow: hidden;
-    box-shadow: 5px 6px 0 rgba(0,0,0,.55);
-  }
-  .panel.stage { transform: rotate(-0.7deg); }
-  .panel .kicker { font-size: 10.5px; color: var(--dim); margin-bottom: 8px; letter-spacing: .05em; }
-  .prose { color: var(--paper); font-size: 14.5px; }
-  .code {
-    background: #0d0a05; border: 1px solid var(--line-dim); border-radius: 6px;
-    padding: 10px 12px; margin-top: 8px; font-size: 13px; color: var(--amber-hi);
-    white-space: pre-wrap; overflow-x: auto; text-align: left;
-  }
-  .quotepair { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-  .quotepair .qcard { text-align: left; }
-  .quotepair .qcard .qlabel { font-size: 10px; color: var(--dim); letter-spacing: .04em; margin-bottom: 3px; }
-
-  button {
-    font: inherit; color: inherit; background: none; border: none; cursor: pointer;
-    -webkit-appearance: none; appearance: none; touch-action: manipulation;
-  }
-  .btn {
-    width: 100%; border-radius: 12px; padding: 13px 10px; font-weight: 700;
-    border: 3px solid var(--line); background: var(--panel-2); color: var(--amber-hi);
-    transition: transform .06s ease, box-shadow .06s ease;
-    box-shadow: 0 5px 0 rgba(0,0,0,.5);
-    min-height: 44px;
-  }
-  .btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,.5); }
-  .btn.primary { background: var(--amber); border-color: var(--amber); color: #04101c; font-size: 15px; box-shadow: 0 0 18px rgba(79,201,255,.3); }
-  .btn.go    { background: var(--go-deep); border-color: var(--go); color: var(--go); }
-  .btn.halt  { background: var(--halt-deep); border-color: var(--halt); color: var(--halt); }
-  .btn small { display: block; font-weight: 400; font-size: 10px; color: inherit; opacity: .75; margin-top: 2px; }
-  .btn:disabled { opacity: .45; cursor: default; }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .grid6 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .grid6 .btn { font-size: 11.5px; padding: 10px 6px; }
-  .stack { display: flex; flex-direction: column; gap: 9px; }
-
-  .verdict {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    text-align: center; padding: 14px; font-size: 13px; font-weight: 700; z-index: 5;
-    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); overflow-y: auto;
-  }
-  .verdict.ok  { background: rgba(12,42,26,.94); color: var(--go); }
-  .verdict.bad { background: rgba(58,16,10,.94); color: var(--halt); }
-  .verdict .mark { font-size: 30px; display: block; margin-bottom: 6px; }
-
-  .float {
-    position: fixed; top: 64px; left: 50%; transform: translateX(-50%); z-index: 95;
-    background: var(--panel); border: 1px solid var(--amber); color: var(--amber);
-    border-radius: 999px; padding: 4px 14px; font-weight: 800; font-size: 15px;
-    box-shadow: 0 0 22px rgba(79,201,255,.55);
-    animation: rise .9s cubic-bezier(.2,.9,.25,1) forwards; pointer-events: none;
-  }
-  @keyframes rise {
-    0%   { opacity: 0; transform: translate(-50%, 4px) rotate(-4deg) scale(.7); }
-    14%  { opacity: 1; transform: translate(-50%, -4px) rotate(3deg) scale(1.4); }
-    26%  { transform: translate(-50%, -2px) rotate(-1.5deg) scale(1.05); }
-    40%  { transform: translate(-50%, -6px) rotate(0deg) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -30px) rotate(0deg) scale(1); }
-  }
-  .chipnum { color: var(--chips); font-family: 'VT323', ui-monospace, monospace; font-weight: 400; font-size: 1.2em; }
-  .multnum { color: var(--mult); font-family: 'VT323', ui-monospace, monospace; font-weight: 400; font-size: 1.2em; }
-  .cash-big { font-family: 'VT323', ui-monospace, monospace; font-size: 40px; font-weight: 400; line-height: 1.1;
-    text-shadow: 3px 3px 0 rgba(0,0,0,.6); }
-
-  .drill-card { text-align: left; border: 1px solid var(--line-dim); background: var(--panel); border-radius: 10px; padding: 11px 12px; width: 100%; }
-  .drill-card:active { border-color: var(--amber); }
-  .drill-card .tag { font-size: 10.5px; color: var(--amber); }
-  .drill-card h3 { font-size: 14px; color: var(--paper); margin: 2px 0; }
-  .drill-card p { font-size: 11.5px; color: var(--dim); }
-
-  h1.title { font-family: 'VT323', ui-monospace, monospace; font-size: 30px; letter-spacing: .01em; line-height: 1.15; color: var(--paper); }
-  h1.title .glow { color: var(--amber); text-shadow: 0 0 14px rgba(79,201,255,.5); }
-  .sub { font-size: 12.5px; color: var(--dim); margin-top: 8px; }
-
-  .tags { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 12px; }
-  .tagpill { border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; font-size: 10px; color: var(--dim); letter-spacing: .04em; }
-
-  .lesson { border: 1px solid var(--line-dim); background: var(--panel-2); border-radius: 8px; padding: 9px 11px; font-size: 12px; color: var(--dim); text-align: left; }
-  .lesson b { color: var(--amber-hi); }
-
-  footer { text-align: center; font-size: 10px; color: #3f5f80; padding: 4px 0 8px; }
-  .spacer { flex: 1; }
-
-  /* ---------- power-on boot flash + entrance choreography ---------- */
-  #boot-flash {
-    position: fixed; inset: 0; z-index: 200; pointer-events: none;
-    background: var(--amber);
-    animation: crtWarm 820ms linear forwards;
-  }
-  @keyframes crtWarm {
-    0%   { clip-path: inset(49.9% 0 49.9% 0); background: var(--amber); opacity: 1; }
-    9%   { clip-path: inset(48% 0 48% 0); background: var(--amber); opacity: 1; }
-    18%  { clip-path: inset(0 0 0 0); background: var(--amber); opacity: 1; }
-    34%  { clip-path: inset(0 0 0 0); background: var(--ink); opacity: 1; }
-    100% { clip-path: inset(0 0 0 0); background: var(--ink); opacity: 0; }
-  }
-  #app { animation: appIn .5s .34s cubic-bezier(.2,.8,.3,1) both; }
-  @keyframes appIn { from { opacity: 0; transform: translateY(6px) scale(.985); } to { opacity: 1; transform: none; } }
-
-  @keyframes matIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  .bar, .bot, .panel { animation: matIn 200ms ease-out both; }
-  /* .panel.stage carries a static tilt (see above); it needs its own entrance
-     keyframe that settles into that tilt instead of transform:none, and its
-     own higher-specificity rule so it wins over the generic .panel one. */
-  @keyframes matInStage { from { opacity: 0; transform: translateY(4px) rotate(-0.7deg); } to { opacity: 1; transform: rotate(-0.7deg); } }
-  .panel.stage { animation: matInStage 200ms ease-out both; }
-
-  .panel.stage.shake { animation: shakeIt 420ms both; }
-  @keyframes shakeIt {
-    10%,90%     { transform: translateX(-1px) rotate(-0.7deg); }
-    20%,80%     { transform: translateX(2px) rotate(-0.7deg); }
-    30%,50%,70% { transform: translateX(-4px) rotate(-0.7deg); }
-    40%,60%     { transform: translateX(4px) rotate(-0.7deg); }
-    0%,100%     { transform: rotate(-0.7deg); }
-  }
-  .panel.stage.good { animation: glowPulse 550ms ease-out; }
-  @keyframes glowPulse {
-    0%   { box-shadow: 5px 6px 0 rgba(0,0,0,.55), 0 0 0 rgba(91,224,138,0); }
-    35%  { box-shadow: 5px 6px 0 rgba(0,0,0,.55), 0 0 26px rgba(91,224,138,.55); }
-    100% { box-shadow: 5px 6px 0 rgba(0,0,0,.55), 0 0 0 rgba(91,224,138,0); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .float { animation: none; opacity: 0; }
-    .btn:active { transform: none; }
-    body::before { animation: none; }
-    .panel.stage { transform: none; }
-    #boot-flash { display: none; }
-    #app { animation: none; }
-    .bar, .bot, .panel { animation: none; }
-    .panel.stage, .panel.stage.shake, .panel.stage.good { animation: none; }
-    .scanbar { display: none; }
-  }
+h1{font-size:1.5rem;margin:0 0 4px}
+h2{font-size:1.15rem;margin:0 0 10px}
+.sub{color:var(--dim);margin:0 0 18px}
+.card{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:16px 18px;margin:0 0 14px}
+.prompt{background:var(--panel2);border-left:4px solid var(--accent);padding:14px 16px;border-radius:0 8px 8px 0;margin:0 0 6px}
+.src{font-family:var(--mono);font-size:.76rem;color:var(--dim);margin:0 0 14px}
+.quotes{display:grid;gap:10px;margin:0 0 14px}
+.quotes div{background:var(--panel2);border:1px solid var(--edge);border-radius:8px;padding:10px 12px;font-size:.92rem}
+.quotes b{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.opts{display:grid;gap:8px}
+button.opt{text-align:left;background:var(--panel2);color:var(--ink);border:1px solid var(--edge);
+  border-radius:8px;padding:12px 14px;font:inherit;cursor:pointer;min-height:44px}
+button.opt:hover{border-color:var(--accent)}
+button.opt[disabled]{cursor:default;opacity:.75}
+button.opt[data-state="right"]{border-color:var(--good);background:#10251a}
+button.opt[data-state="chosen-wrong"]{border-color:var(--bad);background:#2a1416}
+.fb{margin:14px 0 0;padding:14px 16px;border-radius:8px;background:var(--panel2);border-left:4px solid var(--dim)}
+.fb[data-w="correct"]{border-left-color:var(--good)}
+.fb[data-w="wrong"]{border-left-color:var(--bad)}
+.verdict{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.btn{background:var(--accent);color:#04222e;border:0;border-radius:8px;padding:11px 18px;font:inherit;
+  font-weight:600;cursor:pointer;min-height:44px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--edge)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.stations{display:grid;gap:10px}
+button.station{text-align:left;background:var(--panel);border:1px solid var(--edge);border-radius:10px;
+  padding:14px 16px;color:var(--ink);font:inherit;cursor:pointer}
+button.station:hover{border-color:var(--accent)}
+button.station .nm{font-weight:600;display:block}
+button.station .bl{color:var(--dim);font-size:.9rem;display:block;margin-top:2px}
+button.station .st{font-family:var(--mono);font-size:.72rem;color:var(--dim);display:block;margin-top:8px}
+/* --- the case file: the run compounds into something you keep --- */
+.case{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:14px 16px;margin-top:18px}
+.case h3{margin:0 0 8px;font-size:.78rem;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.case ol{margin:0;padding-left:20px}
+.case li{margin:0 0 6px;font-size:.92rem}
+.case li[data-w="wrong"]{color:var(--dim)}
+textarea{width:100%;min-height:220px;background:#0b1220;color:var(--ink);border:1px solid var(--edge);
+  border-radius:8px;padding:12px;font-family:var(--mono);font-size:.84rem;line-height:1.5}
+table{width:100%;border-collapse:collapse;margin:0 0 8px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--edge);font-size:.92rem}
+th{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:400}
+.foot{color:var(--dim);font-size:.8rem;margin-top:22px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<div id="app"></div>
-<div id="boot-flash"></div>
-
+<main id="app"></main>
+<p class="sr" id="live" role="status" aria-live="polite"></p>
 <script>
-"use strict";
+const b = s => btoa(unescape(encodeURIComponent(s)));
+const u = s => decodeURIComponent(escape(atob(s)));
 
-/* iOS Safari only evaluates :active styles on elements below an ancestor
-   that has a touch listener attached. This dummy listener is the standard
-   fix so button press-states (and :active in general) work on iPhone. */
-document.addEventListener("touchstart", function () {}, { passive: true });
-
-const reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-/* the power-on flash is a one-shot CSS animation on a static element;
-   once it finishes (or immediately, under reduced motion) it's removed
-   so it can't sit in the way of taps. */
-(function bootFlashCleanup() {
-  const el = document.getElementById("boot-flash");
-  if (!el) return;
-  if (reduceMotion) { el.remove(); return; }
-  el.addEventListener("animationend", () => el.remove(), { once: true });
-  setTimeout(() => el.remove(), 1500); // fallback if animationend never fires
-})();
-
-/* =====================================================================
-   FIELD ANALYST ARCADE — a short bridge between the Guided Analysis
-   quizzes/exit tickets and the Case File assignment ("DataMan from the
-   Analyst's Seat", Number Guesser). Four stations, one habit each, all
-   pulled from lesson 1.5's four-step reading process and the case-file
-   rubric:
-     SIGNAL    -> sort real DataMan lines into the right analyst category
-     VERDICT   -> observation vs. assumption (the professional rule)
-     EVIDENCE  -> what counts as a citation, and what's a fake unknown
-     REGISTER  -> Part I vs Part II — the manual disagrees with itself
-   Every card is drawn from Answer Checker, Memory Bank, Electro Flash,
-   Wipe Out, Force Out, and Missing Number "Box" Problems — never Number
-   Guesser. That feature stays untouched for the solo case file.
-   No dependencies. Works offline. Open this file in any browser.
-   ===================================================================== */
-
-/* ---------------- audio: small synthesized square-wave kit ---------- */
-const AudioKit = {
-  ctx: null, muted: false,
-  init() {
-    if (!this.ctx) {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (AC) this.ctx = new AC();
-    }
-    if (this.ctx && this.ctx.state === "suspended") this.ctx.resume();
-  },
-  tone(freq, type, dur, gainVal) {
-    if (this.muted) return;
-    try {
-      this.init(); if (!this.ctx) return;
-      const o = this.ctx.createOscillator(), g = this.ctx.createGain();
-      o.type = type; o.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      g.gain.setValueAtTime(gainVal, this.ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + dur);
-      o.connect(g); g.connect(this.ctx.destination);
-      o.start(); o.stop(this.ctx.currentTime + dur);
-    } catch (e) { /* audio is optional */ }
-  },
-  correct() { this.tone(587, "triangle", .07, .14); setTimeout(() => this.tone(880, "triangle", .12, .16), 65); },
-  wrong()   { this.tone(150, "sawtooth", .12, .2);  setTimeout(() => this.tone(105, "sawtooth", .2, .22), 90); },
-  combo()   { [440,554,659,880,1109].forEach((f,i)=>setTimeout(()=>this.tone(f,"square",.07,.14), i*45)); },
-  click()   { this.tone(520, "square", .02, .05); },
-  fanfare() { [523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>this.tone(f,"square",.16,.18), i*80)); }
-};
-
-function buzz(pattern) {
-  if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} }
-}
-
-/* ---------------- drill content ------------------------------------- */
-
-const CATEGORIES = ["PURPOSE", "USERS & ROLES", "INPUTS", "PROCESSING", "OUTPUTS", "FEEDBACK"];
-
-/* SIGNAL: a real line from the manual. Which analyst category is it evidence of? */
-const SIGNAL = [
-  { text: "DataMan™ was designed with the help of educators to help provide fun, drill and practice with numbers.",
-    section: "The Story of DataMan (Narrative)", ans: 0,
-    why: "This is a claim about why the product exists, not about what happens when you press a key. That's Purpose — keep it out of Processing." },
-  { text: "You, one of your friends, or Mom or Dad can put up to ten problems in my memory bank.",
-    section: "Memory Bank (Story)", ans: 1,
-    why: "Two roles are named without ever using the word \"role\": the person loading problems (friend, Mom, or Dad) and the person solving them later are not the same job." },
-  { text: "DataMan will only accept problems with one or two digit numbers. Answers can be one, two, or three digits.",
-    section: "Answer Checker (Operating Notes)", ans: 2,
-    why: "A limit on what the system will accept before it does anything with it — an Input constraint." },
-  { text: "DataMan is not built to handle negative numbers and will not accept subtraction problems that would result in a negative answer.",
-    section: "Answer Checker (Operating Notes)", ans: 3,
-    why: "This is a rule the system applies to what you enter, not the entering itself — that's Processing." },
-  { text: "After 10 problems, two numbers are displayed: 8   10 — Number of right answers · Number of problems tried.",
-    section: "Answer Checker (Operating Notes)", ans: 4,
-    why: "Information the system hands back to the user at the end of a run — an Output." },
-  { text: "If the answer is right, DataMan will flash his display. If the answer is wrong, EEE is displayed, followed by a random blinking pattern.",
-    section: "Answer Checker (Operating Notes)", ans: 5,
-    why: "Not the score itself — this is how the system reacts to each try, right then. That reaction is Feedback." },
-  { text: "The other team presses my ON key, and my Electro Flash key, and selects a math table for you to practice. You then press GO, and solve the problems I pop up.",
-    section: "Space Ball (continued) · Game Board", ans: 1,
-    why: "One role picks the table and sets up the turn; a different role — the batter — solves it. Same device, two jobs." },
-  { text: "DataMan measures time in \"ticks of his Atom Clock.\" The actual speed of his clock may vary depending on how fresh the battery is, room temperature, etc.",
-    section: "Memory Bank (Operating Notes) · DataMan's Timer", ans: 3,
-    why: "A rule about how the system's own internal measurement behaves, not what it displays — that's Processing, not Output." }
+const STATIONS = [
+  {id:"signal", name:"Sort the Signal", ask:"Which analyst category is this line evidence of?", blurb:"Every line in a manual is evidence of something. Naming which kind is the first move.", optionSet:["PURPOSE","USERS & ROLES","INPUTS","PROCESSING","OUTPUTS","FEEDBACK"]},
+  {id:"verdict", name:"Observation or Assumption", ask:"Can you point at the sentence, or are you adding it?", blurb:"An observation can be quoted. An assumption cannot. The difference is the job.", optionSet:["Observation","Assumption"]},
+  {id:"evidence", name:"Check the Citation", ask:"Would this hold up in your case file?", blurb:"A quote without its source is not evidence. Neither is a paraphrase.", optionSet:["Counts as evidence","Not evidence"]},
+  {id:"register", name:"Catch the Contradiction", ask:"The two registers disagree. What is the strongest finding?", blurb:"The Story and the Operating Notes do not always agree. Silence in one is not silence in the manual."}
 ];
 
-/* VERDICT: observation (evidence exists) or assumption (it doesn't)? */
-const VERDICT = [
-  { s: "DataMan has a key labeled MEMORY BANK.", ans: "OBS",
-    why: "Directly stated: \"You enter and store problems with the [MEMORY BANK] key.\" — Memory Bank (Operating Notes) · DataMan's Timer. You can point right at the sentence." },
-  { s: "Kids like Electro Flash better than Answer Checker.", ans: "ASM",
-    why: "The manual never compares the two activities by preference. There's nothing to point to — this is a guess dressed as a fact." },
-  { s: "After ten problems, Answer Checker shows a score.", ans: "OBS",
-    why: "\"After you try ten problems, I'll put your score in lights with two numbers like this: 9   10\" — Please Try Me Out · Score · Division · Turning Off." },
-  { s: "Playing Electro Flash makes children faster at math facts than any other method.", ans: "ASM",
-    why: "The manual claims Electro Flash players get \"lightning fast\" — but it never compares that result to any other method. That comparison is something you'd be adding, not reporting." },
-  { s: "Force Out will not accept 0 as a move.", ans: "OBS",
-    why: "Stated in DataMan's own voice: \"I won't let you put in a zero!\" — Force Out (Story)." },
-  { s: "The Wipe Out timer runs the same length every game.", ans: "ASM",
-    why: "The opposite is built in on purpose: the cutoff is \"selected at random by DataMan... and is known only to him.\" Treat a claim of sameness here as unsupported." },
-  { s: "DataMan's Timer counts in seconds.", ans: "ASM",
-    why: "The manual names a specific, different unit — \"ticks\" of the Atom Clock — and says its real-world speed varies. Swapping in \"seconds\" is a small, easy-to-miss assumption." },
-  { s: "TI recommends a 9-volt alkaline battery for DataMan.", ans: "OBS",
-    why: "Stated directly, word for word: \"A standard 9-volt alkaline battery is recommended for maximum DataMan operating time.\" — Appendix." }
+const ITEMS = [
+  {id:"s01", station:"signal", prompt:"DataMan™ was designed with the help of educators to help provide fun, drill and practice with numbers.", answer:b("PURPOSE"), why:"This is a claim about why the product exists, not about what happens when you press a key. That's Purpose — keep it out of Processing.", source:"The Story of DataMan (Narrative)"},
+  {id:"s02", station:"signal", prompt:"You, one of your friends, or Mom or Dad can put up to ten problems in my memory bank.", answer:b("USERS & ROLES"), why:"Two roles are named without ever using the word \"role\": the person loading problems (friend, Mom, or Dad) and the person solving them later are not the same job.", source:"Memory Bank (Story)"},
+  {id:"s03", station:"signal", prompt:"DataMan will only accept problems with one or two digit numbers. Answers can be one, two, or three digits.", answer:b("INPUTS"), why:"A limit on what the system will accept before it does anything with it — an Input constraint.", source:"Answer Checker (Operating Notes)"},
+  {id:"s04", station:"signal", prompt:"DataMan is not built to handle negative numbers and will not accept subtraction problems that would result in a negative answer.", answer:b("PROCESSING"), why:"This is a rule the system applies to what you enter, not the entering itself — that's Processing.", source:"Answer Checker (Operating Notes)"},
+  {id:"s05", station:"signal", prompt:"After 10 problems, two numbers are displayed: 8   10 — Number of right answers · Number of problems tried.", answer:b("OUTPUTS"), why:"Information the system hands back to the user at the end of a run — an Output.", source:"Answer Checker (Operating Notes)"},
+  {id:"s06", station:"signal", prompt:"If the answer is right, DataMan will flash his display. If the answer is wrong, EEE is displayed, followed by a random blinking pattern.", answer:b("FEEDBACK"), why:"Not the score itself — this is how the system reacts to each try, right then. That reaction is Feedback.", source:"Answer Checker (Operating Notes)"},
+  {id:"s07", station:"signal", prompt:"The other team presses my ON key, and my Electro Flash key, and selects a math table for you to practice. You then press GO, and solve the problems I pop up.", answer:b("USERS & ROLES"), why:"One role picks the table and sets up the turn; a different role — the batter — solves it. Same device, two jobs.", source:"Space Ball (continued) · Game Board"},
+  {id:"s08", station:"signal", prompt:"DataMan measures time in \"ticks of his Atom Clock.\" The actual speed of his clock may vary depending on how fresh the battery is, room temperature, etc.", answer:b("PROCESSING"), why:"A rule about how the system's own internal measurement behaves, not what it displays — that's Processing, not Output.", source:"Memory Bank (Operating Notes) · DataMan's Timer"},
+  {id:"v01", station:"verdict", prompt:"DataMan has a key labeled MEMORY BANK.", answer:b("Observation"), why:"Directly stated: \"You enter and store problems with the [MEMORY BANK] key.\" — Memory Bank (Operating Notes) · DataMan's Timer. You can point right at the sentence."},
+  {id:"v02", station:"verdict", prompt:"Kids like Electro Flash better than Answer Checker.", answer:b("Assumption"), why:"The manual never compares the two activities by preference. There's nothing to point to — this is a guess dressed as a fact."},
+  {id:"v03", station:"verdict", prompt:"After ten problems, Answer Checker shows a score.", answer:b("Observation"), why:"\"After you try ten problems, I'll put your score in lights with two numbers like this: 9   10\" — Please Try Me Out · Score · Division · Turning Off."},
+  {id:"v04", station:"verdict", prompt:"Playing Electro Flash makes children faster at math facts than any other method.", answer:b("Assumption"), why:"The manual claims Electro Flash players get \"lightning fast\" — but it never compares that result to any other method. That comparison is something you'd be adding, not reporting."},
+  {id:"v05", station:"verdict", prompt:"Force Out will not accept 0 as a move.", answer:b("Observation"), why:"Stated in DataMan's own voice: \"I won't let you put in a zero!\" — Force Out (Story)."},
+  {id:"v06", station:"verdict", prompt:"The Wipe Out timer runs the same length every game.", answer:b("Assumption"), why:"The opposite is built in on purpose: the cutoff is \"selected at random by DataMan... and is known only to him.\" Treat a claim of sameness here as unsupported."},
+  {id:"v07", station:"verdict", prompt:"DataMan's Timer counts in seconds.", answer:b("Assumption"), why:"The manual names a specific, different unit — \"ticks\" of the Atom Clock — and says its real-world speed varies. Swapping in \"seconds\" is a small, easy-to-miss assumption."},
+  {id:"v08", station:"verdict", prompt:"TI recommends a 9-volt alkaline battery for DataMan.", answer:b("Observation"), why:"Stated directly, word for word: \"A standard 9-volt alkaline battery is recommended for maximum DataMan operating time.\" — Appendix."},
+  {id:"e01", station:"evidence", prompt:"Case file entry — quote: \"DataMan keeps score.\" Cited as: page 20.", answer:b("Not evidence"), why:"The section heading is the citation, not the page. This manual has two page-numbering systems that disagree — write \"Answer Checker (Operating Notes)\" instead."},
+  {id:"e02", station:"evidence", prompt:"Case file entry — quote: \"After 10 problems, two numbers are displayed: 8   10.\" Cited as: Answer Checker (Operating Notes).", answer:b("Counts as evidence"), why:"Exact quoted phrase, plus the section heading by name. That's what evidence looks like."},
+  {id:"e03", station:"evidence", prompt:"Case file entry: \"The Memory Bank lets more than one person load problems.\" No exact phrase quoted.", answer:b("Not evidence"), why:"A fair reading — but it's a paraphrase. Quote it: \"You, one of your friends, or Mom or Dad can put up to ten problems in my memory bank.\""},
+  {id:"e04", station:"evidence", prompt:"Case file entry — quote: \"I won't let you put in a zero!\" Cited as: Force Out (Story).", answer:b("Counts as evidence"), why:"Exact wording, named section. Counts."},
+  {id:"e05", station:"evidence", prompt:"Open question logged: \"What happens after two wrong tries in Answer Checker?\"", answer:b("Not evidence"), why:"Answered directly: \"If after two tries the answer entered is still wrong, DataMan will display the problem with the correct result.\" — Answer Checker (Operating Notes). Check before you log it."},
+  {id:"e06", station:"evidence", prompt:"Open question logged: \"How many ticks of the Atom Clock equal one real second?\"", answer:b("Counts as evidence"), why:"Genuinely open. The manual only says the clock's \"actual speed... may vary depending on how fresh the battery is, room temperature, etc.\" — no fixed conversion is ever given."},
+  {id:"e07", station:"evidence", prompt:"Open question logged: \"Does Wipe Out reveal the answer after two misses?\" — checked Operating Notes only, which is silent.", answer:b("Not evidence"), why:"Operating Notes are silent, but the Story is not: \"If you miss the problem twice, I'll answer the problem for you.\" — Wipe Out (Story). A silence in one register is not a silence in the manual — check both before you log an Unknown."},
+  {id:"e08", station:"evidence", prompt:"Open question logged: \"What brand of 9-volt battery works best, beyond alkaline?\"", answer:b("Counts as evidence"), why:"The Appendix names the battery type (alkaline) and nothing more specific. Genuinely unanswered."},
+  {id:"r01", station:"register", prompt:"What's the strongest finding here?", answer:b("The two registers disagree on direction, and the Story's own worked examples actually follow the Operating Notes' order — even the Story contradicts itself"), why:"The Story's prose says left-to-right; the Story's own examples move right → left → middle, matching Operating Notes exactly. The real finding isn't \"left to right\" — it's that the prose and the examples in the same section disagree.", source:"Missing Number \"Box\" Problems (Story) vs Missing Number (Box) Problems (Operating Notes)", options:["Trust the Story's prose — it's simpler","The two registers disagree on direction, and the Story's own worked examples actually follow the Operating Notes' order — even the Story contradicts itself","This is unimportant and can be skipped"], left:"Missing Number \"Box\" Problems (Story)", right:"Missing Number (Box) Problems (Operating Notes)", quote1:"Keep pressing the key until the box stops where you want to put your answer in the problem... 4 × 3 = [?]  or  [?] × 3 = 12  or  4 × [?] = 12", quote2:"The box [ ] appears at the right side of the problem... Pressing [?] again moves the box to the left side... Pressing [?] once more moves the box to the middle."},
+  {id:"r02", station:"register", prompt:"What's the safest finding to record?", answer:b("The starting number varies between examples, and Operating Notes confirms it changes \"a different one each time\""), why:"Two different worked numbers plus an explicit statement that it changes — record the rule, not either example number.", source:"Force Out (Story) vs Wipe Out (continued) · Force Out · Missing Number (Operating Notes)", options:["The starting number is always 37","The starting number is always 63","The starting number varies between examples, and Operating Notes confirms it changes \"a different one each time\""], left:"Force Out (Story)", right:"Wipe Out (continued) · Force Out · Missing Number (Operating Notes)", quote1:"I'll pick a number to start the game and show it to you like this: 37 − [ ] =", quote2:"DataMan will display a number (a different one each time) like this: 63 − [ ] ="},
+  {id:"r03", station:"register", prompt:"Operating Notes never say what happens after two misses. What goes in the case file?", answer:b("Record the finding anyway, citing Wipe Out (Story) — and note in Section 9 that Operating Notes are silent on this point"), why:"Part I answers this even though Part II doesn't. Use the register that has the evidence, and put the disagreement itself in the Cross-Register Note.", source:"Wipe Out (Story) vs Wipe Out (Operating Notes)", options:["Log it as an Unknown, since Operating Notes never confirm it","Record the finding anyway, citing Wipe Out (Story) — and note in Section 9 that Operating Notes are silent on this point","Leave it out of the case file entirely"], left:"Wipe Out (Story)", right:"Wipe Out (Operating Notes)", quote1:"If you miss the problem twice, I'll answer the problem for you."},
+  {id:"r04", station:"register", prompt:"The Story never mentions these limits at all. What does that mean for an analyst?", answer:b("A real content gap: a reader of only Part I would build an incomplete picture of what Answer Checker actually accepts"), why:"Neither register is complete on its own. This is exactly why Section 9 asks for a cross-register note, not just a two-column comparison.", source:"Answer Checker (Story) / Please Try Me Out vs Answer Checker (Operating Notes)", options:["The limits must not really exist, since the Story would mention anything important","A real content gap: a reader of only Part I would build an incomplete picture of what Answer Checker actually accepts","It's a manual error — delete the Operating Notes rule"], left:"Answer Checker (Story) / Please Try Me Out", right:"Answer Checker (Operating Notes)", quote2:"DataMan will only accept problems with one or two digit numbers... will not accept subtraction problems that would result in a negative answer."},
+  {id:"r05", station:"register", prompt:"If your assigned feature were one of these six games, what would Section 9 say?", answer:b("Part I is your only source, and the Cross-Register Note records that Operating Notes are silent on the feature entirely"), why:"A one-sided feature is still a finding worth naming — silence itself is evidence of how this manual is organized.", source:"Starmath Race · Orbit Math! · First Out! · Space Ball! · Astro Race · Antimath Maze vs Operating Notes", options:["Skip Section 9 — there's nothing to compare","Part I is your only source, and the Cross-Register Note records that Operating Notes are silent on the feature entirely","Write your own Operating Notes rules to fill the gap"], left:"Starmath Race · Orbit Math! · First Out! · Space Ball! · Astro Race · Antimath Maze", right:"Operating Notes", quote1:"Six named games, each with its own Story section."}
 ];
 
-/* EVIDENCE: does this count as a citation? and is this unknown genuine? */
-const EVIDENCE = [
-  { kind: "cite", text: "Case file entry — quote: \"DataMan keeps score.\" Cited as: page 20.",
-    optA: { label: "Counts as evidence" }, optB: { label: "Not evidence" }, ans: "B",
-    why: "The section heading is the citation, not the page. This manual has two page-numbering systems that disagree — write \"Answer Checker (Operating Notes)\" instead." },
-  { kind: "cite", text: "Case file entry — quote: \"After 10 problems, two numbers are displayed: 8   10.\" Cited as: Answer Checker (Operating Notes).",
-    optA: { label: "Counts as evidence" }, optB: { label: "Not evidence" }, ans: "A",
-    why: "Exact quoted phrase, plus the section heading by name. That's what evidence looks like." },
-  { kind: "cite", text: "Case file entry: \"The Memory Bank lets more than one person load problems.\" No exact phrase quoted.",
-    optA: { label: "Counts as evidence" }, optB: { label: "Not evidence" }, ans: "B",
-    why: "A fair reading — but it's a paraphrase. Quote it: \"You, one of your friends, or Mom or Dad can put up to ten problems in my memory bank.\"" },
-  { kind: "cite", text: "Case file entry — quote: \"I won't let you put in a zero!\" Cited as: Force Out (Story).",
-    optA: { label: "Counts as evidence" }, optB: { label: "Not evidence" }, ans: "A",
-    why: "Exact wording, named section. Counts." },
-  { kind: "unknown", text: "Open question logged: \"What happens after two wrong tries in Answer Checker?\"",
-    optA: { label: "Genuine unknown" }, optB: { label: "Manual answers this" }, ans: "B",
-    why: "Answered directly: \"If after two tries the answer entered is still wrong, DataMan will display the problem with the correct result.\" — Answer Checker (Operating Notes). Check before you log it." },
-  { kind: "unknown", text: "Open question logged: \"How many ticks of the Atom Clock equal one real second?\"",
-    optA: { label: "Genuine unknown" }, optB: { label: "Manual answers this" }, ans: "A",
-    why: "Genuinely open. The manual only says the clock's \"actual speed... may vary depending on how fresh the battery is, room temperature, etc.\" — no fixed conversion is ever given." },
-  { kind: "unknown", text: "Open question logged: \"Does Wipe Out reveal the answer after two misses?\" — checked Operating Notes only, which is silent.",
-    optA: { label: "Genuine unknown" }, optB: { label: "Manual answers this" }, ans: "B",
-    why: "Operating Notes are silent, but the Story is not: \"If you miss the problem twice, I'll answer the problem for you.\" — Wipe Out (Story). A silence in one register is not a silence in the manual — check both before you log an Unknown." },
-  { kind: "unknown", text: "Open question logged: \"What brand of 9-volt battery works best, beyond alkaline?\"",
-    optA: { label: "Genuine unknown" }, optB: { label: "Manual answers this" }, ans: "A",
-    why: "The Appendix names the battery type (alkaline) and nothing more specific. Genuinely unanswered." }
-];
-
-/* REGISTER: Part I vs Part II — the manual disagrees with, or is silent against, itself. */
-const REGISTER = [
-  { left: "Missing Number \"Box\" Problems (Story)",
-    quote1: "Keep pressing the key until the box stops where you want to put your answer in the problem... 4 × 3 = [?]  or  [?] × 3 = 12  or  4 × [?] = 12",
-    right: "Missing Number (Box) Problems (Operating Notes)",
-    quote2: "The box [ ] appears at the right side of the problem... Pressing [?] again moves the box to the left side... Pressing [?] once more moves the box to the middle.",
-    q: "What's the strongest finding here?",
-    opts: ["Trust the Story's prose — it's simpler",
-           "The two registers disagree on direction, and the Story's own worked examples actually follow the Operating Notes' order — even the Story contradicts itself",
-           "This is unimportant and can be skipped"],
-    ans: 1,
-    why: "The Story's prose says left-to-right; the Story's own examples move right → left → middle, matching Operating Notes exactly. The real finding isn't \"left to right\" — it's that the prose and the examples in the same section disagree." },
-  { left: "Force Out (Story)", quote1: "I'll pick a number to start the game and show it to you like this: 37 − [ ] =",
-    right: "Wipe Out (continued) · Force Out · Missing Number (Operating Notes)", quote2: "DataMan will display a number (a different one each time) like this: 63 − [ ] =",
-    q: "What's the safest finding to record?",
-    opts: ["The starting number is always 37", "The starting number is always 63",
-           "The starting number varies between examples, and Operating Notes confirms it changes \"a different one each time\""],
-    ans: 2,
-    why: "Two different worked numbers plus an explicit statement that it changes — record the rule, not either example number." },
-  { left: "Wipe Out (Story)", quote1: "If you miss the problem twice, I'll answer the problem for you.",
-    right: "Wipe Out (Operating Notes)", quote2: null,
-    q: "Operating Notes never say what happens after two misses. What goes in the case file?",
-    opts: ["Log it as an Unknown, since Operating Notes never confirm it",
-           "Record the finding anyway, citing Wipe Out (Story) — and note in Section 9 that Operating Notes are silent on this point",
-           "Leave it out of the case file entirely"],
-    ans: 1,
-    why: "Part I answers this even though Part II doesn't. Use the register that has the evidence, and put the disagreement itself in the Cross-Register Note." },
-  { left: "Answer Checker (Story) / Please Try Me Out", quote1: null,
-    right: "Answer Checker (Operating Notes)", quote2: "DataMan will only accept problems with one or two digit numbers... will not accept subtraction problems that would result in a negative answer.",
-    q: "The Story never mentions these limits at all. What does that mean for an analyst?",
-    opts: ["The limits must not really exist, since the Story would mention anything important",
-           "A real content gap: a reader of only Part I would build an incomplete picture of what Answer Checker actually accepts",
-           "It's a manual error — delete the Operating Notes rule"],
-    ans: 1,
-    why: "Neither register is complete on its own. This is exactly why Section 9 asks for a cross-register note, not just a two-column comparison." },
-  { left: "Starmath Race · Orbit Math! · First Out! · Space Ball! · Astro Race · Antimath Maze",
-    quote1: "Six named games, each with its own Story section.",
-    right: "Operating Notes", quote2: null,
-    q: "If your assigned feature were one of these six games, what would Section 9 say?",
-    opts: ["Skip Section 9 — there's nothing to compare",
-           "Part I is your only source, and the Cross-Register Note records that Operating Notes are silent on the feature entirely",
-           "Write your own Operating Notes rules to fill the gap"],
-    ans: 1,
-    why: "A one-sided feature is still a finding worth naming — silence itself is evidence of how this manual is organized." }
-];
-
-/* BOOT: the prelude. Teaches the process; the shift tests it.
-   No lives, no timer — the prelude teaches; the shift keeps score. */
 const BOOT = [
-  { kind: "tell", title: "Two registers, one manual.",
-    text: "This manual documents DataMan twice. Part I is the Story — first person, illustrated, written for a child. Part II is the Operating Notes — third person, a reference for adults. Neither half is complete. Your case file, and every station ahead, has to draw from both." },
-  { kind: "ask", q: "Which of these counts as valid evidence for a case file finding?",
-    opts: ["A paraphrase you're confident is right", "An exact quoted phrase plus the section heading it came from", "A page number"],
-    ans: 1,
-    why: "Quote it exactly, and name the section it came from. This manual carries two page-numbering systems that disagree with each other — a page number will not survive a different copy of the scan." },
-  { kind: "tell", title: "Observation, not assumption.",
-    text: "The professional rule: if you cannot point to evidence that supports a conclusion, do not record it as a fact. Call it an assumption, or say more information is needed. Every station ahead runs on this one rule." },
-  { kind: "ask", q: "A feature's Story section never mentions a rule that its Operating Notes state plainly. Is that a manual-wide silence?",
-    opts: ["Yes — if one register is silent, log it as Unknown", "No — check the other register before deciding something is truly undetermined", "Doesn't matter, pick either"],
-    ans: 1,
-    why: "A silence in one register is not a silence in the manual. Read both before you write Section 8." },
-  { kind: "tell", title: "The four moves.",
-    text: "Observe: read without jumping to conclusions. Identify: find the evidence for Purpose, Users, Inputs, Processing, Outputs, Feedback. Verify: support every conclusion with a quote. Document: record only what you know, and name what you don't. That's the whole process — every station ahead is one of these moves." },
-  { kind: "tell", title: "Why Number Guesser isn't in this game.",
-    text: "Every station ahead pulls from Answer Checker, Memory Bank, Electro Flash, Wipe Out, Force Out, and Missing Number \"Box\" Problems — never Number Guesser. That feature is your solo case file. This game trains the moves. It doesn't hand you the findings." }
+  {title:"Two registers, one manual.", text:"This manual documents DataMan twice. Part I is the Story — first person, illustrated, written for a child. Part II is the Operating Notes — third person, a reference for adults. Neither half is complete. Your case file, and every station ahead, has to draw from both."},
+  {title:"", text:""},
+  {title:"Observation, not assumption.", text:"The professional rule: if you cannot point to evidence that supports a conclusion, do not record it as a fact. Call it an assumption, or say more information is needed. Every station ahead runs on this one rule."},
+  {title:"", text:""},
+  {title:"The four moves.", text:"Observe: read without jumping to conclusions. Identify: find the evidence for Purpose, Users, Inputs, Processing, Outputs, Feedback. Verify: support every conclusion with a quote. Document: record only what you know, and name what you don't. That's the whole process — every station ahead is one of these moves."},
+  {title:"Why Number Guesser isn't in this game.", text:"Every station ahead pulls from Answer Checker, Memory Bank, Electro Flash, Wipe Out, Force Out, and Missing Number \"Box\" Problems — never Number Guesser. That feature is your solo case file. This game trains the moves. It doesn't hand you the findings."}
 ];
-
-/* ---------------- drill metadata ------------------------------------ */
-const DRILLS = [
-  { key: "SIGNAL", name: "Sort the signal", tag: "Station 1 · which category is this?",
-    blurb: "Real DataMan lines. Which analyst category do they belong to?", pts: 120 },
-  { key: "VERDICT", name: "Observation or assumption", tag: "Station 2 · the professional rule",
-    blurb: "Can you point to the evidence, or are you guessing?", pts: 140 },
-  { key: "EVIDENCE", name: "Evidence check", tag: "Station 3 · quote it or lose it",
-    blurb: "Valid citations, paraphrase traps, and unknowns that aren't.", pts: 170 },
-  { key: "REGISTER", name: "Cross-register", tag: "Station 4 · Part I vs Part II",
-    blurb: "The manual disagrees with itself. Find the real finding.", pts: 200 }
-];
-
-const RANKS = [
-  { min: 12000, tier: "S-RANK", title: "Case Captain" },
-  { min: 6500,  tier: "A-RANK", title: "Senior Analyst" },
-  { min: 2500,  tier: "B-RANK", title: "Field Analyst" },
-  { min:    0,  tier: "RECRUIT", title: "Analyst Recruit" }
-];
-
-/* ---------------- state --------------------------------------------- */
-const S = {
-  screen: "TITLE",
-  mode: "SHIFT",
-  order: [], orderIdx: 0,
-  deck: [], card: null,
-  score: 0, streak: 0, chips: 0, mult: 1, best: 0, lives: 3, cash: null,
-  mood: "IDLE",
-  says: "DataMan online. Read with purpose, Earthling — I'll guard the case file with you.",
-  feedback: null,
-  died: false,
-  bootIdx: 0, bootDone: false, bootAnswered: false
+</script>
+<script>
+/* ---- store: cumulative only. runs and best accrue and never break. ---- */
+const KEY = "cts285.arcade.m1";
+const Store = {
+  read(){ try{ const r = localStorage.getItem(KEY); if(!r) return null;
+    const d = JSON.parse(r); return d && d.v === 2 ? d : null; }catch(e){ return null; } },
+  write(d){ try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){} },
+  clear(){ try{ localStorage.removeItem(KEY); }catch(e){} }
 };
+let mem = Store.read() || { v:2, stations:{} };
+const save = () => Store.write(mem);
+const rec = id => (mem.stations[id] = mem.stations[id] || { runs:0, best:0 });
 
-/* ---------------- helpers ------------------------------------------- */
-const shuffle = (a) => [...a].sort(() => Math.random() - 0.5);
-const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const app  = document.getElementById("app");
+const live = document.getElementById("live");
+const say  = t => { live.textContent = ""; setTimeout(() => { live.textContent = t; }, 40); };
+const esc  = s => String(s == null ? "" : s).replace(/[&<>"]/g, c =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+const stationById = id => STATIONS.find(s => s.id === id);
+const itemsFor = id => ITEMS.filter(i => i.station === id);
+function shuffle(a){ const r = a.slice();
+  for(let i=r.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; }
+  return r; }
 
-function floatScore(txt) {
-  const el = document.createElement("div");
-  el.className = "float"; el.textContent = txt;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 850);
+const S = { screen:"title", station:null, queue:[], idx:0, answered:false,
+            results:[], bootIdx:0, bootAnswered:null, mood:"IDLE", says:"" };
+
+/* ---- the narrator. It reacts to the move you just made and says what the
+   move established. It never keeps score: the case file does that. ---- */
+const FACE = { IDLE:"◠◠", SCAN:"▚▚", HAPPY:"◡◡", SMUG:"◔◔", GLITCH:"✕✕", OVERCLOCK:"▲▲" };
+function narrate(mood, line){ S.mood = mood; S.says = line; }
+
+function dmBlock(){
+  return '<div class="dm" data-mood="' + esc(S.mood) + '">'
+    + '<div class="face" aria-hidden="true">' + (FACE[S.mood] || FACE.IDLE) + '</div>'
+    + '<div class="line"><p class="who">DataMan</p><p class="say">' + esc(S.says) + '</p></div></div>';
 }
 
-function success(basePts, msg) {
-  AudioKit.correct(); buzz([25, 35]);
-  S.streak += 1;
-  S.chips += basePts;
-  S.mult += 0.5;
-  floatScore("+" + basePts + " clues   x" + S.mult.toFixed(1));
-  S.mood = S.streak >= 4 ? "OVERCLOCK" : "HAPPY";
-  S.says = msg;
+/* ---- screens ---- */
+function screenTitle(){
+  narrate("IDLE", "Field Analyst online. Two registers, one manual, and a case file to keep.");
+  return dmBlock()
+    + '<h1>Field Analyst</h1>'
+    + '<p class="sub">CTS-285 Module 1 &middot; four stations, one habit each. '
+    + 'Nothing here is graded and nothing is submitted.</p>'
+    + '<div class="card"><p style="margin:0 0 10px">You read the 1977 DataMan manual the way an analyst '
+    + 'reads any system document: sort the signal, tell observation from assumption, check what you can '
+    + 'actually cite, and catch the manual disagreeing with itself.</p>'
+    + '<p style="margin:0;color:var(--dim)">No clock. No lives. No score to lose. Each answer adds a line '
+    + 'to your case file, and you leave with the case file.</p></div>'
+    + '<div class="row"><button class="btn" data-act="boot">Start the prelude</button>'
+    + '<button class="btn ghost" data-act="select">Skip to the stations</button></div>';
 }
 
-function failure(msg) {
-  AudioKit.wrong(); buzz([60, 50, 70]);
-  S.streak = 0;
-  S.mult = 1;
-  S.mood = "GLITCH"; S.says = msg;
-  S.lives -= 1;
-  if (S.lives <= 0) { S.died = true; setTimeout(() => endRun(), 700); }
-}
-
-function currentDrill() { return DRILLS.find(d => d.key === S.order[S.orderIdx]); }
-
-function dealDeck() {
-  const key = S.order[S.orderIdx];
-  const src = { SIGNAL, VERDICT, EVIDENCE, REGISTER }[key];
-  S.deck = shuffle(src);
-  S.card = S.deck[0];
-}
-
-function nextCard() {
-  S.feedback = null;
-  S.deck = S.deck.slice(1);
-  if (S.deck.length > 0) { S.card = S.deck[0]; render(); return; }
-  cashOut();
-}
-
-function cashOut() {
-  const won = Math.round(S.chips * S.mult);
-  S.cash = { chips: S.chips, mult: S.mult, won: won,
-             last: S.orderIdx >= S.order.length - 1 };
-  S.score += won;
-  if (S.score > S.best) S.best = S.score;
-  S.chips = 0; S.mult = 1;
-  AudioKit.fanfare();
-  S.mood = "SMUG";
-  S.says = "Station cleared. Bank it.";
-  S.screen = "CASHOUT";
-  render();
-}
-
-function cashContinue() {
-  AudioKit.click();
-  const last = S.cash && S.cash.last;
-  S.cash = null;
-  if (!last) {
-    S.orderIdx += 1; dealDeck();
-    AudioKit.combo();
-    S.mood = "OVERCLOCK";
-    S.says = "Next station: " + currentDrill().name + ". Fresh pot.";
-    S.screen = "PLAY";
-    render();
-  } else {
-    endRun();
-  }
-}
-
-function startRun(mode) {
-  AudioKit.init(); AudioKit.combo();
-  S.mode = mode;
-  S.order = mode === "SHIFT" ? DRILLS.map(d => d.key) : [mode];
-  S.orderIdx = 0;
-  S.score = 0; S.streak = 0; S.chips = 0; S.mult = 1; S.cash = null; S.lives = 3; S.died = false;
-  dealDeck();
-  S.mood = "SCAN"; S.says = "Shift open. First station: " + currentDrill().name + ".";
-  S.feedback = null;
-  S.screen = "PLAY";
-  render();
-}
-
-function endRun() {
-  if (!S.died && S.screen === "PLAY" && S.chips > 0) {
-    S.score += Math.round(S.chips * S.mult);
-    if (S.score > S.best) S.best = S.score;
-  }
-  S.chips = 0; S.mult = 1; S.cash = null;
-  if (S.died) { S.mood = "GLITCH"; S.says = "Case breach. The unbanked pot burns. Run it back."; }
-  else { AudioKit.fanfare(); S.mood = "SMUG"; S.says = "Shift closed. The case file held. Well kept, Earthling."; }
-  S.screen = "DEBRIEF";
-  render();
-}
-
-function rank() { return RANKS.find(r => S.score >= r.min); }
-
-/* ---------------- answer handlers ----------------------------------- */
-function answer(kind, pick) {
-  if (S.feedback) return;
-  const c = S.card, d = currentDrill();
-  const ok = (kind === "SIGNAL" || kind === "REGISTER") ? (Number(pick) === c.ans) : (pick === c.ans);
-  const why = c.why;
-
-  if (ok) { success(d.pts, why); S.feedback = { ok: true, text: why }; }
-  else {
-    let correct;
-    if (kind === "SIGNAL") correct = "Answer: " + CATEGORIES[c.ans] + ". ";
-    else if (kind === "REGISTER") correct = "Answer: " + c.opts[c.ans] + ". ";
-    else if (kind === "VERDICT") correct = "Correct call: " + (c.ans === "OBS" ? "Observation" : "Assumption") + ". ";
-    else correct = "Correct call: " + (c.ans === "A" ? c.optA.label : c.optB.label) + ". ";
-    failure(correct + why);
-    S.feedback = { ok: false, text: correct + why };
-  }
-  render();
-  if (!S.died) setTimeout(nextCard, ok ? 1400 : 2800);
-}
-
-/* ---------------- boot prelude flow --------------------------------- */
-function startBoot() {
-  AudioKit.init(); AudioKit.combo();
-  S.screen = "BOOT"; S.bootIdx = 0; S.bootAnswered = false; S.feedback = null;
-  S.mood = "SCAN"; S.says = "Boot sequence. No clock, no lives. Just listen and answer.";
-  render();
-}
-
-function bootAnswer(pick) {
-  if (S.bootAnswered) return;
+function screenBoot(){
   const c = BOOT[S.bootIdx];
-  S.bootAnswered = true;
-  if (pick === c.ans) {
-    AudioKit.correct(); buzz([25, 35]);
-    S.mood = "HAPPY"; S.says = c.why;
-    S.feedback = { ok: true, text: c.why };
-  } else {
-    AudioKit.wrong(); buzz(40);
-    S.mood = "SCAN"; S.says = c.why;
-    S.feedback = { ok: false, text: "Not quite — " + c.why };
+  const isAsk = !!c.opts;
+  let h = dmBlock() + '<h2>Prelude &middot; ' + (S.bootIdx + 1) + ' of ' + BOOT.length + '</h2>';
+  if (!isAsk) {
+    narrate("SCAN", "Read this before the shift. The prelude teaches; the stations only ask.");
+    h += '<div class="card"><h2>' + esc(c.title) + '</h2><p style="margin:0">' + esc(c.text) + '</p></div>'
+       + '<div class="row"><button class="btn" data-act="bootnext">Continue</button></div>';
+    return h;
   }
+  h += '<div class="card"><div class="prompt">' + esc(c.q) + '</div><div class="opts">'
+     + c.opts.map((o,i) => '<button class="opt" data-boot="' + i + '"'
+        + (S.bootAnswered === null ? "" : " disabled")
+        + (S.bootAnswered === null ? "" :
+            (i === c.ans ? ' data-state="right"' : (i === S.bootAnswered ? ' data-state="chosen-wrong"' : "")))
+        + '>' + esc(o) + '</button>').join("") + '</div>';
+  if (S.bootAnswered !== null) {
+    const ok = S.bootAnswered === c.ans;
+    h += '<div class="fb" data-w="' + (ok ? "correct" : "wrong") + '">'
+       + '<p class="verdict">' + (ok ? "That is the habit" : "Not the habit") + '</p>'
+       + '<p style="margin:6px 0 0">' + esc(c.why) + '</p></div>'
+       + '<div class="row"><button class="btn" data-act="bootnext">Continue</button></div>';
+  }
+  return h + '</div>';
+}
+
+function screenSelect(){
+  narrate("IDLE", "Pick a station. Each one is a different habit, and you can take them in any order.");
+  const cards = STATIONS.map(st => {
+    const r = mem.stations[st.id] || { runs:0, best:0 };
+    const n = itemsFor(st.id).length;
+    return '<button class="station" data-go="' + esc(st.id) + '">'
+      + '<span class="nm">' + esc(st.name) + '</span>'
+      + '<span class="bl">' + esc(st.blurb) + '</span>'
+      + '<span class="st">' + n + ' items &middot; runs ' + r.runs + ' &middot; best ' + r.best + '/' + n + '</span>'
+      + '</button>';
+  }).join("");
+  return dmBlock() + '<h1>Four stations</h1><p class="sub">Runs and best only ever go up. '
+    + 'Leaving costs you nothing.</p><div class="stations">' + cards + '</div>'
+    + '<div class="row"><button class="btn ghost" data-act="title">Back</button>'
+    + '<button class="btn ghost" data-act="wipe">Clear progress</button></div>';
+}
+
+function optionsFor(st, it){ return it.options || st.optionSet; }
+
+function screenPlay(){
+  const st = S.station, it = S.queue[S.idx], opts = optionsFor(st, it);
+  const answer = u(it.answer);
+  let h = dmBlock() + '<h2>' + esc(st.name) + '</h2>'
+    + '<p class="sub">' + (S.idx + 1) + ' of ' + S.queue.length + ' &middot; ' + esc(st.ask) + '</p>';
+  h += '<div class="card"><div class="prompt">' + esc(it.prompt) + '</div>';
+  if (it.source) h += '<p class="src">' + esc(it.source) + '</p>';
+  if (it.quote1 || it.quote2) {
+    h += '<div class="quotes">';
+    if (it.quote1) h += '<div><b>' + esc(it.left) + '</b>' + esc(it.quote1) + '</div>';
+    if (it.quote2) h += '<div><b>' + esc(it.right) + '</b>' + esc(it.quote2) + '</div>';
+    if (!it.quote1) h += '<div><b>' + esc(it.left) + '</b>No corresponding passage. The silence is the finding.</div>';
+    if (!it.quote2) h += '<div><b>' + esc(it.right) + '</b>No corresponding passage. The silence is the finding.</div>';
+    h += '</div>';
+  }
+  h += '<div class="opts">' + opts.map(o =>
+      '<button class="opt" data-opt="' + esc(o) + '"' + (S.answered ? " disabled" : "")
+      + (S.answered ? (o === answer ? ' data-state="right"'
+          : (o === S.chosen ? ' data-state="chosen-wrong"' : "")) : "")
+      + '>' + esc(o) + '</button>').join("") + '</div>';
+  if (S.answered) {
+    const ok = S.chosen === answer;
+    h += '<div class="fb" data-w="' + (ok ? "correct" : "wrong") + '">'
+       + '<p class="verdict">' + (ok ? "Held up" : "Does not hold") + '</p>'
+       + '<p style="margin:6px 0 0">' + esc(it.why) + '</p></div>'
+       + '<div class="row"><button class="btn" data-act="next">'
+       + (S.idx + 1 < S.queue.length ? "Next" : "Close the file") + '</button></div>';
+  }
+  h += '</div>';
+  return h + caseBlock();
+}
+
+/* ---- the case file. This is the compounding: each answer adds a line, the
+   lines are the run, and the run is something you take away. ---- */
+function caseBlock(){
+  if (!S.results.length) return "";
+  return '<div class="case"><h3>Case file &middot; ' + S.results.length + ' entr'
+    + (S.results.length === 1 ? "y" : "ies") + '</h3><ol>'
+    + S.results.map(r => '<li data-w="' + (r.ok ? "correct" : "wrong") + '">'
+        + esc(r.line) + '</li>').join("") + '</ol></div>';
+}
+
+function caseMarkdown(){
+  const st = S.station;
+  const right = S.results.filter(r => r.ok).length;
+  const out = ["# Field Analyst — case file", "",
+    "**Station:** " + st.name, "**Kept:** " + right + " of " + S.results.length, "",
+    "| # | Entry | Held up |", "|---|---|---|"];
+  S.results.forEach((r, i) => out.push("| " + (i+1) + " | " + r.line.replace(/\|/g, "\\|")
+    + " | " + (r.ok ? "yes" : "no") + " |"));
+  out.push("", "_Nothing here is graded. Carry the entries that held up into your guided document analysis._");
+  return out.join("\n");
+}
+
+function screenDebrief(){
+  const st = S.station, right = S.results.filter(r => r.ok).length, n = S.results.length;
+  const r = rec(st.id);
+  r.runs += 1;
+  r.best = Math.max(r.best, right);
+  r.lastMissed = S.results.filter(x => !x.ok).map(x => x.id);
+  save();
+  const missed = S.results.filter(x => !x.ok);
+  narrate(missed.length ? "SCAN" : "HAPPY",
+    missed.length ? "Some entries did not hold. Those are the ones worth rereading."
+                  : "Every entry held. The case file is clean.");
+  let h = dmBlock() + '<h1>' + esc(st.name) + '</h1>'
+    + '<p class="sub">' + right + ' of ' + n + ' entries held &middot; best ' + r.best + '/' + n
+    + ' &middot; run ' + r.runs + '</p>';
+  h += '<div class="card"><table><thead><tr><th>Entry</th><th>Held up</th></tr></thead><tbody>'
+    + S.results.map(x => '<tr><td>' + esc(x.line) + '</td><td>' + (x.ok ? "yes" : "no") + '</td></tr>').join("")
+    + '</tbody></table></div>';
+  if (missed.length) {
+    h += '<div class="card"><h2>Reread these</h2>'
+      + missed.map(x => '<p style="margin:0 0 10px"><strong>' + esc(x.line) + '</strong><br>'
+          + esc(x.why) + '</p>').join("") + '</div>';
+  }
+  h += '<div class="card"><h2>Take the case file with you</h2>'
+    + '<p style="margin:0 0 10px;color:var(--dim)">Copy this into your notes. The entries that held up are '
+    + 'the ones you can cite in your guided document analysis.</p>'
+    + '<textarea id="md" readonly aria-label="Case file as Markdown">' + esc(caseMarkdown()) + '</textarea>'
+    + '<div class="row"><button class="btn" data-act="copy">Copy Markdown</button>'
+    + '<button class="btn ghost" data-act="again">Run it again</button>'
+    + '<button class="btn ghost" data-act="select">Other stations</button></div></div>';
+  return h + '<p class="foot">Nothing here is graded, nothing is submitted, and your progress stays in '
+    + 'this browser.</p>';
+}
+
+/* ---- flow ---- */
+function startStation(id){
+  const st = stationById(id); if (!st) return go("select");
+  S.station = st; S.queue = shuffle(itemsFor(id)); S.idx = 0;
+  S.answered = false; S.chosen = null; S.results = [];
+  narrate("SCAN", st.ask);
+  S.screen = "play"; render();
+}
+function answer(chosen){
+  if (S.answered) return;
+  const it = S.queue[S.idx], ok = chosen === u(it.answer);
+  S.answered = true; S.chosen = chosen;
+  S.results.push({ id: it.id, ok, line: it.prompt.length > 96
+    ? it.prompt.slice(0, 93) + "…" : it.prompt, why: it.why });
+  narrate(ok ? "HAPPY" : "GLITCH",
+    ok ? "That one you can point at." : "You cannot point at that. Read the why.");
+  render(); say(ok ? "Held up." : "Does not hold.");
+}
+function advance(){
+  if (S.idx + 1 < S.queue.length) { S.idx++; S.answered = false; S.chosen = null;
+    narrate("IDLE", S.station.ask); }
+  else S.screen = "debrief";
   render();
 }
+function go(screen){ S.screen = screen; render(); }
 
-function bootNext() {
-  AudioKit.click();
-  S.feedback = null; S.bootAnswered = false;
-  if (S.bootIdx < BOOT.length - 1) {
-    S.bootIdx += 1;
-    S.mood = "IDLE"; S.says = "Sector " + (S.bootIdx + 1) + " of " + BOOT.length + ".";
-    render();
-  } else {
-    S.bootDone = true;
-    AudioKit.fanfare();
-    S.mood = "SMUG"; S.says = "Boot complete. The console is yours. Now the shift keeps score.";
-    S.screen = "TITLE";
-    render();
+function render(){
+  app.innerHTML = S.screen === "title"   ? screenTitle()
+                : S.screen === "boot"    ? screenBoot()
+                : S.screen === "select"  ? screenSelect()
+                : S.screen === "play"    ? screenPlay()
+                :                          screenDebrief();
+  wire();
+  const f = app.querySelector("button.opt:not([disabled]), .btn");
+  if (f) f.focus();
+}
+
+function wire(){
+  app.querySelectorAll("[data-act]").forEach(el => el.addEventListener("click", () => {
+    const a = el.getAttribute("data-act");
+    if (a === "boot")     { S.bootIdx = 0; S.bootAnswered = null; go("boot"); }
+    if (a === "bootnext") { S.bootAnswered = null;
+                            if (S.bootIdx + 1 < BOOT.length) { S.bootIdx++; render(); } else go("select"); }
+    if (a === "select" || a === "title") go(a);
+    if (a === "next")   advance();
+    if (a === "again")  startStation(S.station.id);
+    if (a === "copy")   copyMd(el);
+    if (a === "wipe")   { if (confirm("Clear runs and best for every station?")) {
+                            Store.clear(); mem = { v:2, stations:{} }; render(); } }
+  }));
+  app.querySelectorAll("[data-go]").forEach(el =>
+    el.addEventListener("click", () => startStation(el.getAttribute("data-go"))));
+  app.querySelectorAll("[data-opt]").forEach(el =>
+    el.addEventListener("click", () => answer(el.getAttribute("data-opt"))));
+  app.querySelectorAll("[data-boot]").forEach(el =>
+    el.addEventListener("click", () => {
+      if (S.bootAnswered !== null) return;
+      S.bootAnswered = parseInt(el.getAttribute("data-boot"), 10);
+      const c = BOOT[S.bootIdx];
+      narrate(S.bootAnswered === c.ans ? "HAPPY" : "SCAN",
+        S.bootAnswered === c.ans ? "Right. That is the habit the stations will ask for."
+                                 : "Not yet. Read the why — the prelude is where this is free.");
+      render();
+    }));
+}
+
+function copyMd(btn){
+  const t = document.getElementById("md"); if (!t) return;
+  t.select();
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch(e) { ok = false; }
+  if (!ok && navigator.clipboard) {
+    navigator.clipboard.writeText(t.value).then(() => { btn.textContent = "Copied"; });
+    return;
   }
+  btn.textContent = ok ? "Copied" : "Select all and copy";
+  setTimeout(() => { btn.textContent = "Copy Markdown"; }, 1800);
 }
-
-/* ---------------- mascot: DataMan himself ---------------------------- */
-function botFace() {
-  const eyes = {
-    IDLE:      '<circle cx="36" cy="45" r="5" fill="#4fc9ff"/><circle cx="64" cy="45" r="5" fill="#4fc9ff"/><line x1="42" y1="57" x2="58" y2="57" stroke="#4fc9ff" stroke-width="2.5" stroke-linecap="round"/>',
-    SCAN:      '<rect x="30" y="41" width="12" height="7" rx="2" fill="#c9f0ff"/><rect x="58" y="41" width="12" height="7" rx="2" fill="#c9f0ff"/><line x1="40" y1="57" x2="60" y2="57" stroke="#4fc9ff" stroke-width="2.5" stroke-dasharray="4 3"/>',
-    HAPPY:     '<path d="M30 46 Q36 38 42 46" fill="none" stroke="#c9f0ff" stroke-width="3" stroke-linecap="round"/><path d="M58 46 Q64 38 70 46" fill="none" stroke="#c9f0ff" stroke-width="3" stroke-linecap="round"/><path d="M40 55 Q50 62 60 55" fill="none" stroke="#4fc9ff" stroke-width="2.5" stroke-linecap="round"/>',
-    OVERCLOCK: '<polygon points="30,42 42,38 36,50" fill="#c9f0ff"/><polygon points="70,42 58,38 64,50" fill="#c9f0ff"/><path d="M36 57 L44 54 L56 58 L64 54" fill="none" stroke="#c9f0ff" stroke-width="2.5" stroke-linecap="round"/>',
-    GLITCH:    '<line x1="30" y1="40" x2="42" y2="50" stroke="#ff8a7a" stroke-width="3.5" stroke-linecap="round"/><line x1="42" y1="40" x2="30" y2="50" stroke="#ff8a7a" stroke-width="3.5" stroke-linecap="round"/><line x1="58" y1="40" x2="70" y2="50" stroke="#ff8a7a" stroke-width="3.5" stroke-linecap="round"/><line x1="70" y1="40" x2="58" y2="50" stroke="#ff8a7a" stroke-width="3.5" stroke-linecap="round"/><line x1="36" y1="58" x2="64" y2="58" stroke="#ff8a7a" stroke-width="3" stroke-dasharray="3 2"/>',
-    SMUG:      '<path d="M30 44 Q36 38 42 44" fill="none" stroke="#c9f0ff" stroke-width="3" stroke-linecap="round"/><circle cx="64" cy="43" r="5" fill="#c9f0ff"/><path d="M38 56 Q54 62 62 53" fill="none" stroke="#4fc9ff" stroke-width="2.5" stroke-linecap="round"/>'
-  }[S.mood] || "";
-  return '<svg viewBox="0 0 100 100">' +
-    '<polygon points="50,6 88,24 88,76 50,94 12,76 12,24" fill="#13233a" stroke="#4fc9ff" stroke-width="4" stroke-linejoin="round"/>' +
-    '<line x1="50" y1="6" x2="50" y2="1" stroke="#4fc9ff" stroke-width="4" stroke-linecap="round"/>' +
-    '<rect x="22" y="28" width="56" height="36" rx="4" fill="#050b14" stroke="#2f7ec2" stroke-width="2"/>' +
-    eyes +
-    '<line x1="32" y1="76" x2="40" y2="76" stroke="#ff9d3d" stroke-width="3"/>' +
-    '<line x1="46" y1="74" x2="54" y2="74" stroke="#ff9d3d" stroke-width="3"/>' +
-    '<line x1="60" y1="76" x2="68" y2="76" stroke="#ff9d3d" stroke-width="3"/>' +
-    '</svg>';
-}
-
-function botPanel() {
-  return '<div class="bot">' +
-    '<div class="face">' + botFace() + (S.mood === "SCAN" ? '<div class="scanbar"></div>' : '') + '</div>' +
-    '<div style="flex:1">' +
-      '<div class="who"><span>DATAMAN // field unit</span><span class="mood">' + S.mood + '</span></div>' +
-      '<div class="says">' + esc(S.says) + '</div>' +
-    '</div></div>';
-}
-
-/* ---------------- screens ------------------------------------------- */
-function screenTitle() {
-  const bootBtn = S.bootDone
-    ? '<button class="btn" data-act="boot">Replay the boot sequence ✓</button>'
-    : '<button class="btn primary" data-act="boot">Boot sequence — start here<small>two minutes · nothing to lose · the four moves</small></button>';
-  const shiftBtn = '<button class="btn' + (S.bootDone ? ' primary' : '') + '" data-act="shift">Run the full shift</button>';
-  return botPanel() +
-  '<div class="panel" style="text-align:center">' +
-    '<h1 class="title">Field <span class="glow">Analyst</span></h1>' +
-    '<div class="tags"><span class="tagpill">4 stations</span><span class="tagpill">no clock</span><span class="tagpill">real DataMan quotes</span></div>' +
-    '<p class="sub">I am DataMan. I came from the stars to help you practice with numbers — now I need your help to read my own manual. AntiMath\'s newest trick isn\'t clouding minds. It\'s clouding manuals. ' +
-    'Four stations, one habit each: sort the signal, tell observation from assumption, check your evidence, and catch me disagreeing with myself. ' +
-    'No clock. Read every quote before you answer. Correct answers stack <span class="chipnum">clues</span>; streaks grow the <span class="multnum">mult</span>; clearing a station banks clues x mult. A wrong answer burns the mult — the clues survive. Three strikes and the unbanked pot burns with you. ' +
-    'Every station trains a habit your case file will need, Earthling.</p>' +
-  '</div>' +
-  '<div class="stack">' +
-    '<div class="bar"><span>Best shift</span><strong>' + S.best + ' pts</strong>' +
-      (S.bootDone ? '<span style="color:var(--go)">BOOT ✓</span>' : '') + '</div>' +
-    bootBtn + shiftBtn +
-    '<button class="btn" data-act="select">Practice one station</button>' +
-  '</div>' +
-  '<div class="spacer"></div>';
-}
-
-function screenBoot() {
-  const c = BOOT[S.bootIdx];
-  const progress = 'Boot ' + (S.bootIdx + 1) + ' / ' + BOOT.length;
-  let stage, controls;
-  if (c.kind === "tell") {
-    stage = '<div class="kicker">' + progress + '</div>' +
-      '<div class="prose" style="font-weight:700;font-size:15.5px">' + esc(c.title) + '</div>' +
-      '<div class="sub" style="margin-top:10px;text-align:left">' + esc(c.text) + '</div>';
-    controls = '<button class="btn primary" data-act="bootnext">' +
-      (S.bootIdx === BOOT.length - 1 ? 'Finish boot' : 'Continue ▸') + '</button>';
-  } else {
-    stage = '<div class="kicker">' + progress + '</div>' +
-      '<div class="prose">' + esc(c.q) + '</div>';
-    controls = S.bootAnswered
-      ? '<button class="btn primary" data-act="bootnext">Continue ▸</button>'
-      : '<div class="stack">' + c.opts.map((o, i) =>
-          '<button class="btn" style="text-align:left" data-act="bootans" data-pick="' + i + '">' + esc(o) + '</button>'
-        ).join("") + '</div>';
-  }
-  return botPanel() +
-    '<div class="panel" style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center">' +
-    stage + verdict() + '</div>' + controls +
-    '<button class="btn" data-act="title" style="opacity:.6">Skip to menu</button>';
-}
-
-function screenSelect() {
-  return botPanel() +
-  '<div class="stack">' +
-    DRILLS.map(d =>
-      '<button class="drill-card" data-act="drill" data-key="' + d.key + '">' +
-        '<div class="tag">' + esc(d.tag) + '</div>' +
-        '<h3>' + esc(d.name) + '</h3>' +
-        '<p>' + esc(d.blurb) + '</p>' +
-      '</button>').join("") +
-    '<button class="btn" data-act="title">Back</button>' +
-  '</div>' +
-  '<div class="spacer"></div>';
-}
-
-function hud() {
-  const total = 3;
-  let pips = "";
-  for (let i = 0; i < total; i++) pips += '<span class="pip' + (i < S.lives ? "" : " gone") + '"></span>';
-  return '<div class="bar">' +
-    '<span><span class="chipnum">' + S.chips + '</span> <span style="color:var(--dim)">x</span> <span class="multnum">' + S.mult.toFixed(1) + '</span>' +
-    ' <span style="color:var(--dim)">| bank</span> <strong>' + S.score + '</strong></span>' +
-    '<span class="pips">' + pips + '</span>' +
-  '</div>';
-}
-
-function verdict() {
-  if (!S.feedback) return "";
-  const f = S.feedback;
-  return '<div class="verdict ' + (f.ok ? "ok" : "bad") + '"><div>' +
-    '<span class="mark">' + (f.ok ? "✓" : "✕") + '</span>' + esc(f.text) + '</div></div>';
-}
-
-function screenPlay() {
-  const key = S.order[S.orderIdx], c = S.card, d = currentDrill();
-  let stage = "", controls = "";
-
-  if (key === "SIGNAL") {
-    stage = '<div class="kicker">' + esc(d.tag) + ' · ' + S.deck.length + ' left</div>' +
-      '<div class="code">' + esc(c.text) + '</div>' +
-      '<div class="sub">— ' + esc(c.section) + '</div>' +
-      '<div class="prose" style="margin-top:8px">Which category is this evidence of?</div>';
-    controls = '<div class="grid6">' + CATEGORIES.map((cat, i) =>
-      '<button class="btn" data-act="ans" data-pick="' + i + '"' + (S.feedback ? " disabled" : "") + '>' + esc(cat) + '</button>').join("") + '</div>';
-  }
-  else if (key === "VERDICT") {
-    stage = '<div class="kicker">' + esc(d.tag) + ' · ' + S.deck.length + ' left</div>' +
-      '<div class="prose" style="font-size:16px;font-weight:700">' + esc(c.s) + '</div>' +
-      '<div class="sub">Is this supported by evidence, or a guess dressed as fact?</div>';
-    controls = '<div class="row2">' +
-      '<button class="btn go" data-act="ans" data-pick="OBS"' + (S.feedback ? " disabled" : "") + '>Observation<small>I can point to the quote</small></button>' +
-      '<button class="btn halt" data-act="ans" data-pick="ASM"' + (S.feedback ? " disabled" : "") + '>Assumption<small>no evidence for this</small></button></div>';
-  }
-  else if (key === "EVIDENCE") {
-    stage = '<div class="kicker">' + esc(d.tag) + ' · ' + S.deck.length + ' left</div>' +
-      '<div class="code" style="white-space:normal">' + esc(c.text) + '</div>';
-    controls = '<div class="row2">' +
-      '<button class="btn go" data-act="ans" data-pick="A"' + (S.feedback ? " disabled" : "") + '>' + esc(c.optA.label) + '</button>' +
-      '<button class="btn halt" data-act="ans" data-pick="B"' + (S.feedback ? " disabled" : "") + '>' + esc(c.optB.label) + '</button></div>';
-  }
-  else { // REGISTER
-    stage = '<div class="kicker">' + esc(d.tag) + ' · ' + S.deck.length + ' left</div>' +
-      '<div class="quotepair">' +
-        '<div class="qcard"><div class="qlabel">' + esc(c.left) + '</div><div class="code">' +
-          (c.quote1 ? esc(c.quote1) : '<span style="opacity:.6">— not mentioned —</span>') + '</div></div>' +
-        '<div class="qcard"><div class="qlabel">' + esc(c.right) + '</div><div class="code">' +
-          (c.quote2 ? esc(c.quote2) : '<span style="opacity:.6">— not mentioned —</span>') + '</div></div>' +
-      '</div>' +
-      '<div class="prose" style="margin-top:8px;font-weight:700">' + esc(c.q) + '</div>';
-    controls = '<div class="stack">' + c.opts.map((o, i) =>
-      '<button class="btn" style="text-align:left" data-act="ans" data-pick="' + i + '"' + (S.feedback ? " disabled" : "") + '>' + esc(o) + '</button>').join("") + '</div>';
-  }
-
-  const stageCls = "panel stage" + (S.feedback ? (S.feedback.ok ? " good" : " shake") : "");
-  return hud() + botPanel() +
-    '<div class="' + stageCls + '" style="flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center">' +
-    stage + verdict() + '</div>' + controls;
-}
-
-function screenCashout() {
-  const c = S.cash;
-  return botPanel() +
-  '<div class="panel" style="text-align:center">' +
-    '<div class="kicker">Station cleared</div>' +
-    '<div class="cash-big"><span class="chipnum">' + c.chips + '</span>' +
-    ' <span style="color:var(--dim)">x</span> <span class="multnum">' + c.mult.toFixed(1) + '</span></div>' +
-    '<div class="cash-big" style="margin-top:6px;color:var(--paper)">= <span id="wonNum">0</span></div>' +
-    '<div class="sub" style="margin-top:10px">banked · total ' + S.score + '</div>' +
-  '</div>' +
-  '<button class="btn primary" data-act="cashnext">' + (c.last ? 'Finish the shift' : 'Next station ▸') + '</button>' +
-  '<div class="spacer"></div>';
-}
-
-function screenDebrief() {
-  const r = rank();
-  return botPanel() +
-  '<div class="panel" style="text-align:center">' +
-    '<div class="kicker">' + r.tier + '</div>' +
-    '<h1 class="title" style="font-size:21px">' + r.title + '</h1>' +
-    '<div class="row3" style="margin-top:12px;text-align:left">' +
-      '<div class="lesson"><b>' + S.score + '</b><br>banked</div>' +
-      '<div class="lesson"><b>' + S.streak + '</b><br>last streak</div>' +
-      '<div class="lesson"><b>' + S.lives + '</b><br>lives kept</div>' +
-    '</div>' +
-    '<div class="lesson" style="margin-top:10px">' +
-      'Every station is a move your case file needs:<br>' +
-      '<b>Sort the signal</b> — Purpose, Users &amp; Roles, Inputs, Processing, Outputs, Feedback.<br>' +
-      '<b>Observation or assumption</b> — if you can\'t point to the quote, it\'s not a fact yet.<br>' +
-      '<b>Evidence check</b> — quote it and name the section. Check both registers before you log an Unknown.<br>' +
-      '<b>Cross-register</b> — Part I and Part II don\'t always agree. Say so, and say why it matters.<br>' +
-      'Number Guesser is next. Same four moves, no one walking you through it.' +
-    '</div>' +
-  '</div>' +
-  '<div class="stack">' +
-    '<button class="btn primary" data-act="shift">Run it back</button>' +
-    '<button class="btn" data-act="title">Main menu</button>' +
-  '</div>' +
-  '<div class="spacer"></div>';
-}
-
-/* ---------------- render + events ----------------------------------- */
-function render() {
-  const app = document.getElementById("app");
-  const body = S.screen === "TITLE" ? screenTitle()
-             : S.screen === "BOOT" ? screenBoot()
-             : S.screen === "SELECT" ? screenSelect()
-             : S.screen === "PLAY" ? screenPlay()
-             : S.screen === "CASHOUT" ? screenCashout()
-             : screenDebrief();
-  app.innerHTML = body + '<footer>DataMan field unit · built for the case file · works offline</footer>';
-  if (S.screen === "CASHOUT" && S.cash) animateTally(S.cash.won);
-}
-
-/* slot-machine-style count-up for the banked total on cash-out */
-function animateTally(target) {
-  const el = document.getElementById("wonNum");
-  if (!el) return;
-  if (reduceMotion || target <= 0) { el.textContent = target; return; }
-  const dur = 650, start = performance.now();
-  function step(now) {
-    const p = Math.min(1, (now - start) / dur);
-    const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.round(target * eased);
-    if (p < 1) requestAnimationFrame(step);
-    else el.textContent = target;
-  }
-  requestAnimationFrame(step);
-}
-
-document.addEventListener("click", (e) => {
-  const b = e.target.closest("[data-act]");
-  if (!b) return;
-  const act = b.dataset.act;
-  if (act !== "ans") AudioKit.click();
-  if (act === "shift")  startRun("SHIFT");
-  if (act === "select") { S.screen = "SELECT"; S.says = "Pick a station. Each one is a move."; S.mood = "IDLE"; render(); }
-  if (act === "title")  { S.screen = "TITLE"; S.mood = "IDLE"; S.says = "DataMan online. Read with purpose, Earthling — I'll guard the case file with you."; render(); }
-  if (act === "drill")  startRun(b.dataset.key);
-  if (act === "boot")     startBoot();
-  if (act === "bootnext") bootNext();
-  if (act === "bootans")  bootAnswer(Number(b.dataset.pick));
-  if (act === "cashnext") cashContinue();
-  if (act === "ans") {
-    const key = S.order[S.orderIdx];
-    const pick = (key === "SIGNAL" || key === "REGISTER") ? Number(b.dataset.pick) : b.dataset.pick;
-    answer(key, pick);
-  }
-});
 
 render();
+
 </script>
 </body>
 </html>
