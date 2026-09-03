@@ -370,7 +370,6 @@ const BANK = {
   }]
 };
 
-const RANKS=["Trainee","Product Analyst","Product Owner","Lead PO","Principal"];
 const VERDICT_WORD={correct:"Strong",near:"Useful",early:"Too early",wrong:"Not this one"};
 const VERDICT_GLYPH={correct:"✓",near:"△",early:"○",wrong:"✕"};
 
@@ -381,7 +380,7 @@ const Store={
   write(d){ try{localStorage.setItem(KEY,JSON.stringify(d));}catch(e){} },
   clear(){ try{localStorage.removeItem(KEY);}catch(e){} }
 };
-let mem=Store.read()||{v:1,rank:0,stations:{}};
+let mem=Store.read()||{v:1,stations:{}};
 const save=()=>{ if(!S.present) Store.write(mem); };
 
 const params=new URLSearchParams(location.search);
@@ -396,7 +395,7 @@ const stationById=id=>BANK.stations.find(s=>s.id===id);
 function shuffle(a){const r=a.slice();for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
 
 function bar(){ if(S.present) return "";
-  return '<div class="bar"><span class="rank">Rank &middot; '+esc(RANKS[mem.rank]||RANKS[0])+'</span>'
+  return '<div class="bar"><span class="rank">'+esc(BANK.title)+'</span>'
     +'<span><button class="minibtn" id="wipe">Clear progress</button></span></div>'; }
 
 function renderMenu(){
@@ -511,7 +510,7 @@ function renderDebrief(){
   const st=S.station, score=S.queue.length-S.missed.length;
   const rec=mem.stations[st.id]||{runs:0,best:0};
   rec.runs+=1; rec.best=Math.max(rec.best,score); mem.stations[st.id]=rec;
-  mem.rank=Math.min(RANKS.length-1,Math.floor(rec.best/4)); save();
+  save();
 
   const seen={},hit={};
   S.queue.forEach(it=>{seen[it.mlo]=(seen[it.mlo]||0)+1;});
@@ -541,7 +540,7 @@ function renderDebrief(){
   }).join(""):'<p>Nothing missed.</p>';
 
   app.innerHTML=bar()+'<p class="eyebrow">Debrief</p><h1>The Bench</h1><hr class="rule">'
-    +'<p class="meter">'+score+' of '+S.queue.length+' &middot; best '+rec.best+' &middot; rank '+esc(RANKS[mem.rank])+'</p>'
+    +'<p class="meter">'+score+' of '+S.queue.length+' &middot; best '+rec.best+' of '+S.queue.length+'</p>'
     +'<h2>By outcome</h2>'+breakdown+steer+nearNote
     +'<h2>Run it back on these</h2>'+list
     +'<div class="btn-row"><button class="btn btn-primary" id="again">Run it back</button>'
@@ -556,7 +555,7 @@ function wire(){
   app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(!S.present)answer(b.dataset.opt);});
   on("next",advance); on("again",()=>startStation(S.station.id)); on("menu",renderMenu);
   on("wipe",()=>{ if(confirm("Clear your saved progress for this cabinet? This cannot be undone.")){
-    Store.clear(); mem={v:1,rank:0,stations:{}}; renderMenu(); }});
+    Store.clear(); mem={v:1,stations:{}}; renderMenu(); }});
 }
 
 document.addEventListener("keydown",e=>{
