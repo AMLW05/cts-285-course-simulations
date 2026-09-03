@@ -384,7 +384,6 @@ const BANK = {
   }]
 };
 
-const RANKS = ["Trainee","Field Analyst","Senior Analyst","Lead Analyst","Principal"];
 const VERDICT_WORD = {correct:"Strong", near:"Useful", early:"Too early", wrong:"Not this one"};
 const VERDICT_GLYPH = {correct:"✓", near:"△", early:"○", wrong:"✕"};
 
@@ -399,7 +398,7 @@ const Store = {
   write(d){ try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){} },
   clear(){ try{ localStorage.removeItem(KEY); }catch(e){} }
 };
-let mem = Store.read() || {v:1, rank:0, muted:false, stations:{}};
+let mem = Store.read() || {v:1, muted:true, stations:{}};
 const save = () => { if(!S.present) Store.write(mem); };
 
 /* ------------------------------------------------------------------ audio */
@@ -456,7 +455,7 @@ function shuffle(a){ const r = a.slice();
 function bar(){
   if(S.present) return "";
   return '<div class="bar">'
-    + '<span class="rank">Rank &middot; ' + esc(RANKS[mem.rank] || RANKS[0]) + '</span>'
+    + '<span class="rank">' + esc(BANK.title) + '</span>'
     + '<span>'
       + '<button class="minibtn" id="mute">' + (mem.muted ? "Sound off" : "Sound on") + '</button> '
       + '<button class="minibtn" id="wipe">Clear progress</button>'
@@ -565,7 +564,6 @@ function renderDebrief(){
   rec.best = Math.max(rec.best, score);
   rec.lastMissed = S.missed.map(m => m.it.id);
   mem.stations[st.id] = rec;
-  mem.rank = Math.min(RANKS.length - 1, Math.floor(rec.best / 4));
   save();
 
   /* per-MLO breakdown — the point of a survey station */
@@ -601,7 +599,7 @@ function renderDebrief(){
 
   app.innerHTML = bar()
     + '<p class="eyebrow">Debrief</p><h1>Field Check</h1><hr class="rule">'
-    + '<p class="meter">' + score + ' of ' + S.queue.length + ' &middot; best ' + rec.best + ' &middot; rank ' + esc(RANKS[mem.rank]) + '</p>'
+    + '<p class="meter">' + score + ' of ' + S.queue.length + ' &middot; best ' + rec.best + ' of ' + S.queue.length + '</p>'
     + '<h2>By outcome</h2>' + breakdown + steer + nearNote
     + '<h2>Run it back on these</h2>' + list
     + '<div class="btn-row"><button class="btn btn-primary" id="again">Run it back</button>'
@@ -620,7 +618,7 @@ function wire(){
   on("mute", () => { mem.muted = !mem.muted; save(); (S.screen === "menu" ? renderMenu : renderItem)(); });
   on("wipe", () => {
     if(confirm("Clear your saved progress for this cabinet? This cannot be undone.")){
-      Store.clear(); mem = {v:1, rank:0, muted:mem.muted, stations:{}}; renderMenu();
+      Store.clear(); mem = {v:1, muted:mem.muted, stations:{}}; renderMenu();
     }
   });
 }
