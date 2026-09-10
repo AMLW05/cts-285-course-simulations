@@ -273,9 +273,14 @@ Two registers, one frame:
   ribbed rails, and the cosmic booklet cover for the sortie card. The design notes already state
   the value of this frame: a readout that fits one line cannot become a scoreboard.
 - **The field is the CRT.** *Hard/Wired Coast*'s scanlines, cyan on void, condensed type.
-- **The assistant is Windows 95.** Grey dialog, title bar, close box, *Did you know…*. It is the
-  voice of the wrong idea in M1 and the tip surface everywhere else. It is never the exit; the
-  exit is the frame bar.
+- **The operating system is Windows 98.** Grey dialog, title bar, close box, *Did you know…*,
+  and the *Are you sure?* confirm box. In the decision cartridges this is the simulation's own
+  interface, not decoration, because the tropes read as gates: a confirm dialog is where a cost
+  becomes visible, a wizard is the brief, an error dialog is a ping that established nothing,
+  the assistant is the voice that catches a solution-in-disguise. The irony adds realism; an
+  analyst's real tools look like this. The OS is the one voice that may use the course's words.
+  It is never the exit; the exit is the frame bar. (Direction of 2026-09-10; the earlier draft
+  had the assistant alone, in Windows 95.)
 
 Each reference contributes one thing and no more: *White Knuckle* gives M3 its verticality and
 its rising threat; *Trepang2* gives M4 its breach-and-pause; *Suspended* gives M2 its status
