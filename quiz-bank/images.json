@@ -1,0 +1,6 @@
+{
+  "_comment": "Upload the PNGs in ./images to Canvas Files, then paste each file's URL here and re-run build_qti.py. Unmapped images are omitted from feedback, never emitted broken. A Canvas file URL looks like https://faytechcc.instructure.com/courses/11777/files/0000000/preview",
+
+  "dataman-score-display.png": "https://faytechcc.instructure.com/courses/11777/files/8857655/preview",
+  "dataman-keypad.png": "https://faytechcc.instructure.com/courses/11777/files/8857654/preview"
+}

@@ -11,8 +11,9 @@ somewhere to be recorded. See the tracking issue for what is and is not settled.
 ```
 build_qti.py                     source .md  ->  QTI .zip
 qti_to_source.py                 QTI .zip    ->  source .md   (recovery direction)
+images.json                      image filename -> Canvas file URL
 m1-exit-tickets-source.md        3 quizzes, 15 items
-m1-guided-analysis-source.md     2 quizzes
+m1-guided-analysis-source.md     2 quizzes, 21 items
 m2-exit-tickets-source.md        1 quiz, 5 items
 m3-exit-tickets-source.md        1 quiz, 5 items
 qti/                             7 built packages
@@ -27,6 +28,27 @@ python3 build_qti.py m2-exit-tickets-source.md --out qti/
 The source `.md` is the source of truth. Edit it and rebuild; do not hand-edit a `.zip`.
 `qti_to_source.py` runs the other direction and exists for recovering a package whose source
 was lost — it is not part of the normal loop.
+
+**Run the build from inside `quiz-bank/`.** `build_qti.py` looks for `images.json` in the
+working directory unless you pass `--images`. Building from elsewhere finds no map and silently
+drops every image (see below).
+
+## Images
+
+A source line of the form `- IMG: <file.png> | <alt text>` appends an image to that option's
+feedback. `images.json` maps the filename to a Canvas Files URL:
+
+```json
+{ "dataman-keypad.png": "https://faytechcc.instructure.com/courses/11777/files/8857654/preview" }
+```
+
+The PNGs are uploaded to Canvas Files by hand; only the resulting URLs live here. Two images are
+mapped today, both in `m1-guided-analysis-source.md`.
+
+**An unmapped image is omitted, not broken.** `build_qti.py` prints a `NOTE:` line and still
+reports `OK`. That is the right default — a missing image beats a broken one in a live quiz —
+but it means a build can quietly produce a package worse than the one it replaces. If you touch
+the guided analyses, read the NOTE lines, not just the OK lines.
 
 ## Format contract
 
@@ -53,6 +75,17 @@ They are build artifacts, which normally would not be tracked. They are here bec
 
 If a source and its zip ever disagree, the source wins for future builds and the zip stands as
 the historical record of what shipped.
+
+### Reproducibility check — 2026-09-03
+
+All seven packages were rebuilt from source and the unzipped XML compared against the committed
+zip. Five reproduce exactly. `cts285-m1-guided-a` and `cts285-m1-guided-b` differed by one image
+each — the rebuild dropped them, because `images.json` had not been committed alongside the
+sources. Adding it closes the gap; the committed zips were correct and were not rebuilt.
+
+Reproducing is not the same as being correct. It means a rebuild will not silently downgrade a
+package. Whether the questions work on a student is a separate claim, and only the three M1 exit
+tickets and two guided analyses have any evidence for it.
 
 ## Status of each source
 
