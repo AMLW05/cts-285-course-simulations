@@ -2,11 +2,11 @@
 
 **Status: proposed. Nothing here is decided and nothing here is built.** This is a plan for
 three parallel work products. It records what each one is, which rules bind it, what it borrows
-from the two repositories, and what Angela has to decide before any of it is placed in front of
+from the two repositories, and what the course owner has to decide before any of it is placed in front of
 a student. Later dated decisions in the private source repository's `planning/DECISIONS.md`
 supersede anything here.
 
-This file lives in the public simulations repository by Angela's direction of 2026-09-10: the
+This file lives in the public simulations repository by the course owner's direction of 2026-09-10: the
 simulation material for CTS-285 belongs where the simulations run. Every `planning/…`,
 `module-XX/…`, `binder/…`, and `.claude/…` path cited below is a path in the private
 `AMLW05/cts-285_SOURCE` repository unless it says otherwise.
@@ -70,7 +70,7 @@ same one (see §9).
 | HTLL Phase 3 (technical implementation) is deferred; React vetoed (HTLL `CLAUDE.md`) | — | binds: single-file HTML, no framework | binds |
 
 The consequence of the table: **Product B is an HTLL product by default.** It borrows CTS-285's
-structure for its code. It becomes CTS-285 material only when Angela places a cartridge in an
+structure for its code. It becomes CTS-285 material only when the course owner places a cartridge in an
 interstitial, and at that moment the classroom profile applies. The profile does not strip the
 stakes. It converts them: hull becomes capacity, score becomes recorded shifts, the clock
 becomes a complication. The course teaches prioritisation and trade-offs, so stakes handled in
@@ -132,7 +132,7 @@ These keep the CTS-285 pattern whole and change the world. They are *transfer pr
 student has no stake in the scenario, which is the same reason StudyTrack exists for M3.5.
 
 Each one mirrors the mechanic the course already proved for that module. None replaces a
-locked or built simulation. Each is optional and unplaced until Angela places it.
+locked or built simulation. Each is optional and unplaced until the course owner places it.
 
 | Module | CTS-285 mechanic (proved by) | HTLL scenario | Role | Constraint | Complication | Record |
 |---|---|---|---|---|---|---|
@@ -298,7 +298,7 @@ loaded from a CDN. The same SVGs can go to Canvas pages through the compositor's
 
 | Thing | Repository | Path |
 |---|---|---|
-| This plan; any simulation or cartridge Angela places for students | `AMLW05/cts-285-course-simulations` | `planning/`; by module, as the existing arcades are |
+| This plan; any simulation or cartridge the course owner places for students | `AMLW05/cts-285-course-simulations` | `planning/`; by module, as the existing arcades are |
 | Governance, decisions, build guides, Canvas launch pages | `AMLW05/cts-285_SOURCE` | `planning/`, `module-XX/final-build/` |
 | Persona rules, pair sheets, cartridge format, reference build, review | `norrisaftcc/game-high-tech-low-lives` | `arcade/` |
 | The shell and the cartridges while they are HTLL products | `norrisaftcc/game-high-tech-low-lives` | `arcade/cabinet/`, `arcade/cartridges/` |
