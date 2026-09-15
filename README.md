@@ -16,6 +16,7 @@ Canvas page names the exact path.
 | Stakeholder Elicitation Under Pressure | `m2/stakeholder-elicitation/` | `docs/decisions/m2-elicitation-decision-record.md` |
 | Backlog Triage — What Moves Forward? | `m3/backlog-triage/` | `docs/decisions/m3-backlog-triage-record.md` |
 | Product Owner Sprint Simulation | `m3/product-owner-sprint/` | `docs/decisions/m3-product-owner-decision-record.md` |
+| DataMan Design Investigation | `m4/design-investigation/` | `docs/decisions/m4-design-investigation-record.md` |
 
 ## Practice
 
