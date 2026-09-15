@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flask Responsibility Lab</title>
+<style>
+:root{--ink:#20252b;--muted:#66717d;--line:#d8dee5;--panel:#f7f9fb;--accent:#0b6f73;--warm:#f0b82d;--good:#166534;--bad:#991b1b;--warn:#92400e}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}.wrap{max-width:980px;margin:0 auto;padding:28px 18px 56px}.hero{border-top:10px solid var(--warm);background:#111;color:#fff;padding:24px 28px}.hero p{margin:0 0 6px;color:var(--warm);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}.hero h1{margin:0;font-size:clamp(1.7rem,3vw,2.3rem)}.lede{font-size:1.08rem;margin:20px 0}.callout{border-left:5px solid var(--accent);background:#f2fbfb;padding:14px 16px;margin:20px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:18px 0}.card,.round,.result,.summary{border:1px solid var(--line);border-radius:8px;padding:16px;background:#fff}.card h3,.round h2{margin-top:0}.round{margin-top:18px}.choices{display:grid;gap:10px;margin:14px 0}.choice{display:block;border:1px solid var(--line);border-radius:7px;padding:12px;cursor:pointer;background:#fff}.choice:hover{background:#f8fafc}.choice input{margin-right:8px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}button{border:0;border-radius:6px;padding:10px 14px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff}button.secondary{background:#4b5563}button:disabled{opacity:.45;cursor:not-allowed}.result{margin-top:12px;display:none}.result.good{border-left:5px solid var(--good)}.result.warn{border-left:5px solid var(--warn)}.result.bad{border-left:5px solid var(--bad)}.impact{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:12px}.impact div{background:var(--panel);border:1px solid var(--line);padding:9px;border-radius:6px;font-size:.92rem}.tag{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:.78rem;color:var(--muted);margin-right:5px}.hidden{display:none}.progress{height:8px;background:#eceff3;border-radius:999px;overflow:hidden;margin:18px 0}.progress span{display:block;height:100%;width:0;background:var(--accent);transition:width .2s ease}.summary textarea{width:100%;min-height:180px;font:inherit;padding:10px;border:1px solid var(--line);border-radius:6px}.small{font-size:.9rem;color:var(--muted)}code{background:#f3f4f6;padding:.1em .3em;border-radius:3px}@media (max-width:600px){.hero{padding:20px}.wrap{padding:18px 12px 42px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero"><p>Module 5 · Controlled Lab</p><h1>Flask Responsibility Lab</h1></section>
+<p class="lede">Place responsibilities in a small DataMan Flask flow, run the design, inspect what your choice makes easier or harder, and revise before you touch your own project.</p>
+<div class="callout"><strong>Goal:</strong> not to memorize a folder structure. Your job is to decide which responsibility belongs to Flask, reusable business logic, or the data/state boundary—and to notice the consequences when those boundaries blur.</div>
+<div class="grid" aria-label="Responsibility lenses">
+  <div class="card"><h3>Framework / Interface</h3><p>Receive request data, call application behavior, select the next response or template.</p></div>
+  <div class="card"><h3>Business Logic</h3><p>Apply DataMan rules independently of one specific user interface.</p></div>
+  <div class="card"><h3>Data / State</h3><p>Retrieve or preserve the information that the behavior depends on.</p></div>
+</div>
+<div class="progress" aria-label="Lab progress"><span id="bar"></span></div>
+<div id="rounds"></div>
+<section id="summary" class="summary hidden">
+  <h2>Carry Forward</h2>
+  <p>You have now seen that code can appear to work while still creating a weak boundary. Use this summary when you return to Canvas.</p>
+  <textarea id="notes" aria-label="Lab evidence summary"></textarea>
+  <div class="actions"><button id="copyBtn">Copy Summary</button><button id="resetBtn" class="secondary">Run Again</button></div>
+  <p id="copyStatus" class="small" role="status"></p>
+</section>
+</main>
+<script>
+const rounds=[
+{
+ title:"Round 1 · Two-Attempt Rule",
+ scenario:"A learner posts an answer to /answer. On the first miss, DataMan should allow exactly one retry. On the second miss, the correct answer is revealed.",
+ choices:[
+  {label:"Put the full two-attempt rule inside the Flask route.",level:"warn",why:"The browser flow can work, but the rule is now tied to this route. A CLI test, second interface, or unit test must reproduce or reach through Flask to reuse it.",imp:["Web request works","Reuse becomes harder","Rule is harder to test alone"]},
+  {label:"Let the route read input and call a reusable check_answer(...) rule.",level:"good",why:"Flask handles the web request while the DataMan rule remains callable without Flask. The route orchestrates instead of becoming the product logic.",imp:["Web request works","Rule remains reusable","Unit testing stays focused"]},
+  {label:"Store the retry decision in the HTML template.",level:"bad",why:"A template can display an outcome, but it should not decide whether the product permits another attempt. The rule becomes presentation-dependent and easy to bypass.",imp:["Display may look right","Rule can be bypassed","Behavior depends on presentation"]}
+ ]
+},
+{
+ title:"Round 2 · Resume After Interruption",
+ scenario:"A learner misses once, closes the page, and returns later. The system must know that the next attempt is try 2.",
+ choices:[
+  {label:"Keep try_number only in a JavaScript variable on the page.",level:"bad",why:"The page can track the value only while that page state survives. Closing or reloading loses the evidence the rule needs.",imp:["Fast to build","Resume fails","State is not durable"]},
+  {label:"Persist the attempt/session state behind a data boundary, then pass it to the rule.",level:"good",why:"The data boundary preserves the evidence; the business rule uses it; Flask coordinates the request. Each responsibility remains inspectable.",imp:["Resume works","Rule stays independent","Persistence can change later"]},
+  {label:"Infer try 2 by checking whether the user has visited the route before.",level:"warn",why:"Route history is not the same thing as product state. The system may misclassify refreshes, unrelated visits, or multiple problems.",imp:["May appear to work","State is ambiguous","Behavior becomes fragile"]}
+ ]
+},
+{
+ title:"Round 3 · Memory Bank Limit",
+ scenario:"A curator adds problems to a Memory Bank set. The product rule is a maximum of 10 problems.",
+ choices:[
+  {label:"Disable the Add button in the browser when the count reaches 10.",level:"warn",why:"The interface helps the user, but the product rule exists only in one path. Another route, import, or future API could bypass the limit.",imp:["Good UX","Rule is not authoritative","Alternate paths can bypass it"]},
+  {label:"Enforce the 10-problem rule in reusable logic and also reflect it in the interface.",level:"good",why:"The rule remains authoritative outside Flask while the interface communicates it clearly. Multiple entry paths can reuse the same decision.",imp:["Rule is reusable","UI stays helpful","Alternate paths stay consistent"]},
+  {label:"Hard-code 10 checks in the route before saving.",level:"bad",why:"The route becomes responsible for a core product rule. If another route adds set members later, the rule must be duplicated.",imp:["Current route may work","Duplication risk grows","Change becomes expensive"]}
+ ]
+},
+{
+ title:"Round 4 · Curator Review",
+ scenario:"A curator asks which problems a learner missed. The current database stores only the final score.",
+ choices:[
+  {label:"Have Flask calculate missed problems from the final score.",level:"bad",why:"A total score cannot reconstruct which specific problems were missed. The framework cannot recover evidence the data model never preserved.",imp:["Request reaches Flask","Required evidence is missing","Result cannot be trusted"]},
+  {label:"Revise the data/state design to preserve attempt-level evidence, then query it through the boundary.",level:"good",why:"The implementation exposes a design gap. Preserving attempt-level evidence lets the curator request be answered without inventing information.",imp:["Question becomes answerable","Data supports retrieval","Design revision is evidence-based"]},
+  {label:"Add a note in the template saying detailed history is unavailable.",level:"warn",why:"That may be an honest temporary response, but it does not satisfy the product need. The correct next step is to reopen the data decision.",imp:["No false data shown","Requirement remains unmet","Design question stays open"]}
+ ]
+}
+];
+const state={answers:[],revisions:[]};
+const root=document.getElementById('rounds');
+function render(){root.innerHTML='';rounds.forEach((r,i)=>{const s=document.createElement('section');s.className='round';s.innerHTML=`<span class="tag">Decision ${i+1} of ${rounds.length}</span><h2>${r.title}</h2><p>${r.scenario}</p><div class="choices">${r.choices.map((c,j)=>`<label class="choice"><input type="radio" name="r${i}" value="${j}">${c.label}</label>`).join('')}</div><div class="actions"><button data-run="${i}">Run this design</button>${state.answers[i]!=null?`<button class="secondary" data-revise="${i}">Revise decision</button>`:''}</div><div id="res${i}" class="result"></div>`;root.appendChild(s);if(state.answers[i]!=null)showResult(i,state.answers[i],false);});document.querySelectorAll('[data-run]').forEach(b=>b.onclick=()=>run(+b.dataset.run));document.querySelectorAll('[data-revise]').forEach(b=>b.onclick=()=>revise(+b.dataset.revise));updateProgress();}
+function run(i){const picked=document.querySelector(`input[name=r${i}]:checked`);if(!picked){alert('Choose a design decision first.');return;}const idx=+picked.value;if(state.answers[i]!=null&&state.answers[i]!==idx)state.revisions[i]=true;state.answers[i]=idx;render();document.getElementById(`res${i}`).scrollIntoView({behavior:'smooth',block:'nearest'});}
+function showResult(i,idx,scroll=true){const c=rounds[i].choices[idx],el=document.getElementById(`res${i}`);el.className=`result ${c.level}`;el.style.display='block';el.innerHTML=`<strong>Consequence:</strong> ${c.why}<div class="impact">${c.imp.map(x=>`<div>${x}</div>`).join('')}</div>${c.level!=='good'?'<p><strong>Now decide:</strong> would you keep this boundary, or revise it before carrying it into your own project?</p>':'<p><strong>Boundary holds:</strong> this design keeps responsibilities separable enough to carry forward.</p>'}`;}
+function revise(i){state.answers[i]=null;render();const block=root.children[i];block.scrollIntoView({behavior:'smooth',block:'start'});}
+function updateProgress(){const done=state.answers.filter(x=>x!=null).length;document.getElementById('bar').style.width=`${done/rounds.length*100}%`;if(done===rounds.length)finish();}
+function finish(){const best=state.answers.map((a,i)=>rounds[i].choices[a].level==='good').filter(Boolean).length;const revised=state.revisions.filter(Boolean).length;const text=`M5 Flask Responsibility Lab\n\nWhat I tested:\n- Where Flask/interface responsibilities should stop\n- Which DataMan rules should remain reusable business logic\n- Which state/data must be preserved behind a boundary\n\nMy results:\n- ${best} of ${rounds.length} final decisions used a strong separation of responsibilities.\n- I revised ${revised} decision${revised===1?'':'s'} after inspecting consequences.\n\nCarry-forward questions for my M4 prototype:\n1. What should Flask receive and return for my selected product slice?\n2. Which business-logic function should remain independent of Flask?\n3. What state/data does that logic require?\n4. What implementation decision might I need to reopen if Flask exposes a new constraint?`;document.getElementById('notes').value=text;document.getElementById('summary').classList.remove('hidden');}
+document.getElementById('copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById('notes').value);document.getElementById('copyStatus').textContent='Summary copied.';}catch(e){document.getElementById('notes').select();document.execCommand('copy');document.getElementById('copyStatus').textContent='Summary copied.';}};
+document.getElementById('resetBtn').onclick=()=>{state.answers=[];state.revisions=[];document.getElementById('summary').classList.add('hidden');render();window.scrollTo({top:0,behavior:'smooth'});};
+render();
+</script>
+</body>
+</html>
