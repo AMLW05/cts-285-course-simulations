@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minimal DataMan Flask Starter</title>
+</head>
+<body>
+  <main>
+    <h1>DataMan Answer Checker</h1>
+    <p><strong>Problem:</strong> {{ state.problem }}</p>
+    <p><strong>Try:</strong> {{ state.try_number + 1 }}</p>
+
+    {% if outcome %}
+      <p><strong>Result:</strong> {{ outcome.message }}</p>
+    {% endif %}
+
+    {% if state.status not in ['correct', 'revealed'] %}
+      <form method="post" action="/answer">
+        <label for="answer">Your answer</label>
+        <input id="answer" name="answer" inputmode="numeric" required>
+        <button type="submit">Check answer</button>
+      </form>
+    {% else %}
+      <p>This controlled round is complete. Restart the app to reset the starter state.</p>
+    {% endif %}
+  </main>
+</body>
+</html>
