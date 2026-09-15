@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minimal Flask Starter</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f6f7f9;color:#222;line-height:1.55}main{max-width:900px;margin:0 auto;padding:24px}.hero{background:#111;color:#fff;padding:24px;border-top:8px solid #d7a928}.card{background:#fff;border:1px solid #dfe3e8;padding:20px;margin:18px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.file{border:1px solid #dfe3e8;padding:14px;background:#fafafa}.btn{display:inline-block;background:#0b6f73;color:#fff;text-decoration:none;font-weight:700;padding:10px 14px;border-radius:4px;margin-top:8px}code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}pre{background:#f3f4f6;border:1px solid #dfe3e8;padding:14px;overflow:auto}.note{border-left:4px solid #d7a928;padding-left:14px}.small{color:#5f6670;font-size:.94rem}
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <div style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#d7a928;">Module 5 Student Resource</div>
+    <h1 style="margin:.25rem 0 0;">Minimal Flask Starter</h1>
+  </section>
+
+  <p>This starter is the controlled application you will run in your own CTS-285 repository before migrating your Module 4 product slice.</p>
+
+  <div class="card note">
+    <strong>Work only in your own repository.</strong> Download these files, place them in a clearly named Module 5 folder in your CTS-285 repository, then open your repository in Codespaces.
+  </div>
+
+  <div class="card">
+    <h2>1. Create this folder structure</h2>
+    <pre>minimal-flask-app/
+├── app.py
+├── business_logic.py
+├── data_store.py
+├── requirements.txt
+└── templates/
+    └── index.html</pre>
+  </div>
+
+  <div class="card">
+    <h2>2. Download the starter files</h2>
+    <p class="small">Save each file with the exact filename shown. Put <code>index.html</code> inside the <code>templates</code> folder.</p>
+    <div class="grid">
+      <div class="file"><strong>app.py</strong><br><span class="small">Flask request/response coordination</span><br><a class="btn" href="files/app.py" download>Download app.py</a></div>
+      <div class="file"><strong>business_logic.py</strong><br><span class="small">Reusable DataMan rule behavior</span><br><a class="btn" href="files/business_logic.py" download>Download business_logic.py</a></div>
+      <div class="file"><strong>data_store.py</strong><br><span class="small">Temporary state boundary</span><br><a class="btn" href="files/data_store.py" download>Download data_store.py</a></div>
+      <div class="file"><strong>requirements.txt</strong><br><span class="small">Flask dependency</span><br><a class="btn" href="files/requirements.txt" download>Download requirements.txt</a></div>
+      <div class="file"><strong>templates/index.html</strong><br><span class="small">Browser-facing template</span><br><a class="btn" href="files/templates/index.html" download>Download index.html</a></div>
+      <div class="file"><strong>README.md</strong><br><span class="small">Starter reference</span><br><a class="btn" href="files/README.md" download>Download README.md</a></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3. Run it in Codespaces</h2>
+    <pre>python -m pip install -r requirements.txt
+python -m flask --app app run --debug --host=0.0.0.0</pre>
+    <p>Open the forwarded port when Codespaces offers it.</p>
+  </div>
+
+  <div class="card">
+    <h2>4. Establish the baseline</h2>
+    <ol>
+      <li>Submit one wrong answer. You should be allowed another try.</li>
+      <li>Submit another wrong answer. The correct answer should be revealed.</li>
+      <li>Restart the application to reset the temporary state.</li>
+    </ol>
+    <p class="small">Return to Canvas for the controlled change and the questions you will use to inspect the result.</p>
+  </div>
+</main>
+</body>
+</html>
