@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>M4 — DataMan Design Investigation</title>
+<style>
+:root{--navy:#17324d;--teal:#0b6f73;--gold:#b7791f;--bg:#f5f7fa;--text:#1f2933;--muted:#5b6673;--border:#d7dee6;--warn:#fff8eb;--soft:#f3fbfb}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}.wrap{max-width:1180px;margin:0 auto;padding:24px}.hero{background:var(--navy);color:#fff;padding:24px;border-radius:12px;margin-bottom:18px}.hero h1{margin:0 0 8px;font-size:28px}.hero p{margin:0;color:#e6edf3}.tag{display:inline-block;padding:3px 8px;border-radius:999px;background:#e7f3f3;color:var(--teal);font-size:12px;font-weight:700;margin:0 6px 8px 0}.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}.panel{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px}.panel h2,.panel h3{margin-top:0;color:var(--navy)}.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.choice{border:1px solid var(--border);border-radius:10px;padding:14px;background:#fff;cursor:pointer}.choice.selected{border:2px solid var(--teal);background:var(--soft)}.choice strong{display:block;margin-bottom:5px}.btn{border:0;border-radius:8px;padding:11px 14px;font-weight:700;cursor:pointer;font-size:15px}.primary{background:var(--teal);color:#fff}.secondary{background:#e8edf2;color:var(--navy)}.btn:focus,.choice:focus{outline:3px solid rgba(11,111,115,.22)}textarea{width:100%;min-height:95px;padding:11px;border:1px solid var(--border);border-radius:8px;font:inherit}label{display:block;font-weight:700;margin:12px 0 6px}.callout{background:var(--warn);border-left:5px solid var(--gold);padding:14px 16px;border-radius:7px;margin:14px 0}.complication{background:#fff3e6;border:1px solid #e7c594;padding:16px;border-radius:9px}.hidden{display:none}.record{white-space:pre-wrap;background:#111827;color:#f9fafb;padding:16px;border-radius:9px;font-family:Consolas,Monaco,monospace;font-size:13px;max-height:540px;overflow:auto}.summary{font-size:14px;color:var(--muted)}.status{padding:10px 12px;background:#eef2f6;border-radius:8px;margin-top:10px}.evidence-list{display:grid;gap:8px}.evidence-chip{border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:#fff;cursor:pointer}.evidence-chip.selected{border:2px solid var(--teal);background:var(--soft)}.mini{font-size:13px;color:var(--muted)}code{background:#eef2f6;padding:1px 4px;border-radius:4px}@media(max-width:880px){.grid{grid-template-columns:1fr}.choice-grid{grid-template-columns:1fr}.wrap{padding:14px}.hero h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+  <div class="tag">Module 4</div><div class="tag">Design Investigation</div><div class="tag">DataMan</div>
+  <h1>DataMan Design Investigation</h1>
+  <p>Your backlog says what should move forward. Your job now is to decide what still needs to be understood before that work is safe and clear enough to build.</p>
+</section>
+
+<section class="panel">
+  <h2>Decision boundary</h2>
+  <p>Use your Module 3 product backlog, requirement traceability, acceptance criteria, and DataMan source evidence. Do not create documentation because a template expects it. Start with an implementation question, then choose the lightest evidence that can actually help answer it.</p>
+</section>
+
+<div class="grid">
+<main>
+<section class="panel" id="step1">
+  <h2>1. What kind of uncertainty are you investigating?</h2>
+  <p>Choose the category that best describes the question you need answered for your selected DataMan product slice.</p>
+  <div class="choice-grid" id="questionTypes"></div>
+  <label for="questionText">Write the actual question you need answered.</label>
+  <textarea id="questionText" placeholder="Example: Where should the two-attempt state live so the interface can change without duplicating business logic?"></textarea>
+  <p><button class="btn primary" id="toEvidence">Choose Evidence</button></p>
+</section>
+
+<section class="panel hidden" id="step2">
+  <h2>2. What evidence could answer that question?</h2>
+  <p>Select one or two evidence types that would genuinely help. More artifacts are not automatically better.</p>
+  <div class="evidence-list" id="evidenceList"></div>
+  <label for="evidenceWhy">Why is this evidence appropriate for your question?</label>
+  <textarea id="evidenceWhy"></textarea>
+  <p><button class="btn primary" id="toDecision">Make a Design Decision</button></p>
+</section>
+
+<section class="panel hidden" id="step3">
+  <h2>3. Make the best current decision</h2>
+  <div class="callout" id="sourceReminder"></div>
+  <label for="decisionText">What is your current design decision?</label>
+  <textarea id="decisionText" placeholder="State the decision clearly enough that another developer could act on it."></textarea>
+  <label for="traceText">What requirement, story, acceptance criterion, or DataMan evidence supports this decision?</label>
+  <textarea id="traceText"></textarea>
+  <label for="tradeoffText">What tradeoff, limitation, or unresolved assumption are you accepting?</label>
+  <textarea id="tradeoffText"></textarea>
+  <p><button class="btn primary" id="revealComplication">Lock Decision &amp; Reveal New Evidence</button></p>
+</section>
+
+<section class="panel hidden" id="step4">
+  <h2>4. New evidence changes the design environment</h2>
+  <div class="complication" id="complication"></div>
+  <p>You do not have to change your decision just because new information appeared. You do have to evaluate whether the new evidence changes the question, the evidence you need, or the decision itself.</p>
+  <div class="choice-grid" id="responseChoices"></div>
+  <label for="revisionText">Explain what you will do now and why.</label>
+  <textarea id="revisionText"></textarea>
+  <label for="nextQuestion">What question should be asked next?</label>
+  <textarea id="nextQuestion"></textarea>
+  <p><button class="btn primary" id="generateRecord">Generate Design Investigation Record</button></p>
+</section>
+
+<section class="panel hidden" id="step5">
+  <h2>Your Design Investigation Record</h2>
+  <p>Copy this Markdown into your CTS-285 repository at <code>docs/decisions/m4-design-investigation-record.md</code>. You will use it again when you prepare your build-readiness evidence.</p>
+  <div class="record" id="record"></div>
+  <p><button class="btn primary" id="copy">Copy Decision Record</button> <button class="btn secondary" id="restart">Restart</button></p>
+  <div class="status" id="copyStatus" aria-live="polite"></div>
+</section>
+</main>
+
+<aside>
+<section class="panel">
+  <h3>DataMan checks</h3>
+  <p class="summary"><strong>Two attempts:</strong> Can the design distinguish try 1 from try 2 and support reveal after the second miss?</p>
+  <p class="summary"><strong>Memory Bank:</strong> Can the design represent or enforce the up-to-10-problem limit?</p>
+  <p class="summary"><strong>Results later:</strong> Can a curator retrieve a learner's past results without watching the session live?</p>
+</section>
+<section class="panel">
+  <h3>XP values in use</h3>
+  <p class="summary"><strong>Simplicity:</strong> Use the minimum evidence needed.</p>
+  <p class="summary"><strong>Feedback:</strong> Let evidence challenge the decision.</p>
+  <p class="summary"><strong>Courage:</strong> Revise weak decisions.</p>
+  <p class="summary"><strong>Communication:</strong> Make reasoning visible.</p>
+  <p class="summary"><strong>Respect:</strong> Different defensible designs may exist.</p>
+</section>
+<section class="panel">
+  <h3>Current investigation</h3>
+  <div class="summary" id="currentSummary">No investigation selected yet.</div>
+</section>
+</aside>
+</div>
+</div>
+
+<script>
+const questionTypes=[
+ {id:'interaction',title:'Interaction',desc:'What must the learner or curator see, enter, choose, or receive?'},
+ {id:'behavior',title:'Behavior',desc:'What must happen, in what order, and under which conditions?'},
+ {id:'data',title:'Data / State',desc:'What information must exist, persist, change, or relate?'},
+ {id:'architecture',title:'Architecture',desc:'Which responsibility belongs where, and what should stay independent?'},
+ {id:'dependency',title:'Dependency / Constraint',desc:'What must be available, true, completed, or decided first?'},
+ {id:'readiness',title:'Readiness',desc:'Do we know enough to build this slice responsibly?'}
+];
+const evidenceByType={
+ interaction:[['wireframe','Wireframe / annotated interaction sketch'],['flow','User-flow sketch'],['criteria','Acceptance-criteria trace'],['prototype','Small executable prototype']],
+ behavior:[['flow','Flow / state representation'],['sequence','Sequence sketch'],['pseudocode','Pseudocode'],['criteria','Acceptance-criteria trace'],['prototype','Small executable prototype']],
+ data:[['erd','ERD / relationship model'],['fields','Field or state table'],['criteria','Acceptance-criteria trace'],['prototype','Small executable prototype']],
+ architecture:[['layers','Layer / component sketch'],['class','Class relationship'],['adr','Architecture Decision Record'],['prototype','Prototype structure']],
+ dependency:[['dependency','Dependency map'],['constraint','Constraint list'],['spike','Technical spike'],['adr','Architecture Decision Record']],
+ readiness:[['criteria','Acceptance-criteria trace'],['dependency','Dependency check'],['review','Design review'],['prototype','Prototype behavior'],['risk','Open-question / uncertainty list']]
+};
+const complications={
+ interaction:'Your proposed interaction satisfies the happy path, but a learner misses the same problem twice. The current screen plan does not show what happens after the second miss or how the correct answer is revealed.',
+ behavior:'Your behavior model handles correct and first-miss paths, but a second attempt exposes state that must survive across two user actions. Your current design never says which layer owns that state.',
+ data:'Your data model can store a final score, but a curator later asks which specific problems were missed and whether the learner was right on the first or second try. The current model cannot answer both questions.',
+ architecture:'Your first prototype works, but the text interface directly performs DataMan arithmetic. Reusing the logic in Flask would require copying code into routes instead of calling a separate business-logic layer.',
+ dependency:'A dependency you assumed would be available is not ready. The story can still move only if you split the work, stub the dependency, or redefine the slice.',
+ readiness:'A story appears ready until the team notices that one acceptance criterion depends on behavior that has never been modeled or tested. The team must decide whether to proceed, revise, split, or block the work.'
+};
+let selectedType=null;let selectedEvidence=new Set();let selectedResponse=null;
+function renderQuestionTypes(){const box=document.getElementById('questionTypes');questionTypes.forEach(q=>{const d=document.createElement('button');d.type='button';d.className='choice';d.innerHTML=`<strong>${q.title}</strong><span>${q.desc}</span>`;d.onclick=()=>{selectedType=q.id;document.querySelectorAll('#questionTypes .choice').forEach(x=>x.classList.remove('selected'));d.classList.add('selected');updateSummary();};box.appendChild(d);});}
+function renderEvidence(){const list=document.getElementById('evidenceList');list.innerHTML='';selectedEvidence=new Set();(evidenceByType[selectedType]||[]).forEach(([id,label])=>{const b=document.createElement('button');b.type='button';b.className='evidence-chip';b.textContent=label;b.onclick=()=>{if(selectedEvidence.has(id)){selectedEvidence.delete(id);b.classList.remove('selected')}else{if(selectedEvidence.size>=2){alert('Choose no more than two evidence types.');return;}selectedEvidence.add(id);b.classList.add('selected')}updateSummary();};list.appendChild(b);});}
+function updateSummary(){const q=questionTypes.find(x=>x.id===selectedType);const ev=(evidenceByType[selectedType]||[]).filter(([id])=>selectedEvidence.has(id)).map(x=>x[1]);document.getElementById('currentSummary').innerHTML=`${q?'<strong>Question type:</strong> '+q.title:'No question type selected.'}${ev.length?'<br><br><strong>Evidence:</strong><br>'+ev.map(x=>'• '+x).join('<br>'):''}`;}
+function val(id){return document.getElementById(id).value.trim()||'[Not entered]'}
+document.getElementById('toEvidence').onclick=()=>{if(!selectedType){alert('Choose a question type first.');return;}if(!document.getElementById('questionText').value.trim()){alert('Write the actual design question before continuing.');return;}renderEvidence();document.getElementById('step2').classList.remove('hidden');document.getElementById('step2').scrollIntoView({behavior:'smooth'});};
+document.getElementById('toDecision').onclick=()=>{if(selectedEvidence.size===0){alert('Choose at least one evidence type.');return;}if(!document.getElementById('evidenceWhy').value.trim()){alert('Explain why the evidence is appropriate.');return;}const q=questionTypes.find(x=>x.id===selectedType);document.getElementById('sourceReminder').innerHTML=`<strong>Before deciding:</strong> Check the DataMan manual, your M3 backlog, and the acceptance criteria that trace to this ${q.title.toLowerCase()} question. If the source evidence settles the issue, use it. If it is silent, make the uncertainty visible instead of inventing certainty.`;document.getElementById('step3').classList.remove('hidden');document.getElementById('step3').scrollIntoView({behavior:'smooth'});};
+document.getElementById('revealComplication').onclick=()=>{if(!document.getElementById('decisionText').value.trim()||!document.getElementById('traceText').value.trim()||!document.getElementById('tradeoffText').value.trim()){alert('Complete the decision, trace, and tradeoff fields before continuing.');return;}document.getElementById('complication').innerHTML=`<strong>New evidence:</strong> ${complications[selectedType]}`;const responses=[['keep','Keep the decision — new evidence does not materially change it'],['revise','Revise the decision'],['evidence','Gather different or additional evidence'],['split','Split or narrow the product work'],['block','Block / return for clarification']];const box=document.getElementById('responseChoices');box.innerHTML='';responses.forEach(([id,label])=>{const b=document.createElement('button');b.type='button';b.className='choice';b.innerHTML=`<strong>${label}</strong>`;b.onclick=()=>{selectedResponse=id;document.querySelectorAll('#responseChoices .choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');};box.appendChild(b);});document.getElementById('step4').classList.remove('hidden');document.getElementById('step4').scrollIntoView({behavior:'smooth'});};
+document.getElementById('generateRecord').onclick=()=>{if(!selectedResponse){alert('Choose how you will respond to the new evidence.');return;}if(!document.getElementById('revisionText').value.trim()||!document.getElementById('nextQuestion').value.trim()){alert('Explain your response and identify the next question.');return;}const q=questionTypes.find(x=>x.id===selectedType);const ev=(evidenceByType[selectedType]||[]).filter(([id])=>selectedEvidence.has(id)).map(x=>'- '+x[1]).join('\n');const responseLabels={keep:'Keep current decision',revise:'Revise decision',evidence:'Gather different/additional evidence',split:'Split or narrow product work',block:'Block / return for clarification'};const rec=`# M4 Design Investigation Record\n\n## Product Slice\n[Add the story/story set from docs/product-backlog.md]\n\n## Design Question\n**Question type:** ${q.title}\n\n${val('questionText')}\n\n## Evidence Selected\n${ev}\n\n**Why this evidence was appropriate:**\n${val('evidenceWhy')}\n\n## Initial Design Decision\n${val('decisionText')}\n\n**Trace to requirement/story/acceptance criteria/source evidence:**\n${val('traceText')}\n\n**Tradeoff, limitation, or unresolved assumption:**\n${val('tradeoffText')}\n\n## New Evidence / Consequence\n${complications[selectedType]}\n\n## Response\n**Action:** ${responseLabels[selectedResponse]}\n\n${val('revisionText')}\n\n## Next Question\n${val('nextQuestion')}\n\n## Transfer Forward\nIdentify what this investigation means for the design evidence you still need, the text-only prototype you will build, and whether the selected product work is moving toward Ready, Revise, Split, or Blocked.\n`;document.getElementById('record').textContent=rec;document.getElementById('step5').classList.remove('hidden');document.getElementById('step5').scrollIntoView({behavior:'smooth'});};
+document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById('record').textContent);document.getElementById('copyStatus').textContent='Design Investigation Record copied. Paste it into docs/decisions/m4-design-investigation-record.md.';}catch(e){document.getElementById('copyStatus').textContent='Copy was blocked. Select the record text and copy it manually.';}};
+document.getElementById('restart').onclick=()=>location.reload();
+renderQuestionTypes();
+</script>
+</body>
+</html>
