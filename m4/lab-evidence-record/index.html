@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M4 Lab Evidence Record</title>
+<style>
+:root{--bg:#f5f7fa;--panel:#fff;--ink:#1f2933;--muted:#5b6673;--navy:#17324d;--teal:#0b6f73;--gold:#b7791f;--line:#d7dee6;--soft:#f3fbfb;--warn:#fff8eb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.55}.wrap{max-width:980px;margin:auto;padding:24px 16px 64px}.hero{background:var(--navy);color:#fff;padding:24px;border-radius:12px;margin-bottom:18px}.hero h1{margin:.2rem 0 .45rem}.hero p{margin:0;color:#e6edf3}.eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f0b82d}.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;margin:0 0 16px}.panel h2,.panel h3{color:var(--navy);margin-top:0}.callout{border-left:5px solid var(--teal);background:var(--soft);padding:14px 16px;margin:16px 0}.warn{border-left-color:var(--gold);background:var(--warn)}label{display:block;font-weight:700;margin:14px 0 6px}select,textarea,input{width:100%;font:inherit;border:1px solid var(--line);border-radius:8px;padding:10px 11px;background:#fff}textarea{min-height:92px;resize:vertical}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:8px;padding:11px 15px;font-weight:700;cursor:pointer;font:inherit}.primary{background:var(--teal);color:#fff}.secondary{background:#e8edf2;color:var(--navy)}.btn:disabled{opacity:.45;cursor:not-allowed}.status{margin-top:12px;padding:10px 12px;border-radius:8px;background:#eef2f6;color:var(--muted)}.record{white-space:pre-wrap;background:#111827;color:#f9fafb;padding:16px;border-radius:8px;max-height:500px;overflow:auto;font-family:Consolas,Monaco,monospace;font-size:13px}.small{font-size:.92rem;color:var(--muted)}@media(max-width:720px){.grid{grid-template-columns:1fr}.wrap{padding:14px 12px 48px}}@media print{body{background:#fff}.no-print,.hero p,.status{display:none!important}.wrap{max-width:none;padding:0}.panel{border:0;padding:0}.record{background:#fff;color:#000;max-height:none;overflow:visible;font-family:Arial,Helvetica,sans-serif;white-space:pre-wrap}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Module 4 · Evidence Checkpoint</div>
+    <h1>M4 Lab Evidence Record</h1>
+    <p>Capture the design evidence that changed your thinking. Record evidence, not a play-by-play.</p>
+  </section>
+
+  <section class="panel">
+    <div class="callout"><strong>This record is your evidence checkpoint.</strong> Complete it after both operational labs. Your submission should show what you tested, what consequence became visible, what you revised, and what changed after the revision.</div>
+    <p class="small">Your entries are stored only in this browser while you work. Use the download button when the record is complete.</p>
+  </section>
+
+  <section class="panel">
+    <h2>1. Answer Flow Lab</h2>
+    <div class="grid">
+      <div>
+        <label for="afDecision">Initial design decision tested</label>
+        <select id="afDecision">
+          <option value="">Choose one</option>
+          <option>Two-attempt rule location</option>
+          <option>Attempt/state representation</option>
+          <option>Persistence across interruption/reload</option>
+          <option>Feedback/reveal responsibility</option>
+        </select>
+      </div>
+      <div>
+        <label for="afScenario">Scenario that exposed the issue</label>
+        <select id="afScenario">
+          <option value="">Choose one</option>
+          <option>Correct on first try</option>
+          <option>Wrong, then correct</option>
+          <option>Wrong twice, then reveal</option>
+          <option>Interruption or reload between attempts</option>
+        </select>
+      </div>
+    </div>
+    <label for="afConsequence">What consequence did the system make visible?</label>
+    <textarea id="afConsequence" placeholder="Describe the actual behavior or evidence you observed."></textarea>
+    <label for="afRevision">What did you revise, and why?</label>
+    <textarea id="afRevision" placeholder="Name the design change and connect it to the evidence."></textarea>
+    <label for="afChanged">What changed after the revision?</label>
+    <textarea id="afChanged" placeholder="State the new outcome or remaining problem."></textarea>
+  </section>
+
+  <section class="panel">
+    <h2>2. Memory Bank &amp; Curator Retrieval Lab</h2>
+    <div class="grid">
+      <div>
+        <label for="mbDecision">Initial design decision tested</label>
+        <select id="mbDecision">
+          <option value="">Choose one</option>
+          <option>Set/problem membership relationship</option>
+          <option>Ten-problem limit enforcement</option>
+          <option>Attempt/session/result storage</option>
+          <option>Curator retrieval/query path</option>
+        </select>
+      </div>
+      <div>
+        <label for="mbScenario">Scenario that exposed the issue</label>
+        <select id="mbScenario">
+          <option value="">Choose one</option>
+          <option>Problem belongs to more than one set</option>
+          <option>Attempt to add an 11th problem</option>
+          <option>Learner session closes</option>
+          <option>Curator retrieves prior learner results</option>
+        </select>
+      </div>
+    </div>
+    <label for="mbConsequence">What relationship, constraint, or retrieval consequence became visible?</label>
+    <textarea id="mbConsequence" placeholder="Describe the actual design consequence you observed."></textarea>
+    <label for="mbRevision">What did you revise, and why?</label>
+    <textarea id="mbRevision" placeholder="Name the design change and connect it to the evidence."></textarea>
+    <label for="mbChanged">What changed after the revision?</label>
+    <textarea id="mbChanged" placeholder="State the new outcome or remaining problem."></textarea>
+  </section>
+
+  <section class="panel">
+    <h2>3. Carry the Evidence Forward</h2>
+    <label for="crossFinding">What did these systems make visible that you could not have known by simply reading the requirements?</label>
+    <textarea id="crossFinding"></textarea>
+    <label for="nextQuestion">What question should now guide your own DataMan design investigation?</label>
+    <textarea id="nextQuestion"></textarea>
+    <div class="callout warn"><strong>Do not write a general reflection.</strong> Your answer should point to a design decision, dependency, state, relationship, behavior, or retrieval need that now requires attention.</div>
+  </section>
+
+  <section class="panel no-print">
+    <h2>4. Generate Your Submission</h2>
+    <p>When all required evidence is complete, generate the record. Download the Markdown file and submit that file in Canvas. You may also print or save the generated record as a PDF if your instructor permits PDF submission.</p>
+    <div class="actions">
+      <button class="btn primary" id="generate" disabled>Generate Evidence Record</button>
+      <button class="btn secondary" id="download" disabled>Download .md</button>
+      <button class="btn secondary" id="print" disabled>Print / Save PDF</button>
+      <button class="btn secondary" id="clear">Clear Saved Work</button>
+    </div>
+    <div class="status" id="status" aria-live="polite">Complete every required field to unlock the evidence record.</div>
+  </section>
+
+  <section class="panel" id="outputPanel" hidden>
+    <h2>Generated Lab Evidence Record</h2>
+    <div class="record" id="record"></div>
+  </section>
+</main>
+<script>
+const ids=['afDecision','afScenario','afConsequence','afRevision','afChanged','mbDecision','mbScenario','mbConsequence','mbRevision','mbChanged','crossFinding','nextQuestion'];
+const key='cts285-m4-lab-evidence-v1';
+const $=id=>document.getElementById(id);
+function read(){try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return{}}}
+function save(){const d={};ids.forEach(id=>d[id]=$(id).value);try{localStorage.setItem(key,JSON.stringify(d))}catch(e){}check();}
+function load(){const d=read();ids.forEach(id=>{if(d[id])$(id).value=d[id]});check();}
+function complete(){return ids.every(id=>$(id).value.trim().length>0)}
+function check(){const ok=complete();$('generate').disabled=!ok;$('status').textContent=ok?'All required evidence is present. Generate your submission record.':'Complete every required field to unlock the evidence record.';}
+function esc(s){return s.trim()}
+function build(){return `# M4 Lab Evidence Record\n\n## Answer Flow Lab\n**Initial design decision tested:** ${esc($('afDecision').value)}\n\n**Scenario that exposed the issue:** ${esc($('afScenario').value)}\n\n### Consequence Observed\n${esc($('afConsequence').value)}\n\n### Revision Made\n${esc($('afRevision').value)}\n\n### What Changed After Revision\n${esc($('afChanged').value)}\n\n---\n\n## Memory Bank & Curator Retrieval Lab\n**Initial design decision tested:** ${esc($('mbDecision').value)}\n\n**Scenario that exposed the issue:** ${esc($('mbScenario').value)}\n\n### Consequence Observed\n${esc($('mbConsequence').value)}\n\n### Revision Made\n${esc($('mbRevision').value)}\n\n### What Changed After Revision\n${esc($('mbChanged').value)}\n\n---\n\n## Cross-Lab Finding\n${esc($('crossFinding').value)}\n\n## Revised / New Design Question\n${esc($('nextQuestion').value)}\n`;}
+ids.forEach(id=>{$(id).addEventListener('input',save);$(id).addEventListener('change',save)});
+$('generate').onclick=()=>{if(!complete())return;const text=build();$('record').textContent=text;$('outputPanel').hidden=false;$('download').disabled=false;$('print').disabled=false;$('status').textContent='Evidence Record generated. Download the .md file and submit it in Canvas.';$('outputPanel').scrollIntoView({behavior:'smooth'});};
+$('download').onclick=()=>{const blob=new Blob([build()],{type:'text/markdown;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='m4-lab-evidence-record.md';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+$('print').onclick=()=>window.print();
+$('clear').onclick=()=>{if(!confirm('Clear all saved evidence from this browser?'))return;localStorage.removeItem(key);ids.forEach(id=>$(id).value='');$('outputPanel').hidden=true;$('download').disabled=true;$('print').disabled=true;check();};
+load();
+</script>
+</body>
+</html>
