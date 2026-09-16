@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spike — Elicitation VN Scene</title>
+<!--
+  DESIGN SPIKE. Not student material. Not linked from any Canvas page.
+
+  Purpose: anchor the visual-novel form for the Module 2 elicitation rebuild by building one
+  scene end to end, at projector scale, so the mechanism can be argued about in front of people
+  instead of in prose.
+
+  Deliberately absent: FTCC gold. The confirmed institutional gold #F0B82D sits 13 from PRISM
+  yellow #F2C037 out of 441 - closer than the retired estimate's 21 - and INTERSTITIAL-MODULES.md
+  rule 4 forbids placing institutional gold where a band claim would be read. This file is
+  in-character throughout, so it uses the band yellow and no institutional colour at all.
+-->
+<style>
+  :root{
+    --paper:#efe6d6; --paper-2:#e4d8c3; --ink:#15120d; --ink-2:#4a4034;
+    --band:#f2c037; --rule:#c9bca4; --cut:#b8452f; --cool:#2d5f63; --white:#faf6ee;
+    --sans:'Helvetica Neue',Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--ink);color:var(--ink);font-family:var(--sans);
+    display:flex;align-items:center;justify-content:center;padding:16px;
+  }
+  #stage{
+    width:min(1200px,100%);aspect-ratio:16/10;max-height:calc(100vh - 32px);
+    background:var(--paper);position:relative;overflow:hidden;
+    box-shadow:0 18px 60px rgba(0,0,0,.6);
+  }
+  #grain{position:absolute;inset:0;width:100%;height:100%;opacity:.22;pointer-events:none;mix-blend-mode:multiply}
+  .screen{position:absolute;inset:0;display:none;flex-direction:column;padding:clamp(18px,3vw,40px)}
+  .screen.on{display:flex}
+
+  /* ---------- boot ---------- */
+  #boot{background:#0d0b08;color:#f2c037;font-family:var(--mono);justify-content:center}
+  #boot .l{font-size:clamp(13px,1.5vw,20px);line-height:2;opacity:0;letter-spacing:.02em}
+  #boot .l.in{opacity:1}
+  #boot .hd{color:#faf6ee;letter-spacing:.18em;margin-bottom:1.2em;font-size:clamp(14px,1.7vw,22px)}
+  .cursor{display:inline-block;width:.6em;height:1.05em;background:#f2c037;vertical-align:-2px;animation:bl 1s steps(2) infinite}
+  @keyframes bl{50%{opacity:0}}
+
+  /* ---------- collage furniture ---------- */
+  .kick{font-family:var(--mono);font-size:clamp(10px,1vw,13px);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-2)}
+  h1,h2{margin:0;font-weight:800;letter-spacing:-.02em;line-height:1.04}
+  h1{font-size:clamp(28px,4.4vw,60px)}
+  h2{font-size:clamp(20px,2.7vw,36px)}
+  .torn{background:var(--white);padding:clamp(14px,1.8vw,26px);position:relative;
+        box-shadow:3px 4px 0 rgba(21,18,13,.16);clip-path:polygon(0 2%,3% 0,97% 1.5%,100% 0,99% 98%,96% 100%,2% 99%,0 100%)}
+  .tape{position:absolute;width:86px;height:24px;background:rgba(242,192,55,.55);
+        box-shadow:0 1px 0 rgba(21,18,13,.12);transform:rotate(-3deg)}
+
+  /* ---------- scene ---------- */
+  #scene{padding:0}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:clamp(14px,2vw,24px) clamp(18px,3vw,34px) 0}
+  .puppets{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:clamp(10px,4vw,70px);min-height:0;padding:0 4%}
+  .fig{display:flex;flex-direction:column;align-items:center;transition:transform .35s,opacity .35s;opacity:.55;transform:translateY(8px) scale(.94)}
+  .fig.live{opacity:1;transform:none}
+  .fig svg{height:clamp(120px,27vh,268px);width:auto;display:block}
+  .nm{font-family:var(--mono);font-size:clamp(9px,.95vw,12px);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);margin-top:8px;text-align:center}
+  .fig.live .nm{color:var(--ink);font-weight:700}
+
+  .dial{margin:0 clamp(18px,3vw,34px) clamp(26px,3.4vw,40px);display:flex;flex-direction:column;justify-content:flex-end;flex:none}
+  .say{font-size:clamp(15px,1.85vw,25px);line-height:1.3;margin:.3em 0 .1em;font-weight:500}
+  .say em{font-style:normal;background:linear-gradient(transparent 62%,rgba(242,192,55,.85) 62%)}
+  .who{font-family:var(--mono);font-size:clamp(10px,1vw,13px);letter-spacing:.2em;text-transform:uppercase;color:var(--cut);font-weight:700}
+
+  .choices{display:grid;gap:8px;margin-top:10px}
+  .ch{display:flex;gap:12px;align-items:baseline;text-align:left;width:100%;cursor:pointer;
+      background:var(--white);border:2px solid var(--ink);padding:clamp(7px,.95vw,13px) clamp(11px,1.4vw,18px);
+      font:inherit;font-size:clamp(13px,1.35vw,18px);line-height:1.28;box-shadow:3px 3px 0 var(--ink)}
+  .ch:hover:not(:disabled),.ch:focus-visible{background:var(--band);outline:none;transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
+  .ch:disabled{opacity:.34;cursor:default;box-shadow:none}
+  .ch b{font-family:var(--mono);color:var(--cut)}
+
+  /* ---------- gauges ---------- */
+  .gauges{display:flex;flex-direction:column;gap:10px;width:clamp(180px,21vw,260px);flex:none}
+  .g{background:var(--white);border:2px solid var(--ink);padding:9px 11px;box-shadow:3px 3px 0 rgba(21,18,13,.2)}
+  .g .lab{font-family:var(--mono);font-size:clamp(8px,.82vw,11px);letter-spacing:.15em;text-transform:uppercase;color:var(--ink-2)}
+  .g .val{font-weight:800;font-size:clamp(14px,1.55vw,21px);line-height:1.15;margin-top:2px}
+  .bar{height:9px;background:var(--paper-2);margin-top:6px;display:flex;gap:2px}
+  .bar i{flex:1;background:var(--paper-2);border:1px solid rgba(21,18,13,.18)}
+  .bar i.f{background:var(--ink)}
+  .g.warn .bar i.f{background:var(--cut)}
+  .delta{font-family:var(--mono);font-size:clamp(9px,.9vw,12px);margin-top:5px;min-height:1.2em;color:var(--cut);font-weight:700}
+  .budget{font-family:var(--mono);font-size:clamp(10px,1.05vw,14px);letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+
+  /* ---------- generic content screens ---------- */
+  .wrap{max-width:62ch;margin:auto;width:100%}
+  .lede{font-size:clamp(15px,1.75vw,23px);line-height:1.5;margin:.7em 0}
+  .btn{font:inherit;font-weight:700;font-size:clamp(13px,1.4vw,18px);cursor:pointer;background:var(--ink);color:var(--band);
+       border:2px solid var(--ink);padding:.62em 1.25em;box-shadow:4px 4px 0 rgba(21,18,13,.28)}
+  .btn:hover,.btn:focus-visible{background:var(--cut);color:var(--white);outline:none}
+  .btn.alt{background:var(--white);color:var(--ink)}
+  .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:1.1em}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,26px);margin-top:1em}
+  .ev{border-left:6px solid var(--cool);padding:.5em 0 .5em .9em;margin:.55em 0;font-size:clamp(13px,1.4vw,18px);line-height:1.42}
+  .ev.none{border-left-color:var(--cut)}
+  .hud{position:absolute;right:14px;bottom:7px;font-family:var(--mono);font-size:11px;color:var(--ink-2);opacity:.75}
+  #boot .hud{color:#6b6250}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="stage">
+<svg id="grain" aria-hidden="true"><filter id="gr"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#gr)"/></svg>
+
+<!-- ============ BOOT ============ -->
+<section class="screen on" id="boot" aria-label="System start-up">
+  <div class="wrap">
+    <div class="l hd" data-l>ALGOCRATIC FUTURES&trade; &middot; IMMERSIVE ENGAGEMENT SUITE</div>
+    <div class="l" data-l>initialising sensory scaffold &middot;&middot;&middot;&middot;&middot;&middot;&middot;&middot; ok</div>
+    <div class="l" data-l>loading stakeholder effigies &middot;&middot;&middot;&middot;&middot;&middot;&middot; ok</div>
+    <div class="l" data-l>reconciling contradictory testimony &middot;&middot; deferred</div>
+    <div class="l" data-l>calibrating enthusiasm &middot;&middot;&middot;&middot;&middot;&middot;&middot;&middot;&middot;&middot;&middot;&middot;&middot; ok</div>
+    <div class="l" data-l style="color:#faf6ee;margin-top:1.3em">SESSION &middot; DATAMAN MODERNISATION &middot; ELICITATION<span class="cursor"></span></div>
+  </div>
+  <div class="hud">press any key</div>
+</section>
+
+<!-- ============ CSP BRIEF ============ -->
+<section class="screen" id="brief" aria-label="Channel Success Partner briefing">
+  <div class="wrap">
+    <div class="kick">Channel Success Partner</div>
+    <h1 style="margin:.18em 0 .5em">Good morning.<br>You are the analyst.</h1>
+    <div class="torn" style="transform:rotate(-.5deg)">
+      <span class="tape" style="top:-11px;left:34px"></span>
+      <p class="lede" style="margin-top:.1em">I will be nearby for the whole engagement, which many participants describe as reassuring.</p>
+      <p class="lede">Three stakeholders will tell you about DataMan. <em>They will not agree with each other.</em> That is not a malfunction. It is the job.</p>
+      <p class="lede"><strong>You may ask two questions.</strong> They have unlimited opinions. Please allocate accordingly.</p>
+      <p class="lede" style="margin-bottom:.15em">One tip, which I am contractually delighted to share: a stakeholder who names a technology has handed you a <em>solution</em>, not a need. You may write it down. It will simply cost you later.</p>
+    </div>
+    <div class="row">
+      <button class="btn" id="go">Begin the interview</button>
+      <button class="btn alt" id="skipTo">Skip to the comparison</button>
+    </div>
+  </div>
+  <div class="hud">spike &middot; one scene</div>
+</section>
+
+<!-- ============ SCENE ============ -->
+<section class="screen" id="scene" aria-label="Stakeholder interview">
+  <div class="top">
+    <div>
+      <div class="kick">DataMan modernisation &middot; elicitation</div>
+      <div class="budget" id="budget">Questions remaining: 2</div>
+    </div>
+    <div class="gauges">
+      <div class="g" id="gC">
+        <div class="lab">Project complexity</div>
+        <div class="val" id="cVal">Unbounded</div>
+        <div class="bar" id="cBar" aria-hidden="true"></div>
+        <div class="delta" id="cDel"></div>
+      </div>
+      <div class="g" id="gP">
+        <div class="lab">Schedule pressure</div>
+        <div class="val" id="pVal">Low</div>
+        <div class="bar" id="pBar" aria-hidden="true"></div>
+        <div class="delta" id="pDel"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="puppets" id="puppets"></div>
+
+  <div class="dial">
+    <div class="who" id="who">The room</div>
+    <p class="say" id="say">Everyone has come with something they already know is true.</p>
+    <div class="choices" id="choices"></div>
+  </div>
+  <p class="sr" id="live" role="status" aria-live="polite"></p>
+  <div class="hud">1&ndash;3 choose &middot; enter advance &middot; R restart</div>
+</section>
+
+<!-- ============ COMPLICATION ============ -->
+<section class="screen" id="comp" aria-label="New information">
+  <div class="wrap">
+    <div class="kick" style="color:var(--cut)">New information arrives</div>
+    <div class="torn" style="transform:rotate(.6deg);margin-top:.7em;border-left:10px solid var(--cut)">
+      <span class="tape" style="top:-11px;right:44px;transform:rotate(4deg)"></span>
+      <p class="lede" style="margin-top:.1em">Students may use DataMan on <strong>school Chromebooks, phones, tablets, and home computers</strong>.</p>
+      <p class="lede" style="margin-bottom:.15em">Some sessions may be <strong>interrupted before students intentionally sign out</strong>.</p>
+    </div>
+    <p class="lede" id="compAsk" style="font-weight:700"></p>
+    <div class="row"><button class="btn" id="toEnd">What can you defend?</button></div>
+  </div>
+</section>
+
+<!-- ============ OUTCOME ============ -->
+<section class="screen" id="end" aria-label="Outcome">
+  <div class="wrap" style="max-width:none">
+    <div class="kick">Terminal position</div>
+    <h2 id="endTitle" style="margin:.2em 0 .1em"></h2>
+    <p class="lede" id="endBody" style="margin-top:.35em"></p>
+    <div id="endEv"></div>
+    <div class="row">
+      <button class="btn" id="again">Run the other route</button>
+      <button class="btn alt" id="reset">Back to the start</button>
+    </div>
+  </div>
+  <div class="hud">no score is kept</div>
+</section>
+
+<!-- ============ COMPARISON ============ -->
+<section class="screen" id="cmp" aria-label="Route comparison">
+  <div class="wrap" style="max-width:none">
+    <div class="kick">The same two questions, spent differently</div>
+    <h2 style="margin:.2em 0 .6em">Two routes through one scene</h2>
+    <div class="cols">
+      <div class="torn" style="transform:rotate(-.7deg)">
+        <div class="who">Route A &middot; spend on solutions</div>
+        <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45"><b>Q5</b> Which database should we use?<br><b>Q6</b> What colours and visual theme?</p>
+        <div class="ev none">&ldquo;I do not know. I expected the development team to decide that.&rdquo;</div>
+        <div class="ev none">Preferences, but no evidence that any scheme is required.</div>
+        <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45"><strong>Complexity: Unbounded.</strong> Nothing was ruled out.<br><strong>Pressure: High.</strong> The budget is spent.</p>
+        <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45;color:var(--cut);font-weight:700">Meets the complication with nothing.</p>
+      </div>
+      <div class="torn" style="transform:rotate(.5deg)">
+        <div class="who" style="color:var(--cool)">Route B &middot; spend on needs</div>
+        <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45"><b>Q2</b> What does &ldquo;shouldn&rsquo;t lose their work&rdquo; mean?<br><b>Q7</b> Who uses it, and where?</p>
+        <div class="ev">Learners pause and return. Saved practice state must survive leaving.</div>
+        <div class="ev">Device and access conditions are <em>not yet confirmed</em>.</div>
+        <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45"><strong>Complexity: Narrowing.</strong> A need was separated from a solution.<br><strong>Pressure: High.</strong> The same budget is spent.</p>
+        <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45;color:var(--cool);font-weight:700">Meets the complication already holding the unknown.</p>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:.9em"><strong>Both routes cost exactly two questions.</strong> Neither team was lazy. The difference is not effort and it is not luck &mdash; it is what the budget was spent on.</p>
+    <div class="row"><button class="btn" id="cmpBack">Run a route</button></div>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(s){return document.querySelector(s)};
+
+  /* ---------- cast: flat shadow-puppet silhouettes on rods ---------- */
+  var CAST=[
+    {id:'teacher',name:'Ms. Okonjo · teacher',
+     svg:'<path d="M40 210 L40 96 Q40 74 58 66 L74 60 Q62 52 62 38 Q62 18 82 18 Q102 18 102 38 Q102 52 90 60 L106 66 Q124 74 124 96 L124 210 Z"/>'+
+         '<path d="M78 16 Q84 4 94 10 Q102 15 96 24 Z"/>'+
+         '<path d="M118 92 L150 116 L146 126 L112 106 Z"/>'+
+         '<rect x="142" y="104" width="34" height="26" rx="2" transform="rotate(-9 159 117)"/>'+
+         '<rect x="81" y="210" width="3" height="46" opacity=".45"/>'},
+    {id:'buyer',name:'D. Reyes · district buyer',
+     svg:'<path d="M34 210 L34 92 Q34 70 56 64 L74 58 Q62 50 62 36 Q62 16 82 16 Q102 16 102 36 Q102 50 90 58 L108 64 Q130 70 130 92 L130 210 Z"/>'+
+         '<path d="M62 62 L82 92 L102 62 L94 58 L82 74 L70 58 Z" fill="#efe6d6"/>'+
+         '<path d="M126 100 L146 130 L136 136 L118 112 Z"/>'+
+         '<rect x="128" y="132" width="44" height="34" rx="3"/>'+
+         '<rect x="144" y="126" width="12" height="8" rx="2"/>'+
+         '<rect x="81" y="210" width="3" height="46" opacity=".45"/>'},
+    {id:'student',name:'A learner',
+     svg:'<path d="M46 210 L46 124 Q46 106 62 100 L74 96 Q64 89 64 77 Q64 60 80 60 Q96 60 96 77 Q96 89 86 96 L98 100 Q114 106 114 124 L114 210 Z"/>'+
+         '<path d="M64 66 Q80 52 96 66 L96 72 Q80 60 64 72 Z"/>'+
+         '<path d="M108 128 L132 146 L126 155 L102 140 Z"/>'+
+         '<rect x="124" y="138" width="26" height="20" rx="3" transform="rotate(10 137 148)"/>'+
+         '<rect x="79" y="210" width="3" height="46" opacity=".45"/>'}
+  ];
+
+  /* ---------- the seven questions, verbatim from the shipped simulation ---------- */
+  var Q=[
+    {n:1,speaker:1,q:'What does “modern” need to mean from a user perspective?',
+     a:'Works in a browser. Understandable without a manual. No screens the learner does not need.',
+     ev:'"Modern" is scoped to reliability and clarity, not to a visual style.',c:-1,p:1,tag:null},
+    {n:2,speaker:0,q:'What do they mean by “students shouldn’t lose their work”?',
+     a:'They pause in the middle and come back the next day. It has to still be there.',
+     ev:'Saved practice state must survive a learner leaving and returning.',c:-2,p:1,tag:'persist'},
+    {n:3,speaker:0,q:'Which original DataMan behaviours are essential to keep?',
+     a:'Answer, know immediately, try again. And they can see they are getting somewhere.',
+     ev:'Immediate feedback, retry after an incorrect answer, visible progress.',c:-1,p:1,tag:null},
+    {n:4,speaker:1,q:'What do parents and teachers need to understand about activity?',
+     a:'What was practised. Whether it is improving. Nothing elaborate.',
+     ev:'Adults need visibility of practice and progress. No dashboard is agreed.',c:0,p:1,tag:null},
+    {n:5,speaker:1,q:'Which database technology should the team use?',
+     a:'I do not know. I expected the development team to decide that.',
+     ev:'No user or business requirement is established. The question was answered honestly and bought nothing.',c:0,p:1,tag:'null'},
+    {n:6,speaker:2,q:'What colours and visual theme should it use?',
+     a:'Blue? I like blue. Is that what you needed?',
+     ev:'Preferences exist. No evidence shows any scheme is required for the system to meet the need.',c:0,p:1,tag:'null'},
+    {n:7,speaker:2,q:'Who will use this, and in what setting?',
+     a:'Me. On whatever is in the room. Sometimes the cart ones, sometimes at home.',
+     ev:'Device and access conditions are named as an open unknown, not settled.',c:-2,p:1,tag:'context'}
+  ];
+
+  var C_STEPS=['Bounded','Narrowing','Wide','Unbounded'];
+  var P_STEPS=['Low','Rising','High','Critical'];
+  var state,asked,cIdx=3,pIdx=0;
+
+  function reset(){
+    state='brief'; asked=[]; cIdx=3; pIdx=0;
+    drawGauges(null,null); drawPuppets(-1);
+    $('#budget').textContent='Questions remaining: 2';
+    $('#who').textContent='The room';
+    $('#say').textContent='Everyone has come with something they already know is true.';
+    renderChoices();
+  }
+
+  function drawPuppets(live){
+    var h='';
+    CAST.forEach(function(c,i){
+      h+='<div class="fig'+(i===live?' live':'')+'" id="fig-'+c.id+'">'+
+         '<svg viewBox="0 0 180 262" role="img" aria-label="Shadow-puppet silhouette of '+c.name+'">'+
+         '<g fill="#15120d">'+c.svg+'</g></svg>'+
+         '<div class="nm">'+c.name+'</div></div>';
+    });
+    $('#puppets').innerHTML=h;
+  }
+
+  function bar(el,filled,total){
+    var h='';for(var i=0;i<total;i++)h+='<i class="'+(i<filled?'f':'')+'"></i>';
+    el.innerHTML=h;
+  }
+  function drawGauges(dc,dp){
+    $('#cVal').textContent=C_STEPS[cIdx];
+    $('#pVal').textContent=P_STEPS[pIdx];
+    bar($('#cBar'),cIdx+1,4); bar($('#pBar'),pIdx+1,4);
+    $('#gP').classList.toggle('warn',pIdx>=2);
+    $('#gC').classList.toggle('warn',cIdx>=3);
+    $('#cDel').textContent=dc?dc:'';
+    $('#pDel').textContent=dp?dp:'';
+  }
+
+  function renderChoices(){
+    var box=$('#choices'),h='',left=2-asked.length;
+    $('#budget').textContent='Questions remaining: '+left;
+    if(left<=0){
+      box.innerHTML='<button class="ch" id="onward"><b>&rarr;</b><span>The stakeholders have to go. <strong>Continue.</strong></span></button>';
+      $('#onward').addEventListener('click',toComp);
+      $('#onward').focus();
+      return;
+    }
+    var pool=Q.filter(function(q){return asked.indexOf(q.n)<0}).slice(0,0);
+    // show a stable set of six so the contrast is demonstrable on a projector
+    var show=[2,7,5,6,1,3].filter(function(n){return asked.indexOf(n)<0}).slice(0,3);
+    show.forEach(function(n,i){
+      var q=Q.filter(function(x){return x.n===n})[0];
+      h+='<button class="ch" data-n="'+q.n+'"><b>'+(i+1)+'</b><span>'+q.q+'</span></button>';
+    });
+    box.innerHTML=h;
+    Array.prototype.forEach.call(box.querySelectorAll('.ch'),function(b){
+      b.addEventListener('click',function(){ask(+b.dataset.n)});
+    });
+  }
+
+  function ask(n){
+    var q=Q.filter(function(x){return x.n===n})[0];
+    if(!q||asked.indexOf(n)>=0)return;
+    asked.push(n);
+    drawPuppets(q.speaker);
+    $('#who').textContent=CAST[q.speaker].name;
+    $('#say').innerHTML='&ldquo;'+q.a+'&rdquo;';
+    var dc='',dp='';
+    if(q.c<0){ cIdx=Math.max(0,cIdx+q.c); dc='↓ a need was separated from a solution'; }
+    else { dc='— nothing was ruled out'; }
+    pIdx=Math.min(3,pIdx+q.p); dp='↑ a question was spent';
+    drawGauges(dc,dp);
+    $('#live').textContent=CAST[q.speaker].name+' answered. Complexity '+C_STEPS[cIdx]+'. Schedule pressure '+P_STEPS[pIdx]+'.';
+    renderChoices();
+  }
+
+  function has(tag){
+    return asked.some(function(n){
+      var q=Q.filter(function(x){return x.n===n})[0];return q&&q.tag===tag;
+    });
+  }
+
+  function toComp(){
+    show('comp');
+    $('#compAsk').textContent='You spent both questions. Does anything you learned bear on this?';
+    $('#toEnd').focus();
+  }
+
+  function toEnd(){
+    var persist=has('persist'),ctx=has('context'),nulls=asked.filter(function(n){
+      var q=Q.filter(function(x){return x.n===n})[0];return q.tag==='null';}).length;
+    var t,b;
+    if(persist&&ctx){
+      t='You are holding the unknown, not guessing at it.';
+      b='Both questions bought evidence that bears directly on what just arrived. You can state a requirement about saved work and name the device conditions as an open assumption. That is a defensible position, and it is not the same as a complete one.';
+    } else if(persist||ctx){
+      t='You can meet half of this.';
+      b='One of your questions reaches the new information and one does not. You can defend a position, and you must say out loud which part of it is still unsupported.';
+    } else if(nulls>=2){
+      t='You spent the budget on answers that bound nothing.';
+      b='Both questions were reasonable to wonder about. Neither established a user or business need, so the complication arrives and there is nothing in hand to meet it. This is not a wrong answer. It is a cost.';
+    } else {
+      t='You learned something, but not about this.';
+      b='What you gathered is useful and does not reach the new information. The honest move is to say so rather than to stretch the evidence to cover it.';
+    }
+    $('#endTitle').textContent=t; $('#endBody').textContent=b;
+    var ev='';
+    asked.forEach(function(n){
+      var q=Q.filter(function(x){return x.n===n})[0];
+      ev+='<div class="ev'+(q.tag==='null'?' none':'')+'"><strong>Q'+q.n+'</strong> &middot; '+q.ev+'</div>';
+    });
+    ev+='<p class="lede" style="margin-top:.6em"><strong>Complexity: '+C_STEPS[cIdx]+'. Schedule pressure: '+P_STEPS[pIdx]+'.</strong> '+
+        'These describe the project, not you. Nothing here is scored and nothing is recorded.</p>';
+    $('#endEv').innerHTML=ev;
+    show('end'); $('#again').focus();
+  }
+
+  function show(id){
+    Array.prototype.forEach.call(document.querySelectorAll('.screen'),function(s){s.classList.remove('on')});
+    $('#'+id).classList.add('on'); state=id;
+  }
+
+  /* ---------- boot ---------- */
+  var lines=document.querySelectorAll('#boot [data-l]'),bi=0,bootTimer;
+  function bootStep(){
+    if(bi<lines.length){lines[bi++].classList.add('in');bootTimer=setTimeout(bootStep,bi<2?420:300);}
+  }
+  function endBoot(ev){
+    if(state!=='boot')return;
+    if(ev&&ev.preventDefault)ev.preventDefault();
+    clearTimeout(bootTimer);
+    Array.prototype.forEach.call(lines,function(l){l.classList.add('in')});
+    show('brief');
+    // Deferred on purpose. Focusing the button inside the same keydown lets that keystroke's
+    // default activation land on it, which skipped the whole briefing.
+    setTimeout(function(){ $('#go').focus() },140);
+  }
+  state='boot'; bootStep();
+
+  /* ---------- wiring ---------- */
+  $('#stage').addEventListener('click',function(e){ if(state==='boot'){e.preventDefault();endBoot();} },true);
+  $('#go').addEventListener('click',function(){ reset(); show('scene'); renderChoices(); });
+  $('#skipTo').addEventListener('click',function(){ show('cmp'); $('#cmpBack').focus(); });
+  $('#cmpBack').addEventListener('click',function(){ reset(); show('scene'); renderChoices(); });
+  $('#toEnd').addEventListener('click',toEnd);
+  $('#again').addEventListener('click',function(){ reset(); show('scene'); renderChoices(); });
+  $('#reset').addEventListener('click',function(){ reset(); show('brief'); $('#go').focus(); });
+
+  function kb(e){
+    if(state==='boot'){ endBoot(e); return; }
+    if(e.key==='r'||e.key==='R'){ reset(); show('brief'); $('#go').focus(); return; }
+    if(state==='scene'&&/^[1-3]$/.test(e.key)){
+      var b=document.querySelectorAll('#choices .ch')[+e.key-1];
+      if(b&&!b.disabled)b.click();
+    }
+  }
+  document.addEventListener('keydown',kb);
+  drawPuppets(-1); drawGauges(null,null);
+})();
+</script>
+</body>
+</html>
