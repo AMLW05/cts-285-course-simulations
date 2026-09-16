@@ -103,7 +103,7 @@
   .ev{border-left:6px solid var(--cool);padding:.5em 0 .5em .9em;margin:.55em 0;font-size:clamp(13px,1.4vw,18px);line-height:1.42}
   .ev.none{border-left-color:var(--cut)}
   .hud{position:absolute;right:14px;bottom:7px;font-family:var(--mono);font-size:11px;color:var(--ink-2);opacity:.75}
-  #boot .hud{color:#6b6250}
+  #boot .hud{color:#f2c037;opacity:1}
   .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -227,7 +227,7 @@
         <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45"><b>Q2</b> What does &ldquo;shouldn&rsquo;t lose their work&rdquo; mean?<br><b>Q7</b> Who uses it, and where?</p>
         <div class="ev">Learners pause and return. Saved practice state must survive leaving.</div>
         <div class="ev">Device and access conditions are <em>not yet confirmed</em>.</div>
-        <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45"><strong>Complexity: Narrowing.</strong> A need was separated from a solution.<br><strong>Pressure: High.</strong> The same budget is spent.</p>
+        <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45"><strong>Complexity: Bounded.</strong> Two needs were separated from solutions.<br><strong>Pressure: High.</strong> The same budget is spent.</p>
         <p style="font-size:clamp(13px,1.4vw,18px);line-height:1.45;color:var(--cool);font-weight:700">Meets the complication already holding the unknown.</p>
       </div>
     </div>
@@ -265,27 +265,33 @@
          '<rect x="79" y="210" width="3" height="46" opacity=".45"/>'}
   ];
 
-  /* ---------- the seven questions, verbatim from the shipped simulation ---------- */
+  /* ---------- the shipped simulation's question bank, prompts verbatim ----------
+     Prompt strings are copied exactly from m2/stakeholder-elicitation/index.html so the scene
+     reads continuous with what students already did. The spoken replies are written for this
+     scene; the shipped file has evidence text but no dialogue.
+     Three prompts are surfaced at a time against a two-question budget, so one run reaches only
+     part of the bank. That is a spike simplification — the shipped simulation shows all seven at
+     once. ------------------------------------------------------------------------------- */
   var Q=[
     {n:1,speaker:1,q:'What does “modern” need to mean from a user perspective?',
      a:'Works in a browser. Understandable without a manual. No screens the learner does not need.',
      ev:'"Modern" is scoped to reliability and clarity, not to a visual style.',c:-1,p:1,tag:null},
-    {n:2,speaker:0,q:'What do they mean by “students shouldn’t lose their work”?',
+    {n:2,speaker:0,q:'What exactly do stakeholders mean by “students shouldn’t lose their work”?',
      a:'They pause in the middle and come back the next day. It has to still be there.',
      ev:'Saved practice state must survive a learner leaving and returning.',c:-2,p:1,tag:'persist'},
-    {n:3,speaker:0,q:'Which original DataMan behaviours are essential to keep?',
+    {n:3,speaker:0,q:'Which original DataMan behaviors are considered essential to preserve?',
      a:'Answer, know immediately, try again. And they can see they are getting somewhere.',
      ev:'Immediate feedback, retry after an incorrect answer, visible progress.',c:-1,p:1,tag:null},
-    {n:4,speaker:1,q:'What do parents and teachers need to understand about activity?',
+    {n:4,speaker:1,q:'What do parents or teachers need to understand about learner activity?',
      a:'What was practised. Whether it is improving. Nothing elaborate.',
      ev:'Adults need visibility of practice and progress. No dashboard is agreed.',c:0,p:1,tag:null},
     {n:5,speaker:1,q:'Which database technology should the team use?',
      a:'I do not know. I expected the development team to decide that.',
      ev:'No user or business requirement is established. The question was answered honestly and bought nothing.',c:0,p:1,tag:'null'},
-    {n:6,speaker:2,q:'What colours and visual theme should it use?',
+    {n:6,speaker:2,q:'What colors and visual theme should the new version use?',
      a:'Blue? I like blue. Is that what you needed?',
      ev:'Preferences exist. No evidence shows any scheme is required for the system to meet the need.',c:0,p:1,tag:'null'},
-    {n:7,speaker:2,q:'Who will use this, and in what setting?',
+    {n:7,speaker:2,q:'Who will use the system and in what setting?',
      a:'Me. On whatever is in the room. Sometimes the cart ones, sometimes at home.',
      ev:'Device and access conditions are named as an open unknown, not settled.',c:-2,p:1,tag:'context'}
   ];
@@ -328,18 +334,26 @@
     $('#pDel').textContent=dp?dp:'';
   }
 
-  function renderChoices(){
+  function renderChoices(force){
     var box=$('#choices'),h='',left=2-asked.length;
+    // The re-render destroys whatever button was focused, dropping focus to <body> and silently
+    // ending the keyboard flow the HUD advertises. Move focus forward when it was already here,
+    // when it is nowhere, or when the element holding it has just been hidden - entering the
+    // scene hides the Begin button while it still has focus, and Chrome's blur fixup does not
+    // land inside this task, so activeElement still reports it. Callers entering the scene pass
+    // force. A mouse user sitting on something else outside the stack is never yanked.
+    var a=document.activeElement;
+    var takeFocus=force===true||!a||a===document.body||box.contains(a)||!a.offsetParent;
     $('#budget').textContent='Questions remaining: '+left;
     if(left<=0){
       box.innerHTML='<button class="ch" id="onward"><b>&rarr;</b><span>The stakeholders have to go. <strong>Continue.</strong></span></button>';
       $('#onward').addEventListener('click',toComp);
-      $('#onward').focus();
+      if(takeFocus)$('#onward').focus();
       return;
     }
     var pool=Q.filter(function(q){return asked.indexOf(q.n)<0}).slice(0,0);
-    // show a stable set of six so the contrast is demonstrable on a projector
-    var show=[2,7,5,6,1,3].filter(function(n){return asked.indexOf(n)<0}).slice(0,3);
+    // A stable order, so the contrast is demonstrable on a projector rather than luck.
+    var show=[2,7,5,6,1,3,4].filter(function(n){return asked.indexOf(n)<0}).slice(0,3);
     show.forEach(function(n,i){
       var q=Q.filter(function(x){return x.n===n})[0];
       h+='<button class="ch" data-n="'+q.n+'"><b>'+(i+1)+'</b><span>'+q.q+'</span></button>';
@@ -348,6 +362,7 @@
     Array.prototype.forEach.call(box.querySelectorAll('.ch'),function(b){
       b.addEventListener('click',function(){ask(+b.dataset.n)});
     });
+    if(takeFocus){ var f=box.querySelector('.ch'); if(f)f.focus(); }
   }
 
   function ask(n){
@@ -431,11 +446,11 @@
 
   /* ---------- wiring ---------- */
   $('#stage').addEventListener('click',function(e){ if(state==='boot'){e.preventDefault();endBoot();} },true);
-  $('#go').addEventListener('click',function(){ reset(); show('scene'); renderChoices(); });
+  $('#go').addEventListener('click',function(){ reset(); show('scene'); renderChoices(true); });
   $('#skipTo').addEventListener('click',function(){ show('cmp'); $('#cmpBack').focus(); });
-  $('#cmpBack').addEventListener('click',function(){ reset(); show('scene'); renderChoices(); });
+  $('#cmpBack').addEventListener('click',function(){ reset(); show('scene'); renderChoices(true); });
   $('#toEnd').addEventListener('click',toEnd);
-  $('#again').addEventListener('click',function(){ reset(); show('scene'); renderChoices(); });
+  $('#again').addEventListener('click',function(){ reset(); show('scene'); renderChoices(true); });
   $('#reset').addEventListener('click',function(){ reset(); show('brief'); $('#go').focus(); });
 
   function kb(e){

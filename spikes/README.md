@@ -15,10 +15,18 @@ It never graduates by being linked to.
 
 One scene, two routes, built to be driven from the front of a room in about ten minutes.
 
-It reuses the shipped simulation's seven questions verbatim so the contrast is continuous with
-what students already did, rather than a toy. Route A spends the budget on questions that
-establish no need; Route B spends it on questions that do. **Both cost exactly two questions.**
-The complication then arrives for both.
+The seven prompt strings are **copied exactly** from `m2/stakeholder-elicitation/index.html`, so
+the scene reads continuous with what students already did rather than as a toy. The spoken
+replies are written for this scene — the shipped file carries evidence text but no dialogue.
+
+Route A spends the budget on questions that establish no need; Route B spends it on questions that
+do. **Both cost exactly two questions.** The complication then arrives for both.
+
+**Known spike simplification:** three prompts are surfaced at a time against a two-question
+budget, so a single run reaches only part of the bank. The shipped simulation shows all seven at
+once and allows three. A rebuild has to decide whether progressive disclosure is a feature — it
+is what makes an interview feel like a conversation — or an accidental narrowing of the choice
+the constraint is supposed to teach.
 
 **Deliberate constraints it is built under, and which any rebuild inherits:**
 
