@@ -81,6 +81,12 @@
 
   /* ---------- gauges ---------- */
   .gauges{display:flex;flex-direction:column;gap:10px;width:clamp(180px,21vw,260px);flex:none}
+  .gauges.veiled{visibility:hidden} /* holds layout, so the stage does not jump when they arrive */
+  .say.narr{font-style:normal;color:var(--ink-2)}
+  /* the advance control is not a choice and must not read like one: it shrinks to its text
+     so a linear beat never presents a full-width lit bar where options will later sit. */
+  .ch.cont{width:auto;align-self:flex-start;box-shadow:2px 2px 0 var(--ink)}
+  .ch.cont b{color:var(--cool)}
   .g{background:var(--white);border:2px solid var(--ink);padding:9px 11px;box-shadow:3px 3px 0 rgba(21,18,13,.2)}
   .g .lab{font-family:var(--mono);font-size:clamp(8px,.82vw,11px);letter-spacing:.15em;text-transform:uppercase;color:var(--ink-2)}
   .g .val{font-weight:800;font-size:clamp(14px,1.55vw,21px);line-height:1.15;margin-top:2px}
@@ -138,7 +144,8 @@
       <p class="lede" style="margin-bottom:.15em">One tip, which I am contractually delighted to share: a stakeholder who names a technology has handed you a <em>solution</em>, not a need. You may write it down. It will simply cost you later.</p>
     </div>
     <div class="row">
-      <button class="btn" id="go">Begin the interview</button>
+      <button class="btn" id="go">Begin</button>
+      <button class="btn alt" id="skipPro">Skip to the questions</button>
       <button class="btn alt" id="skipTo">Skip to the comparison</button>
     </div>
   </div>
@@ -176,7 +183,7 @@
     <div class="choices" id="choices"></div>
   </div>
   <p class="sr" id="live" role="status" aria-live="polite"></p>
-  <div class="hud">1&ndash;3 choose &middot; enter advance &middot; R restart</div>
+  <div class="hud" id="sceneHud">enter continue &middot; R restart</div>
 </section>
 
 <!-- ============ COMPLICATION ============ -->
@@ -295,6 +302,67 @@
      a:'Me. On whatever is in the room. Sometimes the cart ones, sometimes at home.',
      ev:'Device and access conditions are named as an open unknown, not settled.',c:-2,p:1,tag:'context'}
   ];
+
+  /* ---------- the prologue: linear, no choices, no cost ----------
+     It runs on the interview's own stage rather than a screen of its own, so the puppets, the
+     dialogue line and the two gauges are learned in the place they will be used instead of
+     arriving cold at the first decision.
+     The four stakeholder statements are the shipped simulation's Mission Brief, verbatim. The
+     scene had dropped them, which cost the continuity the bank was reused for.
+     sp: index into CAST, or -1 for narration. q: wrap in quotation marks. fx: stage business. */
+  var PROLOGUE=[
+   {sp:-1,who:'The room',t:'The team is modernizing the DataMan learning experience as a web application. Stakeholders agree that the new version should preserve the spirit of the original while making sense for current users.'},
+   {sp:-1,who:'The room',t:'It is the last thing they agree on.'},
+   {sp:1,who:null,q:1,t:'Make DataMan modern.'},
+   {sp:0,who:null,q:1,t:'Keep it simple.'},
+   {sp:0,who:null,q:1,t:'Students shouldn’t lose their work.'},
+   {sp:1,who:null,q:1,t:'Parents should still understand what the child is doing.'},
+   {sp:-1,who:'The room',t:'Four statements. Read them again. Not one of them can be tested \u2014 there is no answer to \u201cis it modern yet?\u201d'},
+   {sp:-1,who:'Instrumentation',fx:'gauges',t:'Two readings, which describe the project and never you. Complexity is Unbounded because nothing has been ruled out. It falls when a need is separated from a solution.'},
+   {sp:-1,who:'Instrumentation',t:'Schedule pressure is Low. It will not stay low. Every question you ask costs time, and that cost is the same whatever the question buys you.'},
+   {sp:2,who:'The room',t:'The learner has said nothing. Nobody has asked them anything.',narr:1},
+   {sp:-1,who:'Channel Success Partner',fx:'budget',t:'You may ask two questions. Nothing here is scored, nothing is recorded, and there is no hidden correct path. Begin whenever you like.'}
+  ];
+  var beat=0,mode='interview';
+
+  function runPrologue(){
+    reset(); mode='prologue'; beat=0;
+    $('.gauges').classList.add('veiled');
+    $('#budget').textContent='';
+    show('scene'); renderBeat();
+  }
+
+  function renderBeat(){
+    var b=PROLOGUE[beat];
+    drawPuppets(b.sp);
+    $('#who').textContent=b.who||CAST[b.sp].name;
+    $('#say').className='say'+((b.sp<0||b.narr)?' narr':'');
+    $('#say').innerHTML=b.q?('\u201c'+b.t+'\u201d'):b.t;
+    if(b.fx==='gauges')$('.gauges').classList.remove('veiled');
+    if(b.fx==='budget')$('#budget').textContent='Questions remaining: 2';
+    $('#live').textContent=($('#who').textContent)+'. '+b.t;
+    var last=beat>=PROLOGUE.length-1;
+    $('#sceneHud').textContent='enter continue \u00b7 R restart';
+    $('#choices').innerHTML='<button class="ch cont" id="beatNext"><b>'+(last?'&rarr;':'\u00b7')+
+      '</b><span>'+(last?'<strong>Ask your first question.</strong>':'Continue')+'</span></button>';
+    $('#beatNext').addEventListener('click',nextBeat);
+    $('#beatNext').focus();
+  }
+
+  function nextBeat(){
+    if(beat<PROLOGUE.length-1){ beat++; renderBeat(); return; }
+    startInterview();
+  }
+
+  function startInterview(){
+    mode='interview';
+    $('#sceneHud').textContent='1\u20133 choose \u00b7 enter advance \u00b7 R restart';
+    $('.gauges').classList.remove('veiled');
+    $('#who').textContent='The room';
+    $('#say').className='say';
+    $('#say').textContent='Everyone has come with something they already know is true.';
+    drawPuppets(-1); renderChoices(true);
+  }
 
   var C_STEPS=['Bounded','Narrowing','Wide','Unbounded'];
   var P_STEPS=['Low','Rising','High','Critical'];
@@ -446,17 +514,19 @@
 
   /* ---------- wiring ---------- */
   $('#stage').addEventListener('click',function(e){ if(state==='boot'){e.preventDefault();endBoot();} },true);
-  $('#go').addEventListener('click',function(){ reset(); show('scene'); renderChoices(true); });
+  $('#go').addEventListener('click',runPrologue);
+  $('#skipPro').addEventListener('click',function(){ reset(); show('scene'); startInterview(); });
   $('#skipTo').addEventListener('click',function(){ show('cmp'); $('#cmpBack').focus(); });
-  $('#cmpBack').addEventListener('click',function(){ reset(); show('scene'); renderChoices(true); });
+  $('#cmpBack').addEventListener('click',function(){ reset(); show('scene'); startInterview(); });
   $('#toEnd').addEventListener('click',toEnd);
-  $('#again').addEventListener('click',function(){ reset(); show('scene'); renderChoices(true); });
+  $('#again').addEventListener('click',function(){ reset(); show('scene'); startInterview(); });
   $('#reset').addEventListener('click',function(){ reset(); show('brief'); $('#go').focus(); });
 
   function kb(e){
     if(state==='boot'){ endBoot(e); return; }
     if(e.key==='r'||e.key==='R'){ reset(); show('brief'); $('#go').focus(); return; }
-    if(state==='scene'&&/^[1-3]$/.test(e.key)){
+    if(state==='scene'&&mode==='prologue'&&(e.key===' '||e.key==='Enter')){ return; } // the button has focus
+    if(state==='scene'&&mode==='interview'&&/^[1-3]$/.test(e.key)){
       var b=document.querySelectorAll('#choices .ch')[+e.key-1];
       if(b&&!b.disabled)b.click();
     }

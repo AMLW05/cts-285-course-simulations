@@ -67,6 +67,13 @@ Exit tickets are not practice cabinets. The cabinet drills a skill; the ticket c
 - Primary drag interactions require an accessible non-drag alternative.
 - Student-facing external experiences contain no institutional branding.
 
+## Not student material
+
+`m2/elicitation-vn-spike/` is a **design spike**, deliberately absent from every sequence table
+above. It is not linked from Canvas, is not part of any module sequence, and must not be given to
+students. It carries its own README stating the same. It is listed here only so that nobody
+finding it in `m2/` has to guess what it is.
+
 ## Verification status
 
 M4 has an explicit asset manifest and cross-repository sequence map. The remaining production check is live human playtesting of the deployed paths and the Canvas-to-hosted-URL wiring before the module is locked.
