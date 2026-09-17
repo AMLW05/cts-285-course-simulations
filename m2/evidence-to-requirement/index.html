@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M2.4 — From Evidence to a Requirement</title>
+<style>
+:root{--black:#000000;--gold:#F0B82D;--ink:#1F2937;--body:#3C4149;--muted:#6B7280;--rule:#DFE3E8;--wash:#F7FAFC;--goldwash:#FFFAF0;--link:#0374B5;--white:#FFFFFF}
+*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--body);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Lato,Helvetica,Arial,sans-serif;line-height:1.65}.wrap{max-width:58rem;margin:0 auto;padding:20px}.panel{background:var(--white);border:1px solid var(--rule);border-radius:8px;padding:24px;margin:0 0 18px}.rulebar{height:7px;background:var(--gold);color:var(--gold);margin:0 0 14px}.kicker{display:inline-block;background:var(--black);color:var(--white);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;margin:0 0 10px}.panel h1,.panel h2,.panel h3{color:var(--ink)}h1{font-size:2rem;line-height:1.15;margin:0 0 8px}h2{font-size:1.5rem;margin-top:0}h3{margin-top:1.5rem}.lead{font-size:1.08rem;margin-top:0}.gutter{border-left:2px solid var(--rule);padding-left:1rem;margin:1rem 0}.caution{border-left:5px solid var(--black);padding-left:1rem;margin:1rem 0}.evidence{background:var(--goldwash);border-left:5px solid var(--gold);padding:16px 18px;margin:18px 0}.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}.flow div{border:1px solid var(--rule);background:var(--wash);border-radius:6px;padding:14px}.flow strong{display:block;color:var(--ink)}.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:16px 0}.choice{appearance:none;width:100%;text-align:left;border:1px solid var(--rule);background:#fff;color:var(--body);border-radius:6px;padding:16px;font:inherit;cursor:pointer}.choice:hover,.choice:focus{border-color:var(--black);outline:3px solid rgba(240,184,45,.38)}.choice strong{display:block;color:var(--ink);margin-bottom:4px}.feedback{display:none;margin-top:12px;padding:14px 16px;border-left:5px solid var(--gold);background:var(--goldwash)}.feedback.show{display:block}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.btn{border:0;background:var(--black);color:var(--white);padding:12px 16px;border-radius:5px;font-weight:700;cursor:pointer}.btn.secondary{background:var(--wash);color:var(--ink);border:1px solid var(--rule)}.btn:focus{outline:3px solid rgba(240,184,45,.45)}.hidden{display:none}.tablewrap{overflow-x:auto}table{width:100%;min-width:680px;border-collapse:collapse}th,td{border:1px solid var(--rule);padding:10px;text-align:left;vertical-align:top}th{background:var(--wash);color:var(--ink)}details{border:1px solid var(--rule);border-radius:5px;padding:13px 15px;margin:10px 0;background:#fff}summary{cursor:pointer;font-weight:600;color:var(--ink)}.progress{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}.step{font-size:.78rem;border:1px solid var(--rule);border-radius:999px;padding:5px 9px;background:#fff;color:var(--muted)}.step.on{background:var(--black);color:#fff;border-color:var(--black)}.summary{background:var(--wash);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;margin-top:18px}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}@media(max-width:600px){.wrap{padding:10px}.panel{padding:18px}.btn{width:100%}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="panel" id="intro">
+<div class="rulebar">.</div>
+<div class="kicker">CTS-285 · Module 2.4</div>
+<h1>From Evidence to a Requirement</h1>
+<p class="lead">You have gathered evidence. Now the analyst has to convert that evidence into language a product team can understand, evaluate, and later turn into product work.</p>
+<div class="gutter"><strong>MLO 2.3</strong> — Translate stakeholder and system evidence into clear, testable functional and non-functional requirements.</div>
+<div class="progress" aria-label="Lab progress"><span class="step on" id="p0">Pattern</span><span class="step" id="p1">Controlled Practice</span><span class="step" id="p2">DataMan</span><span class="step" id="p3">Quality Check</span></div>
+<h2>A Good Requirement Has a Job</h2>
+<p>A requirement should help the team answer three questions:</p>
+<ul><li><strong>What must be true?</strong></li><li><strong>Why does it matter?</strong></li><li><strong>How could we tell whether it has been satisfied?</strong></li></ul>
+<div class="caution"><strong>Caution:</strong> In this module, you are defining the requirement—not the user story, task, interface, database, or code. Those decisions come later.</div>
+<h2>Use This Translation Pattern</h2>
+<div class="flow" aria-label="Evidence to requirement translation pattern"><div><strong>1. Evidence</strong>What did the source, stakeholder, or observation actually show?</div><div><strong>2. Need</strong>What problem, capability, or condition does that evidence reveal?</div><div><strong>3. Requirement</strong>What must the system do or satisfy?</div><div><strong>4. Check</strong>Could a team later verify whether this requirement is met?</div></div>
+<div class="actions"><button class="btn" data-go="practice">Continue to Controlled Practice</button></div>
+</section>
+
+<section class="panel hidden" id="practice">
+<div class="kicker">Controlled Practice</div>
+<h2>Separate the need from the proposed interface</h2>
+<div class="evidence"><strong>Evidence:</strong> Employees report that they sometimes submit the wrong version of a form because multiple versions appear in search results.</div>
+<p><strong>Need:</strong> Employees need a reliable way to identify and access the current approved form.</p>
+<p>Which statement works better as the requirement?</p>
+<div class="choices">
+<button class="choice" data-feedback="f-home"><strong>Put the newest form on the homepage.</strong>This specifies one interface solution.</button>
+<button class="choice" data-feedback="f-current"><strong>The system must identify and provide access to the current approved version of each form.</strong>This describes required behavior.</button>
+</div>
+<div class="feedback" id="f-home"><strong>Weak requirement.</strong> It jumps to a specific interface choice before the team has established that the homepage is the right implementation.</div>
+<div class="feedback" id="f-current"><strong>Stronger requirement.</strong> It describes required behavior without locking the team into one interface solution.</div>
+<div class="actions"><button class="btn" data-go="dataman">Apply the Pattern to DataMan</button></div>
+</section>
+
+<section class="panel hidden" id="dataman">
+<div class="kicker">Apply the Pattern to DataMan</div>
+<h2>Translate the original Answer Checker evidence</h2>
+<div class="evidence"><strong>Evidence:</strong> In the original Answer Checker, DataMan allows a learner to enter a math problem and answer, indicates whether the answer is correct, and reveals the correct answer after repeated incorrect attempts.</div>
+<p><strong>Need:</strong> Learners need immediate feedback while practicing arithmetic.</p>
+<h3>Which statement is the strongest functional requirement?</h3>
+<div class="choices">
+<button class="choice" data-feedback="f-hint"><strong>The system must include an adaptive hint button.</strong>This chooses an implementation.</button>
+<button class="choice" data-feedback="f-feedback"><strong>The system must allow a learner to submit an answer to a math problem and receive correctness feedback.</strong>This describes observable required behavior.</button>
+<button class="choice" data-feedback="f-three"><strong>The system must preserve the exact original three-attempt interface.</strong>This assumes the modern interaction without eliciting whether it should be preserved.</button>
+</div>
+<div class="feedback" id="f-hint"><strong>Not yet.</strong> A hint system may be considered later, but this evidence does not establish that implementation.</div>
+<div class="feedback" id="f-feedback"><strong>Supported.</strong> This is clear, functional, observable, and tied directly to the evidence and learner need.</div>
+<div class="feedback" id="f-three"><strong>Still an open question.</strong> The manual gives evidence about the original three-attempt behavior; elicitation determines the modern requirement.</div>
+<div class="summary"><strong>Open question:</strong> Should the 2026 version preserve the same three-attempt behavior, or should that interaction be redesigned? The manual gives evidence; elicitation determines the modern requirement.</div>
+<div class="actions"><button class="btn" data-go="quality">Run the Quality Check</button></div>
+</section>
+
+<section class="panel hidden" id="quality">
+<div class="kicker">Quality Check</div>
+<h2>Test a requirement before it enters the register</h2>
+<p>Use the same five checks from the course:</p>
+<ul><li><strong>Clear:</strong> Would another team member interpret it the same way?</li><li><strong>Necessary:</strong> Can you connect it to evidence, a need, or a project constraint?</li><li><strong>Testable:</strong> Could the team later determine whether it was satisfied?</li><li><strong>Solution-neutral enough:</strong> Does it avoid prescribing implementation unless the implementation itself is truly constrained?</li><li><strong>Atomic enough:</strong> Is it focused on one main capability or quality rather than several unrelated ideas?</li></ul>
+<h3>Inspect the examples</h3>
+<details><summary>Weak: “The system must be modern, fast, secure, and fun for kids.”</summary><p>This combines several vague qualities and provides no measurable condition. Break it apart and elicit what each term means.</p></details>
+<details><summary>Weak: “The system must use Flask and PostgreSQL so student work is saved.”</summary><p>The need appears to be persistence of student work. Flask/PostgreSQL are implementation choices unless the project has explicitly constrained the technology.</p></details>
+<details><summary>Stronger: “The system must preserve a learner's saved practice data between authenticated sessions.”</summary><p>This states observable required behavior while leaving implementation choices for later design work.</p></details>
+<h3>Hand-Off to Scrum</h3>
+<p>Requirements define what must be true about the system. In Module 3, the Product Owner and development team will translate approved requirements into user stories, acceptance criteria, estimates, and prioritized backlog work. A weak requirement creates weak product work downstream.</p>
+<div class="evidence"><strong>Next:</strong> Use the evidence you gathered in the case to create the first formal project record of what the modern DataMan must do and what qualities or constraints it must satisfy in the DataMan Requirements Register.</div>
+<div class="actions"><button class="btn secondary" id="restart">Restart Lab</button></div>
+</section>
+</main>
+<script>
+const sections=['intro','practice','dataman','quality'];
+function show(id){sections.forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));const map={intro:0,practice:1,dataman:2,quality:3};document.querySelectorAll('.step').forEach((el,i)=>el.classList.toggle('on',i<=map[id]));window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
+document.querySelectorAll('[data-feedback]').forEach(b=>b.addEventListener('click',()=>{const box=document.getElementById(b.dataset.feedback);box.classList.add('show');box.scrollIntoView({behavior:'smooth',block:'nearest'});}));
+document.getElementById('restart').addEventListener('click',()=>{document.querySelectorAll('.feedback').forEach(f=>f.classList.remove('show'));show('intro');});
+</script>
+</body>
+</html>
