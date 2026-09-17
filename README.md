@@ -35,6 +35,14 @@ Canvas support copies are retained under `m4/canvas/` so the simulation architec
 | Backlog Triage — What Moves Forward? | `m3/backlog-triage/` | `docs/decisions/m3-backlog-triage-record.md` |
 | Product Owner Sprint Simulation | `m3/product-owner-sprint/` | `docs/decisions/m3-product-owner-decision-record.md` |
 
+## M2 embedded case experiences
+
+| Experience | Path | Role |
+|---|---|---|
+| DataMan Elicitation Case | `m2/dataman-elicitation-case/` | M2.3 Apply/Gauge case; replaces the former multi-page Canvas branch tree and feeds the DataMan Requirements Register |
+
+The authoritative M2.3 content, alignment, branch logic, and surfaced requirements remain in `AMLW05/cts-285_SOURCE`. This repository changes only the delivery format so students can complete the case without repeated Canvas page jumps.
+
 Module 4 uses a cumulative sequence instead of treating the pre-studio Investigation Brief as the graded simulation. The graded Design Investigation evidence is captured later through Canvas using `docs/decisions/m4-design-investigation-record.md`.
 
 ## Practice
