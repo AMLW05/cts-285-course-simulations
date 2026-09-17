@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M2.3 — DataMan Elicitation Case</title>
+<style>
+:root{--ink:#1f2937;--muted:#667085;--line:#d9dee5;--paper:#fff;--soft:#f7f9fb;--gold:#F0B82D;--black:#000;--blue:#0b5f8a;--warn:#fff8e8;--good:#eef8f0}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f5f7;color:var(--ink);line-height:1.62}.wrap{max-width:980px;margin:0 auto;padding:20px}.hero,.panel{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:24px;margin-bottom:18px}.hero{border-top:8px solid var(--gold)}.eyebrow{display:inline-block;background:#000;color:#fff;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;margin-bottom:9px}.hero h1,.panel h2,.panel h3{color:#111827}.hero h1{font-size:2rem;line-height:1.15;margin:0 0 8px}.hero p{margin:0;font-size:1.05rem}.outcome{border-left:3px solid var(--line);padding-left:16px;margin-top:20px}.rule,.evidence{border-left:5px solid var(--gold);padding:14px 16px;background:var(--soft);margin:18px 0}.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:18px 0}.choice{width:100%;text-align:left;border:1px solid var(--line);border-radius:8px;background:#fff;padding:16px;min-height:110px;font:inherit;cursor:pointer}.choice strong{display:block;color:#111827;margin-bottom:5px}.choice:hover,.choice:focus{border-color:#111827;outline:3px solid rgba(240,184,45,.35)}.choice.solution{background:var(--warn)}.hidden{display:none}.quote{border-left:5px solid #6b7280;background:var(--soft);padding:16px 18px;margin:16px 0}.flow{text-align:center;font-weight:700;background:var(--soft);border:1px solid var(--line);border-radius:7px;padding:15px;margin:18px 0}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}.card{border:1px solid var(--line);background:#fff;border-radius:7px;padding:14px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.btn{border:0;border-radius:6px;background:#000;color:#fff;padding:12px 16px;font-weight:700;font-size:15px;cursor:pointer}.btn.secondary{background:#e9edf2;color:#111827}.btn:focus{outline:3px solid rgba(240,184,45,.5)}details{border:1px solid var(--line);border-radius:6px;padding:13px 15px;margin:10px 0;background:#fff}summary{cursor:pointer;font-weight:600}.tablewrap{overflow-x:auto}table{width:100%;min-width:620px;border-collapse:collapse}th,td{border:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{background:var(--soft)}.req{border-left:4px solid var(--gold);padding-left:14px;margin:16px 0}.status{font-size:.9rem;color:var(--muted);margin-top:8px}.progress{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}.step{font-size:.78rem;border:1px solid var(--line);border-radius:999px;padding:5px 9px;background:#fff}.step.on{background:#111827;color:#fff;border-color:#111827}@media(max-width:600px){.wrap{padding:10px}.hero,.panel{padding:18px}.hero h1{font-size:1.55rem}.choice{min-height:0}.btn{width:100%}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero">
+<div class="eyebrow">CTS-285 · Module 2.3</div>
+<h1>DataMan Elicitation Case</h1>
+<p>You have a stakeholder concern. You do not yet have a requirement.</p>
+<div class="outcome"><strong>MLO 2.2</strong> — Apply elicitation techniques to clarify ambiguous stakeholder statements and identify the need behind a request.</div>
+<div class="progress" aria-label="Case progress"><span class="step on" id="p0">Briefing</span><span class="step" id="p1">Evidence</span><span class="step" id="p2">Manual</span><span class="step" id="p3">Conclusion</span></div>
+</section>
+
+<section class="panel" id="briefing">
+<h2>Incoming Stakeholder Concern</h2>
+<p class="status">Ms. Alvarez — fourth-grade teacher, pilot classroom</p>
+<div class="quote">“The kids get frustrated with it and stop trying. We need to fix that before I use it again.”</div>
+<p>Ms. Alvarez is concerned. The project team wants an answer. Your job is to decide what should happen next.</p>
+<h3>What Do You Actually Know?</h3>
+<ul>
+<li>Ms. Alvarez has observed learners disengaging.</li><li>It mattered enough for her to raise it as a project concern.</li><li>You do not know what the learners were doing when it happened.</li><li>You do not know whether it follows a wrong answer, a score, or something else.</li><li>You do not know how often it happens, or to which learners.</li><li>You do not know what “frustrated” looked like from the outside.</li>
+</ul>
+<div class="rule"><strong>Analyst rule:</strong> A concern is evidence that investigation is needed. It is not automatically a finished requirement.</div>
+<h3>Choose Your First Move</h3>
+<p>Each path reveals different evidence. Choose the action you think gives the project team the strongest next step.</p>
+<div class="choices">
+<button class="choice" data-path="interview"><strong>A. Interview Ms. Alvarez</strong>Ask her to describe what she saw, and when.</button>
+<button class="choice solution" data-path="solution"><strong>B. Recommend adaptive hints</strong>Propose that the system detect struggle and offer help automatically.</button>
+<button class="choice" data-path="observe"><strong>C. Observe a practice session</strong>Watch a learner work through a set of problems.</button>
+<button class="choice" data-path="manual"><strong>D. Review the 1977 manual</strong>Check what the original device did after a wrong answer, and why.</button>
+</div>
+<div class="rule"><strong>There is not always one perfect elicitation technique.</strong> Your goal is enough trustworthy evidence to understand the problem before anyone commits to a solution.</div>
+</section>
+
+<section class="panel hidden" id="interview">
+<div class="eyebrow">DataMan Elicitation Case · Path A</div><h2>Interview Ms. Alvarez</h2><p>You chose to begin with the stakeholder who raised the concern.</p>
+<h3>You Ask…</h3><div class="rule">“When you say the kids get frustrated, what were they doing right before you noticed it?”</div>
+<h3>Ms. Alvarez Responds</h3><div class="quote">“It is usually after they miss one. They try again, miss again, and then they just put it down. A few of them start guessing anything to make it move on.”</div>
+<p>You now know more — but the requirement is still incomplete.</p>
+<h3>Choose Your Follow-Up</h3>
+<details><summary>“How often does this happen?”</summary><p>Useful. Frequency helps establish scope and impact, although you still need to understand the practice session itself.</p></details>
+<details><summary>“What does the learner see after a wrong answer?”</summary><p>Strong. This may reveal where feedback is missing from the current interaction.</p></details>
+<details><summary>“Should we add a hint button?”</summary><p>Too early. A hint may eventually be appropriate, but you have not yet watched what a learner actually does.</p></details>
+<details><summary>“Which learners does it happen to most?”</summary><p>Strong. This helps identify whose practice session should be observed next.</p></details>
+<div class="evidence"><strong>Evidence gained</strong><ul><li>Disengagement follows an incorrect answer, not the start of a session.</li><li>Learners make more than one attempt before giving up.</li><li>Some learners guess in order to move past the problem.</li><li>A learner's practice session is now important evidence.</li></ul></div>
+<div class="actions"><button class="btn" data-go="observe">Next: Observe a Practice Session</button></div>
+</section>
+
+<section class="panel hidden" id="solution">
+<div class="eyebrow">DataMan Elicitation Case · Path B</div><h2>You Jumped to a Solution</h2><p>You recommended adaptive hints before defining the problem.</p>
+<h3>You Say…</h3><div class="quote">“We could have the system detect when a learner is struggling and offer a hint automatically.”</div>
+<h3>Ms. Alvarez Responds</h3><div class="quote">“Maybe. But I do not know that a hint is what they need. We do not even know what they are reacting to yet.”</div>
+<div class="evidence"><strong>Evidence</strong><p>You selected a design solution before defining the stakeholder problem, the learner's actual experience, the trigger, or the success condition.</p></div>
+<h3>Requirements Before Solutions</h3><div class="flow">Concern → Evidence → Requirement → Design Decision</div>
+<p>Adaptive hints might eventually be evaluated as one possible design approach.</p><p>But right now, you still need to learn:</p>
+<ul><li>what the learner experiences after a wrong answer</li><li>when in the session it happens</li><li>how often it happens</li><li>what the original device was documented to do</li><li>what outcome the teacher actually needs</li></ul>
+<div class="rule"><strong>Recovery is part of analysis.</strong> Analysts will sometimes make an assumption or propose a solution too early. The important skill is recognizing the gap and returning to evidence gathering.</div>
+<div class="actions"><button class="btn secondary" data-go="interview">Interview Ms. Alvarez</button><button class="btn" data-go="observe">Observe a Practice Session</button></div>
+</section>
+
+<section class="panel hidden" id="observe">
+<div class="eyebrow">DataMan Elicitation Case · Path C</div><h2>Observe a Practice Session</h2><p>Instead of asking a learner to describe what happens, you ask to watch.</p>
+<h3>What You See</h3><ol><li>The learner starts an Answer Checker session.</li><li>A problem appears. The learner enters an answer.</li><li>The answer is wrong. The device indicates it is wrong.</li><li>The learner tries again. Wrong again.</li><li>On the third miss, the device reveals the correct answer and moves on.</li><li>The learner does not appear to expect this. They sit back.</li></ol>
+<h3>The Learner Adds…</h3><div class="quote">“I did not know it was going to do that. I thought I could keep trying. Now I do not know if I got it wrong or if I ran out.”</div>
+<h3>What Did Observation Reveal?</h3><div class="cards"><div class="card"><strong>Specific trigger</strong><p>Disengagement follows the third incorrect attempt, not the first.</p></div><div class="card"><strong>Documented behavior</strong><p>The three-attempt limit is a real, intended feature of the original device.</p></div><div class="card"><strong>Learner understanding</strong><p>The learner cannot tell how many attempts remain, so the reveal arrives without warning.</p></div><div class="card"><strong>Potential need</strong><p>The learner may need to know where they are in the attempt sequence.</p></div></div>
+<div class="rule"><strong>Notice the shape of this finding.</strong> The device is doing what it was designed to do. The gap is between the documented behavior and what the learner understands about it. That is still a real requirement.</div>
+<h3>Is Observation Enough?</h3><details><summary>Reveal</summary><p>Not necessarily.</p><p>Observation showed what happened in one session with one learner. The manual can tell you whether the three-attempt behavior is intentional and what it was for, which changes what you are allowed to recommend.</p></details>
+<div class="actions"><button class="btn" data-go="manual">Next: Review the Manual</button></div>
+</section>
+
+<section class="panel hidden" id="manual">
+<div class="eyebrow">DataMan Elicitation Case · Document Analysis</div><h2>Review the 1977 Manual</h2><p>Existing documentation can confirm patterns that interviews and observation only suggest.</p><p>The original DataMan manual is project evidence. It tells you what the device was documented to do and, in places, why.</p>
+<h3>What the Manual Establishes</h3><div class="tablewrap"><table><thead><tr><th>Documented behavior</th><th>What it tells the analyst</th></tr></thead><tbody><tr><td>The Answer Checker indicates whether a submitted answer is correct.</td><td>Immediate correctness feedback is original, intended behavior.</td></tr><tr><td>After repeated incorrect attempts, the device reveals the correct answer.</td><td>The three-attempt limit is a designed feature, not a fault to be removed.</td></tr><tr><td>The device is described as reinforcing practice rather than testing.</td><td>The stated purpose is to keep a learner practicing. Disengagement works against the product's own goal.</td></tr><tr><td>A score and time display is available to the learner.</td><td>The device already shows the learner state about their own performance.</td></tr></tbody></table></div>
+<h3>What Does the Evidence Support?</h3>
+<details><summary>“The three-attempt limit is a defect and should be removed.”</summary><p>Unsupported. The manual documents it as intended reinforcement behavior. Removing it is a design decision you have not yet earned the evidence to make.</p></details>
+<details><summary>“Learners are not told where they are in the attempt sequence.”</summary><p><strong>Supported.</strong> Observation showed a learner surprised by the reveal, and the manual documents the limit without documenting any warning before it. The gap is in what the learner is told.</p></details>
+<details><summary>“Adaptive hints are required to solve the problem.”</summary><p>Unsupported. The evidence identifies a recurring problem but does not establish any particular implementation.</p></details>
+<div class="evidence"><strong>Evidence</strong><ul><li>The three-attempt behavior is documented and intentional.</li><li>The product's stated purpose is sustained practice.</li><li>Nothing in the documentation warns the learner before the reveal.</li><li>The evidence supports clarifying a feedback requirement, not removing a feature.</li></ul></div>
+<div class="actions"><button class="btn" data-go="conclusion">Next: What Did You Surface?</button></div>
+</section>
+
+<section class="panel hidden" id="conclusion">
+<div class="eyebrow">DataMan Elicitation Case · Conclusion</div><h2>What Did You Surface?</h2><p>The case began with a vague complaint. You now have enough evidence to describe a real requirement.</p>
+<h3>Your Evidence Trail</h3><div class="flow">Stakeholder Concern → Interview → Observation → Document Analysis → Clarified Requirement</div>
+<h3>What Each Technique Added</h3><div class="tablewrap"><table><thead><tr><th>Technique</th><th>Evidence surfaced</th></tr></thead><tbody><tr><td><strong>Interview</strong></td><td>Ms. Alvarez clarified that disengagement follows repeated wrong answers, not the start of a session.</td></tr><tr><td><strong>Observation</strong></td><td>A learner was surprised when the device revealed the answer, and could not tell whether they had been wrong or had run out of attempts.</td></tr><tr><td><strong>Document analysis</strong></td><td>The manual establishes the three-attempt behavior as intentional, and documents no warning before the reveal.</td></tr></tbody></table></div>
+<h3>Requirements Surfaced</h3><div class="req"><strong>Functional requirement</strong><p>The system must show the learner how many attempts remain on the current problem before it reveals the correct answer.</p></div><div class="req"><strong>Non-functional / interaction requirement</strong><p>Feedback after an incorrect answer must be available through keyboard navigation and must not rely on color alone.</p></div>
+<h3>Notice What You Did Not Specify</h3><ul><li>a hint system</li><li>a countdown animation</li><li>a specific colour or icon</li><li>removal of the three-attempt limit</li><li>a specific programming library</li></ul>
+<div class="rule"><strong>You defined the requirement before designing the solution.</strong> You also left a documented feature intact, because the evidence did not support removing it.</div>
+<h3>Knowledge Check</h3><p>Which statement best explains how elicitation produced the functional requirement?</p>
+<details><summary>Ms. Alvarez requested an attempt counter.</summary><p>No. Ms. Alvarez reported only that learners were getting frustrated and giving up.</p></details>
+<details><summary>The manual specified that attempts must be displayed.</summary><p>No. The manual documents the three-attempt behavior but documents no warning before the reveal. That absence is part of what the evidence surfaced.</p></details>
+<details><summary>Interview, observation, and document review gradually clarified the trigger, the learner's experience, and the documented behavior.</summary><p><strong>Exactly.</strong> The requirement emerged from three pieces of evidence rather than from one assumption or one solution request.</p></details>
+<div class="evidence"><strong>Mini Summary</strong><ul><li>Elicitation is evidence gathering, not order taking.</li><li>Different techniques reveal different kinds of information.</li><li>Documentation can protect an intended feature from being redesigned by assumption.</li><li>Analysts clarify the problem before selecting a solution.</li><li>The final requirement should be traceable back to stakeholder evidence.</li></ul></div>
+<div class="req"><strong>Your artifact</strong><p>Both requirements above are candidates for your <strong>DataMan Requirements Register</strong> at <code>docs/requirements.md</code>. Record the evidence source for each one, exactly as you did for the manual evidence.</p></div>
+<div class="actions"><button class="btn secondary" id="restart">Restart Case</button></div>
+</section>
+</main>
+<script>
+(function(){
+const sections=['briefing','interview','solution','observe','manual','conclusion'];
+const visited=new Set(['briefing']);
+function show(id){sections.forEach(s=>document.getElementById(s).classList.toggle('hidden',s!==id));visited.add(id);document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});updateProgress(id)}
+function updateProgress(id){document.getElementById('p1').classList.toggle('on',['interview','solution','observe','manual','conclusion'].includes(id));document.getElementById('p2').classList.toggle('on',['manual','conclusion'].includes(id));document.getElementById('p3').classList.toggle('on',id==='conclusion')}
+document.querySelectorAll('[data-path]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.path)));
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
+document.getElementById('restart').addEventListener('click',()=>{document.querySelectorAll('details').forEach(d=>d.open=false);show('briefing')});
+})();
+</script>
+</body>
+</html>
