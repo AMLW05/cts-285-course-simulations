@@ -35,13 +35,14 @@ Canvas support copies are retained under `m4/canvas/` so the simulation architec
 | Backlog Triage — What Moves Forward? | `m3/backlog-triage/` | `docs/decisions/m3-backlog-triage-record.md` |
 | Product Owner Sprint Simulation | `m3/product-owner-sprint/` | `docs/decisions/m3-product-owner-decision-record.md` |
 
-## M2 embedded case experiences
+## M2 embedded case and practice experiences
 
 | Experience | Path | Role |
 |---|---|---|
 | DataMan Elicitation Case | `m2/dataman-elicitation-case/` | M2.3 Apply/Gauge case; replaces the former multi-page Canvas branch tree and feeds the DataMan Requirements Register |
+| Evidence-to-Requirement Lab | `m2/evidence-to-requirement/` | M2.4 controlled practice; keeps translation decisions and quality checks outside Canvas while preserving the source-of-truth content |
 
-The authoritative M2.3 content, alignment, branch logic, and surfaced requirements remain in `AMLW05/cts-285_SOURCE`. This repository changes only the delivery format so students can complete the case without repeated Canvas page jumps.
+The authoritative M2.3 and M2.4 content and alignment remain in `AMLW05/cts-285_SOURCE`. This repository changes only the delivery format so students can work through interactive decisions without fragile Canvas page-to-page routing.
 
 Module 4 uses a cumulative sequence instead of treating the pre-studio Investigation Brief as the graded simulation. The graded Design Investigation evidence is captured later through Canvas using `docs/decisions/m4-design-investigation-record.md`.
 
@@ -52,6 +53,7 @@ Module 4 uses a cumulative sequence instead of treating the pre-studio Investiga
 | Story Builder Lab | `m3/story-builder/` | No — nothing submitted separately |
 | Field Analyst Arcade — DataMan Case Prep | `m1/arcade/` | No |
 | DataMan Field Check — Requirements Survey | `m2/arcade/` | No |
+| Evidence-to-Requirement Lab | `m2/evidence-to-requirement/` | No — nothing submitted separately |
 | Backlog Bench — Product Work Survey | `m3/arcade/` | No |
 | Design Decisions Cabinet | `m4/practice-cabinet/` | No — formative practice |
 
