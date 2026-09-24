@@ -6,6 +6,8 @@ Course instructions, alignment, assessment directions, rubrics, and grading live
 
 For the history of how these runtimes evolved and what cleanup remains, see [`PROJECT-TRACKING.md`](PROJECT-TRACKING.md).
 
+For a student-shareable guide to the GitHub/development workflow and project vocabulary used in CTS-285, see [`reference/CTS285-WORKFLOW-GLOSSARY.md`](reference/CTS285-WORKFLOW-GLOSSARY.md).
+
 ## Module 4 — current sequence
 
 Module 4 is no longer represented by one short form-style simulation. The external sequence is:
