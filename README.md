@@ -4,6 +4,8 @@ Public student-facing interactive material for CTS-285 Systems Analysis & Design
 
 Course instructions, alignment, assessment directions, rubrics, and grading live in Canvas and in the private CTS-285 source-of-truth repository. This repository holds the external interactive experiences students open and run, plus support copies/templates used to keep those experiences aligned.
 
+For the history of how these runtimes evolved and what cleanup remains, see [`PROJECT-TRACKING.md`](PROJECT-TRACKING.md).
+
 ## Module 4 — current sequence
 
 Module 4 is no longer represented by one short form-style simulation. The external sequence is:
