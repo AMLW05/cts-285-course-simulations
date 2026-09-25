@@ -19,11 +19,15 @@
 - `m4/canvas/01-preparation-page.html`
 - `m4/canvas/02-post-labs-page.html`
 - `m4/canvas/03-design-studio-launch-page.html`
-- `m4/canvas/03-design-investigation-application.html`
 - `m4/canvas/04-design-investigation-rubric.md`
-- `m4/canvas/05-build-readiness-check-source.md`
 - `m4/canvas/06-text-prototype-assignment.html`
 - `m4/canvas/07-text-prototype-rubric.md`
+
+## Historical / superseded support copies
+- `m4/canvas/03-design-investigation-application.html` — withdrawn; retained only for development history; not in the current Canvas sequence.
+- `m4/canvas/05-build-readiness-check-source.md` — withdrawn; retained only for development history; not in the current Canvas sequence.
+
+Authoritative current Module 4 sequence: `AMLW05/cts-285_SOURCE` → `module-04/M4-CANVAS-SEQUENCE.md`.
 
 ## Required sequence
 Canvas instruction → Practice Cabinet → Investigation Brief → Answer Flow Lab → Memory Bank/Curator Lab → Post-Lab Evidence Check → Design Studio → Design Investigation Application → Build Readiness Check → Three-Layer Text Prototype
