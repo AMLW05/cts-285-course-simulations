@@ -1,3 +1,6 @@
+> **SUPERSEDED / WITHDRAWN SUPPORT COPY**  
+> Retained only for course-development history. This file is **not** part of the current Module 4 Canvas sequence. Use `AMLW05/cts-285_SOURCE` and `module-04/M4-CANVAS-SEQUENCE.md` as the authoritative source.
+
 # M4 Build Readiness Check — Canvas New Quizzes Source
 
 Purpose: verify transfer to new situations after the Design Studio. Keep this short and auto-graded. Do not reuse the student's own project evidence.
