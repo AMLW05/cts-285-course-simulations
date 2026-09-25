@@ -152,6 +152,10 @@ def check_venv_and_install(work, report):
     report.add("install", "#127 requirements.txt installs correctly", PASS, INSTALL)
 
     r = sh(in_venv("python -m pip freeze"), work)
+    if r.returncode != 0:
+        report.add("resolved-versions", "requirements.txt is a range, not a pin", FAIL,
+                   f"could not read the resolved set: {r.stderr.strip()[:300]}")
+        return True
     resolved = " ".join(sorted(x for x in r.stdout.split() if x))
     report.add("resolved-versions", "requirements.txt is a range, not a pin", PASS, resolved)
     return True
@@ -196,18 +200,37 @@ def check_app_over_http(work, report):
             report.add("app-renders", "#127 starter runs", PASS, "template rendered")
 
         def post(answer):
+            """Return the body, or None if the route failed.
+
+            A 4xx or 5xx here is the starter being broken, which is the thing this
+            harness reports. Letting it raise killed the run before the results
+            table printed, so the one failure worth catching was the one that
+            produced no report.
+            """
             data = urllib.parse.urlencode({"answer": answer}).encode()
-            with urllib.request.urlopen(base + "/answer", data=data, timeout=5) as resp:
-                return resp.read().decode()
+            try:
+                with urllib.request.urlopen(base + "/answer", data=data, timeout=5) as resp:
+                    return resp.read().decode()
+            except (urllib.error.URLError, ConnectionError, OSError):
+                return None
 
         first = post("41")
+        if first is None:
+            report.add("rule-first-try", "two-try rule, manual p.20", FAIL,
+                       "POST /answer did not return a response")
+            report.add("rule-second-try", "two-try rule, manual p.20", FAIL,
+                       "not reached; POST /answer failed")
+            return
         if "Try again." in first:
             report.add("rule-first-try", "two-try rule, manual p.20", PASS, "first wrong answer -> Try again.")
         else:
             report.add("rule-first-try", "two-try rule, manual p.20", FAIL, "first wrong answer did not invite a retry")
 
         second = post("41")
-        if "The correct answer is 42." in second:
+        if second is None:
+            report.add("rule-second-try", "two-try rule, manual p.20", FAIL,
+                       "POST /answer did not return a response on the second try")
+        elif "The correct answer is 42." in second:
             report.add("rule-second-try", "two-try rule, manual p.20", PASS, "second wrong answer -> answer revealed")
         else:
             report.add("rule-second-try", "two-try rule, manual p.20", FAIL, "second wrong answer did not reveal")
@@ -220,9 +243,15 @@ def check_app_over_http(work, report):
 
 
 def run_suite(package, suite):
+    # The suite path must be absolute before it reaches the child. cwd is set to
+    # the suite's own directory, so a RELATIVE --suite -- which is the form this
+    # repository's README documents -- would be resolved against that directory
+    # and never found. Verified by review, not by this harness, because every run
+    # here had passed an absolute path.
+    suite = os.path.abspath(suite)
     r = subprocess.run(
         [sys.executable, suite],
-        cwd=os.path.dirname(os.path.abspath(suite)) or ".",
+        cwd=os.path.dirname(suite) or ".",
         # PYTHONDONTWRITEBYTECODE: without it the suite writes __pycache__ into the
         # package it is pointed at, so a check that claims to leave the starter
         # untouched quietly modifies it. Found by the artefacts turning up staged.
@@ -239,7 +268,14 @@ def run_suite(package, suite):
 
 
 def check_suite(package, suite, report):
-    r = run_suite(package, suite)
+    # Copy first, as check_variant already does. The suite can write a database or
+    # other artefacts beside the module it imports, and the README promises every
+    # check runs against a copy. Suppressing bytecode was not enough to make that
+    # true; only copying is.
+    with tempfile.TemporaryDirectory() as tmp:
+        copy = os.path.join(tmp, "pkg")
+        shutil.copytree(package, copy)
+        r = run_suite(copy, suite)
     tail = r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr.strip()[:200]
     if r.returncode == 0:
         report.add("suite-green", "#106 M6 regression suite runs unchanged", PASS, tail)
@@ -269,6 +305,80 @@ def check_variant(package, suite, variant, report):
         report.add(f"variant:{name}", "#106 variant produces the intended failure", FAIL,
                    f"expected 3 PASS + 1 FAIL carrying the storage message; got "
                    f"{len(passing)} PASS, {len(failing)} FAIL\n{r.stdout.strip()[-400:]}")
+
+
+def check_sqlite_reference(package, suite, reference, schema, report):
+    """#106: the SQLite path initializes, and progress survives a process restart.
+
+    Restart survival is checked across two separate interpreter processes, not two
+    calls in one. A module-level dict survives the second; only storage survives
+    the first, which is the whole property M7 introduces.
+    """
+    with tempfile.TemporaryDirectory() as tmp:
+        pkg = os.path.join(tmp, "pkg")
+        shutil.copytree(package, pkg)
+        shutil.copyfile(reference, os.path.join(pkg, "data_store.py"))
+        shutil.copyfile(schema, os.path.join(pkg, "schema.sql"))
+
+        env = {**os.environ, "PYTHONPATH": pkg, "PYTHONDONTWRITEBYTECODE": "1"}
+
+        def run(code):
+            return subprocess.run([sys.executable, "-c", code], cwd=pkg, env=env,
+                                  capture_output=True, text=True, timeout=60)
+
+        r = run("import data_store; data_store.load_state()")
+        if r.returncode != 0:
+            report.add("sqlite-init", "#106 SQLite path creates/initializes", FAIL,
+                       r.stderr.strip()[-400:])
+            return
+        made = [f for f in os.listdir(pkg) if f.endswith(".db")]
+        if not made:
+            report.add("sqlite-init", "#106 SQLite path creates/initializes", FAIL,
+                       "first storage call created no database file")
+            return
+        report.add("sqlite-init", "#106 SQLite path creates/initializes", PASS,
+                   f"first storage call created {made[0]} from schema.sql")
+
+        r = run("import sqlite3, data_store; data_store.load_state();"
+                " c = sqlite3.connect(data_store.DATABASE_FILE);"
+                " c.execute(\"INSERT INTO dataman_state (id, problem, expected_answer,"
+                " try_number, status) VALUES (2, 'x', 1, 0, 'new')\")")
+        if "CHECK constraint failed" in r.stderr:
+            report.add("sqlite-one-row", "gate: CHECK (id = 1) is the schema's rule", PASS,
+                       "a second row is refused by the database, not by convention")
+        else:
+            report.add("sqlite-one-row", "gate: CHECK (id = 1) is the schema's rule", FAIL,
+                       f"a second row was accepted (exit {r.returncode})")
+
+        # Process one: answer wrong, save, exit.
+        r = run("import data_store, business_logic;"
+                " o = business_logic.check_answer(data_store.load_state(), '41');"
+                " data_store.save_state(o['state'])")
+        if r.returncode != 0:
+            report.add("sqlite-restart", "#106 progress survives a restart", FAIL,
+                       r.stderr.strip()[-400:])
+            return
+
+        # Process two: a genuinely new interpreter. Nothing in memory carries over.
+        r = run("import data_store; s = data_store.load_state();"
+                " print(s['try_number'], s['status'])")
+        got = r.stdout.strip()
+        if got == "1 retry":
+            report.add("sqlite-restart", "#106 progress survives a restart", PASS,
+                       "a second process read back try_number=1, status=retry")
+        else:
+            report.add("sqlite-restart", "#106 progress survives a restart", FAIL,
+                       f"expected '1 retry' from a fresh process, got {got!r} "
+                       f"{r.stderr.strip()[-200:]}")
+
+        if suite:
+            r = run_suite(pkg, suite)
+            tail = r.stdout.strip().splitlines()[-1] if r.stdout.strip() else r.stderr[-200:]
+            if r.returncode == 0:
+                report.add("sqlite-suite", "#106 M6 suite unchanged across the swap", PASS, tail)
+            else:
+                report.add("sqlite-suite", "#106 M6 suite unchanged across the swap", FAIL,
+                           f"exit {r.returncode}: {tail}")
 
 
 def sha(path):
@@ -304,7 +414,11 @@ def check_parity(package, other, report):
                    f"all {same} code and template files identical")
 
     a, b = os.path.join(package, "README.md"), os.path.join(other, "README.md")
-    if os.path.exists(a) and os.path.exists(b) and sha(a) != sha(b):
+    missing = [side for side, path in (("package", a), ("other", b)) if not os.path.exists(path)]
+    if missing:
+        report.add("starter-parity-readme", "reported, not gated", SKIP,
+                   f"no README.md on the {' and '.join(missing)} side; nothing compared")
+    elif sha(a) != sha(b):
         report.add("starter-parity-readme", "reported, not gated", SKIP,
                    f"the two READMEs differ ({sha(a)} != {sha(b)}); intentional register "
                    f"difference, wants a provenance header")
@@ -318,6 +432,8 @@ def main():
     p.add_argument("--suite", help="path to test_dataman.py (private source repo)")
     p.add_argument("--variant", action="append", default=[], help="a controlled failure variant (repeatable)")
     p.add_argument("--parity-against", help="a second starter copy to compare against")
+    p.add_argument("--sqlite-reference", help="a SQLite data_store.py to verify (private source repo)")
+    p.add_argument("--sqlite-schema", help="the schema.sql it reads")
     args = p.parse_args()
 
     package = os.path.abspath(args.package)
@@ -342,6 +458,13 @@ def main():
             check_variant(package, args.suite, variant, report)
     else:
         report.add("suite-green", "#106 M6 regression suite", SKIP, "no --suite given (lives in the private source repo)")
+
+    if args.sqlite_reference and args.sqlite_schema:
+        check_sqlite_reference(package, args.suite, os.path.abspath(args.sqlite_reference),
+                               os.path.abspath(args.sqlite_schema), report)
+    else:
+        report.add("sqlite-restart", "#106 SQLite persistence", SKIP,
+                   "no --sqlite-reference given (lives in the private source repo)")
 
     if args.parity_against:
         check_parity(package, os.path.abspath(args.parity_against), report)
