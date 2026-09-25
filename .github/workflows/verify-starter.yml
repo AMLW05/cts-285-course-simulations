@@ -1,0 +1,36 @@
+# The first check this repository has ever had.
+#
+# It runs the commands the Canvas pages publish, against the starter this
+# repository distributes, and fails if they do not work. The starter is the one
+# artifact here that students execute rather than read, so it is the one that can
+# be wrong in a way nobody notices until a class is sitting in front of it.
+#
+# Scope is decided by what may be public. This repository is public and students
+# write the M7 SQLite data_store.py themselves, so the private half of the
+# verification -- the M6 suite, the controlled failure variants, the SQLite
+# reference -- runs in the source repository instead, against this same script.
+#
+# Two tiers, matching house-style.yml in the source repo:
+#   hard   a published command does not work, or the starter does not run
+#   soft   intentional differences, such as the two starter READMEs
+#
+# A repo-wide gate would be red on arrival from inherited drift, and a check that
+# is red on arrival is one people learn to ignore.
+name: Verify starter
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  starter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run the published command sequence against the distributed starter
+        run: python3 verification/check_starter.py --package m5/flask-starter/files

@@ -88,6 +88,11 @@ above. It is not linked from Canvas, is not part of any module sequence, and mus
 students. It carries its own README stating the same. It is listed here only so that nobody
 finding it in `m2/` has to guess what it is.
 
+`verification/` is **course QA tooling**, added 2026-09-25. It runs the commands the Canvas pages
+publish against the starter this repository distributes, and reports whether they work. It is not
+linked from Canvas, is in no module sequence, and must not be given to students. It carries its own
+README stating the same, and it is what `.github/workflows/verify-starter.yml` runs.
+
 ## Verification status
 
 M4 has an explicit asset manifest and cross-repository sequence map. The remaining production check is live human playtesting of the deployed paths and the Canvas-to-hosted-URL wiring before the module is locked.

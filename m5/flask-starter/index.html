@@ -47,8 +47,11 @@
 
   <div class="card">
     <h2>3. Run it in Codespaces</h2>
-    <pre>python -m pip install -r requirements.txt
+    <pre>python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 python -m flask --app app run --debug --host=0.0.0.0</pre>
+    <p class="small">You make the environment once. A fresh terminal starts without it, so run <code>source .venv/bin/activate</code> again before anything else in that terminal. <code>python3</code> creates the environment, because it does not exist yet; <code>python</code> does everything after that.</p>
     <p>Open the forwarded port when Codespaces offers it.</p>
   </div>
 
