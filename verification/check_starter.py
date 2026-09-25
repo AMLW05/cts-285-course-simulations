@@ -223,7 +223,14 @@ def run_suite(package, suite):
     r = subprocess.run(
         [sys.executable, suite],
         cwd=os.path.dirname(os.path.abspath(suite)) or ".",
-        env={**os.environ, "PYTHONPATH": os.path.abspath(package)},
+        # PYTHONDONTWRITEBYTECODE: without it the suite writes __pycache__ into the
+        # package it is pointed at, so a check that claims to leave the starter
+        # untouched quietly modifies it. Found by the artefacts turning up staged.
+        env={
+            **os.environ,
+            "PYTHONPATH": os.path.abspath(package),
+            "PYTHONDONTWRITEBYTECODE": "1",
+        },
         capture_output=True,
         text=True,
         timeout=120,
