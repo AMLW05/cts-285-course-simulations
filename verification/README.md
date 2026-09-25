@@ -45,8 +45,10 @@ The starter is never modified. Every check runs against a copy in a temporary di
 
 ## What a pass means, and what it does not
 
-**A pass here is not a Codespaces verification.** The script prints that on every run, above the
-results, because the distinction is the whole reason the two issues exist. A pass says the command
+**A pass here is not a Codespaces verification** unless the run is inside a Codespace. The script
+says which, above the results, because the distinction is the whole reason the two issues exist.
+It reads the `CODESPACES` variable that GitHub sets in every Codespace, and prints the Codespace
+name when it finds it. Outside a Codespace, it prints a warning that the run is not one. A pass says the command
 form is sound on a clean Linux box with the interpreter named in the environment stamp. It says
 nothing about the forwarded port, the Codespaces image's Python version, or whether bare `python`
 exists on `PATH` before the virtual environment is activated.
