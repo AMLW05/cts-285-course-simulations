@@ -9,12 +9,20 @@ Files:
 - `templates/index.html` — user-facing response
 - `requirements.txt` — Flask dependency
 
-Run in Codespaces from this folder:
+Run in Codespaces from this folder, which is your project root:
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m flask --app app run --debug --host=0.0.0.0
 ```
+
+You make the environment once. A fresh terminal starts without it, so run
+`source .venv/bin/activate` again before anything else in that terminal.
+
+`python3` creates the environment, because it does not exist yet. `python` does everything after
+that, because it is the interpreter inside the environment you just activated.
 
 Controlled test:
 1. Submit a wrong answer once. Expected: `Try again.`
