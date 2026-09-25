@@ -109,9 +109,18 @@ def stamp():
     print(f"  sqlite3        {sqlite3.sqlite_version}")
     print(f"  platform       {platform.platform()}")
     print("")
-    print("  THIS IS NOT A GITHUB CODESPACE. Any check below that passes here")
-    print("  says the command form is sound, not that it is verified in the")
-    print("  environment students will use.")
+    # GitHub sets CODESPACES=true inside every Codespace. Without this check the
+    # banner below printed on every run, including inside a Codespace, so a
+    # genuine student-environment result read as if it were not one.
+    if os.environ.get("CODESPACES") == "true":
+        name = os.environ.get("CODESPACE_NAME", "name not set")
+        print(f"  GITHUB CODESPACE: {name}")
+        print("  This run is in the Codespaces environment. The forwarded port is")
+        print("  still a manual check: open it in the browser and record the result.")
+    else:
+        print("  THIS IS NOT A GITHUB CODESPACE. Any check below that passes here")
+        print("  says the command form is sound, not that it is verified in the")
+        print("  environment students will use.")
     print("")
 
 
