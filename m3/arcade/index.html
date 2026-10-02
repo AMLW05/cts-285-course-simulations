@@ -510,8 +510,12 @@ function renderDebrief(){
   /* "Correct" means the Strong answer only. A near (Useful) answer is defensible
      and is not a miss, but it is not the correct answer, so it is reported
      separately and never added to this number. Older saved records kept a
-     `best` that included near answers; it is left alone and no longer read. */
-  const st=S.station, score=S.queue.length-S.missed.length-S.near.length;
+     `best` that included near answers; it is left alone and no longer read.
+     Ordering items record one entry per pick, so count by item: an item with
+     any missed pick is missed; otherwise an item with any near pick is useful. */
+  const missedIds=new Set(S.missed.map(m=>m.it.id));
+  const nearItems=[...new Map(S.near.filter(n=>!missedIds.has(n.it.id)).map(n=>[n.it.id,n.it])).values()];
+  const st=S.station, score=S.queue.length-missedIds.size-nearItems.length;
   const rec=mem.stations[st.id]||{runs:0,bestStrong:0};
   rec.runs+=1; rec.bestStrong=Math.max(rec.bestStrong||0,score); mem.stations[st.id]=rec;
   save();
@@ -520,7 +524,7 @@ function renderDebrief(){
   S.queue.forEach(it=>{seen[it.mlo]=(seen[it.mlo]||0)+1;});
   const nearBy={};
   S.queue.forEach(it=>{if(!S.missed.some(m=>m.it.id===it.id))hit[it.mlo]=(hit[it.mlo]||0)+1;}); /* held = strong + near; steers the weakest-outcome pointer only */
-  S.near.forEach(n=>{nearBy[n.it.mlo]=(nearBy[n.it.mlo]||0)+1;});
+  nearItems.forEach(it=>{nearBy[it.mlo]=(nearBy[it.mlo]||0)+1;});
   const rates=Object.keys(MLOS).map(k=>({k,got:hit[k]||0,of:seen[k]||0,near:nearBy[k]||0}));
   const weak=rates.filter(r=>r.of).sort((a,c)=>(a.got/a.of)-(c.got/c.of))[0];
   const breakdown=rates.filter(r=>r.of).map(r=>'<div class="mlorow"'
@@ -530,8 +534,8 @@ function renderDebrief(){
     ?'<p>Weakest outcome this run: <strong>MLO '+esc(weak.k)+' &mdash; '+esc(MLOS[weak.k])
       +'</strong>. Reread that section before you revise <code>docs/product-backlog.md</code>.</p>'
     :'<p>Even across all three outcomes. Take the backlog to the Backlog Review and check it against the six lenses.</p>';
-  const nearNote=S.near.length?'<p class="meter">'+S.near.length+' defensible near-miss'
-    +(S.near.length===1?'':'es')+' &mdash; not counted against you. Read why the other reading is stronger.</p>':'';
+  const nearNote=nearItems.length?'<p class="meter">'+nearItems.length+' defensible near-miss'
+    +(nearItems.length===1?'':'es')+' &mdash; not counted against you. Read why the other reading is stronger.</p>':'';
 
   const list=S.missed.length?S.missed.map(m=>{
     const it=m.it;
@@ -547,14 +551,14 @@ function renderDebrief(){
 
   app.innerHTML=bar()+'<p class="eyebrow">Debrief</p><h1>The Bench</h1><hr class="rule">'
     +'<p class="meter">'+score+' of '+S.queue.length+' correct'
-      +(S.near.length?' &middot; '+S.near.length+' useful':'')
+      +(nearItems.length?' &middot; '+nearItems.length+' useful':'')
       +' &middot; best '+rec.bestStrong+' of '+S.queue.length+' correct</p>'
     +'<h2>By outcome</h2>'+breakdown+steer+nearNote
     +'<h2>Run it back on these</h2>'+list
     +'<div class="btn-row"><button class="btn btn-primary" id="again">Run it back</button>'
     +'<button class="btn" id="menu">Main menu</button></div>';
   say("Debrief. "+score+" of "+S.queue.length+" correct."
-      +(S.near.length?" "+S.near.length+" useful, not counted as correct.":""));
+      +(nearItems.length?" "+nearItems.length+" useful, not counted as correct.":""));
   wire();
 }
 
