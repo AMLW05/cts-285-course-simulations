@@ -465,11 +465,11 @@ function bar(){
 function renderMenu(){
   S.screen = "menu";
   const cards = BANK.stations.map(st => {
-    const rec = mem.stations[st.id] || {runs:0, best:0};
+    const rec = mem.stations[st.id] || {runs:0, bestStrong:0};
     return '<button class="stationcard" data-go="' + st.id + '">'
       + '<span class="nm">' + esc(st.name) + '</span><br>'
       + '<span class="sub">' + esc(st.subtitle) + '</span>'
-      + '<span class="stat">runs ' + rec.runs + ' &middot; best ' + rec.best + '/' + st.runLength + '</span>'
+      + '<span class="stat">runs ' + rec.runs + ' &middot; best ' + (rec.bestStrong || 0) + '/' + st.runLength + '</span>'
       + '</button>';
   }).join("");
   app.innerHTML = bar()
@@ -558,10 +558,14 @@ function advance(){
 
 function renderDebrief(){
   S.screen = "debrief";
-  const st = S.station, score = S.queue.length - S.missed.length;
-  const rec = mem.stations[st.id] || {runs:0, best:0};
+  /* "Correct" means the Strong answer only. A near (Useful) answer is defensible
+     and is not a miss, but it is not the correct answer, so it is reported
+     separately and never added to this number. Older saved records kept a
+     `best` that included near answers; it is left alone and no longer read. */
+  const st = S.station, score = S.queue.length - S.missed.length - S.near.length;
+  const rec = mem.stations[st.id] || {runs:0, bestStrong:0};
   rec.runs += 1;
-  rec.best = Math.max(rec.best, score);
+  rec.bestStrong = Math.max(rec.bestStrong || 0, score);
   rec.lastMissed = S.missed.map(m => m.it.id);
   mem.stations[st.id] = rec;
   save();
@@ -569,13 +573,15 @@ function renderDebrief(){
   /* per-MLO breakdown — the point of a survey station */
   const seen = {}, hit = {};
   S.queue.forEach(it => { seen[it.mlo] = (seen[it.mlo]||0) + 1; });
-  S.queue.forEach(it => { if(!S.missed.some(m => m.it.id === it.id)) hit[it.mlo] = (hit[it.mlo]||0) + 1; }); /* near counts as held */
-  const rates = Object.keys(MLOS).map(k => ({k, got:hit[k]||0, of:seen[k]||0}));
+  const nearBy = {};
+  S.queue.forEach(it => { if(!S.missed.some(m => m.it.id === it.id)) hit[it.mlo] = (hit[it.mlo]||0) + 1; }); /* held = strong + near; steers the weakest-outcome pointer only */
+  S.near.forEach(n => { nearBy[n.it.mlo] = (nearBy[n.it.mlo]||0) + 1; });
+  const rates = Object.keys(MLOS).map(k => ({k, got:hit[k]||0, of:seen[k]||0, near:nearBy[k]||0}));
   const weakest = rates.filter(r => r.of).sort((a,c) => (a.got/a.of) - (c.got/c.of))[0];
   const breakdown = rates.filter(r => r.of).map(r =>
     '<div class="mlorow"' + (weakest && r.k === weakest.k && r.got < r.of ? ' data-weak="1"' : '') + '>'
     + '<span class="lbl">MLO ' + esc(r.k) + ' &middot; ' + esc(MLOS[r.k]) + '</span>'
-    + '<span class="sc">' + r.got + '/' + r.of + '</span></div>').join("");
+    + '<span class="sc">' + (r.got - r.near) + '/' + r.of + (r.near ? ' &middot; ' + r.near + ' useful' : '') + '</span></div>').join("");
 
   const steer = (weakest && weakest.got < weakest.of)
     ? '<p>Weakest outcome this run: <strong>MLO ' + esc(weakest.k) + ' &mdash; ' + esc(MLOS[weakest.k])
@@ -599,12 +605,15 @@ function renderDebrief(){
 
   app.innerHTML = bar()
     + '<p class="eyebrow">Debrief</p><h1>Field Check</h1><hr class="rule">'
-    + '<p class="meter">' + score + ' of ' + S.queue.length + ' &middot; best ' + rec.best + ' of ' + S.queue.length + '</p>'
+    + '<p class="meter">' + score + ' of ' + S.queue.length + ' correct'
+      + (S.near.length ? ' &middot; ' + S.near.length + ' useful' : '')
+      + ' &middot; best ' + rec.bestStrong + ' of ' + S.queue.length + ' correct</p>'
     + '<h2>By outcome</h2>' + breakdown + steer + nearNote
     + '<h2>Run it back on these</h2>' + list
     + '<div class="btn-row"><button class="btn btn-primary" id="again">Run it back</button>'
     + '<button class="btn" id="menu">Main menu</button></div>';
   say("Debrief. " + score + " of " + S.queue.length + " correct."
+      + (S.near.length ? " " + S.near.length + " useful, not counted as correct." : "")
       + (weakest && weakest.got < weakest.of ? " Weakest outcome: MLO " + weakest.k + ", " + MLOS[weakest.k] + "." : ""));
   wire();
 }
