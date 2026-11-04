@@ -46,7 +46,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:
 :not(pre)>code{background:#EEF1F4;padding:.05rem .3rem;border-radius:3px}
 .file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;color:var(--muted);margin:1rem 0 0}
 table{border-collapse:collapse;width:100%;margin:.6rem 0 1rem;background:var(--paper)}
-th,td{border:1px solid var(--hair);padding:8px 10px;text-align:left;vertical-align:top}
+th,td{border:1px solid var(--hair);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
 th{background:#EEF1F4}
 .check{background:var(--ok-bg);border:1px solid #8CC89A;border-radius:6px;padding:12px 16px;margin:1rem 0}
 .trap{background:var(--bad-bg);border:1px solid #D48A8A;border-radius:6px;padding:12px 16px;margin:1rem 0}
@@ -159,7 +159,7 @@ def report():
 
 <div class="check"><strong>Check.</strong> The page at <code>/report</code> shows <code>Curator report for maya-1: second-try success</code>. It lists <code>try 1: answered 55 -&gt; wrong</code> and <code>try 2: answered 56 -&gt; correct</code>. Those attempts came from <code>menu.py</code>. <code>python -m pytest -q</code> passes.</div>
 
-<div class="trap"><strong>Trap.</strong> You make attempts in <code>menu.py</code> while the server is already running. You reload <code>/report</code> and the page is old. <code>JsonFileStore()</code> reads the file once, when the program starts. Save <code>app.py</code> or stop and start the server. The reloader restarts the program, and the program reads the file again.</div>
+<div class="trap"><strong>Trap.</strong> You make attempts in <code>menu.py</code> while the server is already running. You reload <code>/report</code> and the page is old. <code>JsonFileStore()</code> reads the file once, when the program starts. Save <code>app.py</code> or stop and start the server. The reloader restarts the program, and the program reads the file again. Do not run both programs at once. Each one writes its whole copy of the store when it saves, so the last one to save erases the attempts the other one made.</div>
 
 <details><summary>Predict first</summary>
 <p>The store file is empty or missing. You open <code>/report</code>. What do you see?</p>

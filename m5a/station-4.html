@@ -1,0 +1,203 @@
+<!doctype html>
+<!--
+  SHELL FOR EVERY m5a/ PAGE. Copy this file, replace the three REPLACE markers,
+  and write the station content inside <main>. Do not change the <style> block
+  on one page only: every page carries the same copy.
+
+  Fixed rules (see AMLW05/cts-285_SOURCE interstitial-5a/M5A-ARCHITECTURE.md):
+  - The out-of-character panel is static markup, first thing inside <main>,
+    and is never removed, collapsed, or injected by script.
+  - No FTCC gold anywhere. ORANGE (#F1A512) is a rail or border only,
+    never text and never a background behind text.
+  - The page works with JavaScript disabled. Script is allowed only for the
+    copy-to-clipboard buttons, and every copy button sits beside visible text.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Station 4: Memory Bank — Module 5A</title>
+<style>
+:root{
+  --ink:#1F2933; --muted:#52606D; --hair:#DFE3E8; --paper:#FFFFFF; --page:#F5F6F7;
+  --uv:#0A0A0A; --orange:#F1A512; --link:#0B5CAD; --code-bg:#111827; --code-ink:#F9FAFB;
+  --ok:#1E6B3A; --ok-bg:#EDF9F1; --bad:#9B1C1C; --bad-bg:#FFF0F0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;font-size:1.02rem}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.top{background:var(--uv);color:#fff;border-left:12px solid var(--orange);padding:18px 22px}
+.top .kicker{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#D1D5DB;margin:0}
+.top h1{margin:.3rem 0 .2rem;font-size:1.6rem;line-height:1.25}
+.top .sub{margin:0;color:#E5E7EB}
+main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h2{font-size:1.3rem;margin:2rem 0 .6rem;line-height:1.3}
+h3{font-size:1.08rem;margin:1.4rem 0 .4rem}
+.ooc{border-left:2px solid var(--hair);padding-left:1rem;margin:0 0 1.6rem}
+.ooc .label{margin:0 0 .25rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6B7280}
+.ooc ol{margin:.2rem 0 0;padding-left:1.3rem}
+.ooc p,.ooc li{margin:.15rem 0}
+.csp{background:var(--paper);border:1px solid var(--hair);border-left:4px solid var(--orange);padding:12px 16px;margin:1.2rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+.csp .who{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:14px 18px;margin:1rem 0}
+pre{background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:6px;overflow-x:auto;font-size:.88rem;line-height:1.45;margin:.4rem 0 1rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+:not(pre)>code{background:#EEF1F4;padding:.05rem .3rem;border-radius:3px}
+.file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;color:var(--muted);margin:1rem 0 0}
+table{border-collapse:collapse;width:100%;margin:.6rem 0 1rem;background:var(--paper)}
+th,td{border:1px solid var(--hair);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:#EEF1F4}
+.check{background:var(--ok-bg);border:1px solid #8CC89A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+.trap{background:var(--bad-bg);border:1px solid #D48A8A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+details{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:10px 14px;margin:1rem 0}
+summary{cursor:pointer;font-weight:600}
+.copy{font:inherit;font-size:.8rem;padding:4px 10px;border:1px solid #9AA5B1;border-radius:4px;background:#fff;cursor:pointer;min-height:32px}
+nav.steps{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--hair);margin-top:2.4rem;padding-top:1rem}
+.prism{font-size:.8rem;color:var(--muted);border-top:1px solid var(--hair);margin-top:2rem;padding-top:.8rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <p class="kicker">AlgoCratic Futures&trade; &middot; Interface Modernization Directive 5A &middot; ORANGE</p>
+  <h1>Station 4: Memory Bank, errors from the library</h1>
+  <p class="sub">Move the Memory Bank into a route. The ten-problem rule stays in the library.</p>
+</header>
+<main>
+
+<!-- OUT-OF-CHARACTER PANEL. Static. Required. Wording fixed by planning/INTERSTITIAL-MODULES.md. -->
+<div class="ooc" role="note" aria-label="Instructor, out of character">
+  <p class="label">Instructor &middot; out of character</p>
+  <ol>
+    <li>You can stop at any time, and stopping costs you nothing. Your grade is not affected.</li>
+    <li>You do not need permission, and you do not have to explain.</li>
+    <li>Nothing you do on these pages is scored. Canvas records that you opened the launch page, the same as any other page in the course. What you do after that is not recorded. These pages are hosted outside Canvas, and Canvas cannot see them.</li>
+    <li>To leave: <a href="https://faytechcc.instructure.com">return to Canvas</a>.</li>
+  </ol>
+  <p>The work you do in your own repository is yours and stays there. Module 5 is graded in Module 5, not here.</p>
+</div>
+
+<h2>What you change</h2>
+<p>You move the third menu choice, <code>bank</code>, into Flask. The route has the same shape as <code>practice</code>. A <code>GET</code> shows the set and a form. A <code>POST</code> receives the problem id and tries to add it. The ten-problem rule does not move. It stays in <code>dataman/logic.py</code>. The route only reports what the library says.</p>
+<div class="csp"><span class="who">SHODANN &middot; Channel Success Partner</span>The Memory Bank holds ten problems. I did not choose ten. The manual did. I find it restful to work for a number somebody else wrote down.</div>
+<h2>The translation row</h2>
+<table>
+<thead><tr><th>Text menu (<code>menu.py</code>)</th><th>Flask (<code>app.py</code>)</th></tr></thead>
+<tbody><tr><td><code>except SetFull as err: print(...)</code></td><td>The same <code>except</code>. The message goes into the page.</td></tr></tbody>
+</table>
+<p>The other rows of the table still apply. <code>input()</code> becomes a form field. <code>print()</code> becomes a value that the template shows.</p>
+
+<h2>Before and after</h2>
+<p>This is the <code>bank</code> function in the text menu. The <code>try</code> and <code>except</code> are the part to watch.</p>
+<p class="file">menu.py &middot; before &middot; excerpt of your Module 4 prototype</p>
+<pre id="s4-old" data-ref="template:app.py"><code>def bank(store):
+    memory_bank = MemoryBank(store, "set-1")
+    pid = input("Problem id to add (for example P11): ").strip()
+    try:
+        memory_bank.add_problem(pid)
+        print(f"Added. Set holds {len(memory_bank.members())}.")
+    except SetFull as err:
+        print(f"Refused: {err}")
+</code></pre>
+<p>This is the new route in <code>app.py</code>. Compare the two blocks line by line. The <code>try</code> and <code>except</code> have the same lines and the same message. Only the two places that talk to the user changed: <code>input()</code> became <code>request.form</code>, and <code>print()</code> became <code>msg</code>.</p>
+<p class="file">app.py &middot; add after report() &middot; excerpt <button class="copy" type="button" data-target="s4-route">Copy</button></p>
+<pre id="s4-route" data-ref="station-4/app.py"><code>@app.route("/bank", methods=["GET", "POST"])
+def bank():
+    memory_bank = MemoryBank(STORE, "set-1")
+    msg = None
+    if request.method == "POST":
+        pid = request.form.get("problem_id", "").strip()
+        try:
+            memory_bank.add_problem(pid)
+            msg = f"Added. Set holds {len(memory_bank.members())}."
+        except SetFull as err:
+            msg = f"Refused: {err}"
+    return render_template("bank.html", members=memory_bank.members(),
+                           message=msg)
+</code></pre>
+<h2>Steps</h2>
+<ol>
+<li>Change the import line in <code>app.py</code> so it also brings in <code>MemoryBank</code> and <code>SetFull</code>.</li>
+<li>Add the <code>bank()</code> route from the block above.</li>
+<li>Create <code>templates/bank.html</code> with the block below. The input has <code>name="problem_id"</code>. The route reads <code>request.form.get("problem_id", "")</code>. The two strings must match, character for character.</li>
+</ol>
+<p class="file">app.py &middot; import lines &middot; excerpt (changed) <button class="copy" type="button" data-target="s4-import">Copy</button></p>
+<pre id="s4-import" data-ref="station-4/app.py"><code>from dataman.logic import (MemoryBank, PracticeSession, Problem, SetFull,
+                           curator_report)
+</code></pre>
+<p class="file">templates/bank.html &middot; new file <button class="copy" type="button" data-target="s4-bank">Copy</button></p>
+<pre id="s4-bank" data-ref="station-4/templates/bank.html"><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Memory Bank&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Memory Bank: set-1&lt;/h1&gt;
+  {% if message %}&lt;p&gt;&lt;strong&gt;{{ message }}&lt;/strong&gt;&lt;/p&gt;{% endif %}
+  &lt;p&gt;Set holds {{ members|length }}: {{ members|join(", ") }}&lt;/p&gt;
+  &lt;form method="post"&gt;
+    &lt;label for="problem_id"&gt;Problem id to add (for example P11)&lt;/label&gt;
+    &lt;input id="problem_id" name="problem_id" required&gt;
+    &lt;button type="submit"&gt;Add&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>You do not edit <code>dataman/logic.py</code>. Open it and look at <code>MemoryBank.add_problem</code>. It already raises <code>SetFull</code> when the set holds ten problems. The route does not need to count anything.</p>
+
+<h2>Run it</h2>
+<p>If the server is not running, start it. If it is running, save your files. The debug reloader restarts it for you. Open <code>/bank</code> in the address bar. Station 5 adds the links.</p>
+<p class="file">Terminal <button class="copy" type="button" data-target="s4-run">Copy</button></p>
+<pre id="s4-run"><code>source .venv/bin/activate
+python -m flask --app app run --debug --host=0.0.0.0
+</code></pre>
+<p>Open a second terminal for the tests. Run <code>source .venv/bin/activate</code> in it first.</p>
+<p class="file">Terminal <button class="copy" type="button" data-target="s4-test">Copy</button></p>
+<pre id="s4-test"><code>source .venv/bin/activate
+python -m pytest -q
+</code></pre>
+<div class="check">
+<p><strong>Check</strong></p>
+<ol>
+<li>Open <code>/bank</code>. The page shows the set and a form.</li>
+<li>Add <code>P1</code>, then <code>P2</code>, and so on up to <code>P10</code>. After each one the page shows <code>Added. Set holds N.</code> If the set already holds problems from earlier work, the count starts higher. That is correct. The store is a file.</li>
+<li>Add <code>P11</code>. The page shows <code>Refused: set-1 already holds 10 problems</code>. The set still holds ten.</li>
+<li>In another terminal, run <code>python menu.py --store json</code>, choose <code>bank</code>, and add <code>P12</code>. The menu gives the same refusal. One rule, two interfaces.</li>
+<li><code>python -m pytest -q</code> still passes.</li>
+</ol>
+</div>
+<div class="trap">
+<p><strong>Trap: the rule in the wrong place</strong></p>
+<p>You add <code>if len(members) &gt;= 10</code> to the route. Or you disable the Add button in the template when the set is full. The page seems to work. But now the rule lives in more than one place. <code>menu.py</code> does not run your route, so it could still add an eleventh problem if <code>logic.py</code> did not refuse it. Today <code>logic.py</code> does refuse, so the web check only repeats it. If you change the limit later, you must find every copy. Keep the rule in <code>logic.py</code> and let the route report the refusal.</p>
+</div>
+<details>
+<summary>Predict first: you add P3 twice. What does the set hold?</summary>
+<p>The set does not change. Look at <code>add_problem</code> in <code>dataman/logic.py</code>. If the id is already in the set, the method returns without adding it. The count stays the same, and no <code>SetFull</code> is raised. The page still says <code>Added. Set holds N.</code> because the route only sees that no error happened. The text menu does the same. This is how the template behaves today, and 5A does not change it.</p>
+</details>
+<h2>Commit</h2>
+<p class="file">Terminal <button class="copy" type="button" data-target="s4-commit">Copy</button></p>
+<pre id="s4-commit"><code>git add -A
+git commit -m "Station 4: Memory Bank route reports SetFull"
+git push
+</code></pre>
+<h2>Read</h2>
+<p>Read the Flask Quickstart section <a href="https://flask.palletsprojects.com/en/stable/quickstart/#http-methods">HTTP methods</a>. Read only that section. The Flask tutorial is outside 5A.</p>
+
+
+<nav class="steps" aria-label="Directive stations">
+  <a href="station-3.html">&larr; Previous</a>
+  <a href="index.html">All stations</a>
+  <a href="station-5.html">Next &rarr;</a>
+</nav>
+
+<p class="prism">PRISM band: ORANGE. Clearance indicates the complexity and scope a reader is prepared to hold. It does not make public information private.</p>
+</main>
+<script>
+document.querySelectorAll('button.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.getElementById(b.getAttribute('data-target'));
+    if(!t||!navigator.clipboard)return;
+    navigator.clipboard.writeText(t.textContent).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)});
+  });
+});
+</script>
+</body>
+</html>

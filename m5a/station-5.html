@@ -1,0 +1,248 @@
+<!doctype html>
+<!--
+  SHELL FOR EVERY m5a/ PAGE. Copy this file, replace the three REPLACE markers,
+  and write the station content inside <main>. Do not change the <style> block
+  on one page only: every page carries the same copy.
+
+  Fixed rules (see AMLW05/cts-285_SOURCE interstitial-5a/M5A-ARCHITECTURE.md):
+  - The out-of-character panel is static markup, first thing inside <main>,
+    and is never removed, collapsed, or injected by script.
+  - No FTCC gold anywhere. ORANGE (#F1A512) is a rail or border only,
+    never text and never a background behind text.
+  - The page works with JavaScript disabled. Script is allowed only for the
+    copy-to-clipboard buttons, and every copy button sits beside visible text.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Station 5: The menu becomes a page — Module 5A</title>
+<style>
+:root{
+  --ink:#1F2933; --muted:#52606D; --hair:#DFE3E8; --paper:#FFFFFF; --page:#F5F6F7;
+  --uv:#0A0A0A; --orange:#F1A512; --link:#0B5CAD; --code-bg:#111827; --code-ink:#F9FAFB;
+  --ok:#1E6B3A; --ok-bg:#EDF9F1; --bad:#9B1C1C; --bad-bg:#FFF0F0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;font-size:1.02rem}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.top{background:var(--uv);color:#fff;border-left:12px solid var(--orange);padding:18px 22px}
+.top .kicker{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#D1D5DB;margin:0}
+.top h1{margin:.3rem 0 .2rem;font-size:1.6rem;line-height:1.25}
+.top .sub{margin:0;color:#E5E7EB}
+main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h2{font-size:1.3rem;margin:2rem 0 .6rem;line-height:1.3}
+h3{font-size:1.08rem;margin:1.4rem 0 .4rem}
+.ooc{border-left:2px solid var(--hair);padding-left:1rem;margin:0 0 1.6rem}
+.ooc .label{margin:0 0 .25rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6B7280}
+.ooc ol{margin:.2rem 0 0;padding-left:1.3rem}
+.ooc p,.ooc li{margin:.15rem 0}
+.csp{background:var(--paper);border:1px solid var(--hair);border-left:4px solid var(--orange);padding:12px 16px;margin:1.2rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+.csp .who{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:14px 18px;margin:1rem 0}
+pre{background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:6px;overflow-x:auto;font-size:.88rem;line-height:1.45;margin:.4rem 0 1rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+:not(pre)>code{background:#EEF1F4;padding:.05rem .3rem;border-radius:3px}
+.file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;color:var(--muted);margin:1rem 0 0}
+table{border-collapse:collapse;width:100%;margin:.6rem 0 1rem;background:var(--paper)}
+th,td{border:1px solid var(--hair);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:#EEF1F4}
+.check{background:var(--ok-bg);border:1px solid #8CC89A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+.trap{background:var(--bad-bg);border:1px solid #D48A8A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+details{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:10px 14px;margin:1rem 0}
+summary{cursor:pointer;font-weight:600}
+.copy{font:inherit;font-size:.8rem;padding:4px 10px;border:1px solid #9AA5B1;border-radius:4px;background:#fff;cursor:pointer;min-height:32px}
+nav.steps{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--hair);margin-top:2.4rem;padding-top:1rem}
+.prism{font-size:.8rem;color:var(--muted);border-top:1px solid var(--hair);margin-top:2rem;padding-top:.8rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <p class="kicker">AlgoCratic Futures&trade; &middot; Interface Modernization Directive 5A &middot; ORANGE</p>
+  <h1>Station 5: The menu becomes a page</h1>
+  <p class="sub">Build the menu from links. Use url_for so a path can change in one place.</p>
+</header>
+<main>
+
+<!-- OUT-OF-CHARACTER PANEL. Static. Required. Wording fixed by planning/INTERSTITIAL-MODULES.md. -->
+<div class="ooc" role="note" aria-label="Instructor, out of character">
+  <p class="label">Instructor &middot; out of character</p>
+  <ol>
+    <li>You can stop at any time, and stopping costs you nothing. Your grade is not affected.</li>
+    <li>You do not need permission, and you do not have to explain.</li>
+    <li>Nothing you do on these pages is scored. Canvas records that you opened the launch page, the same as any other page in the course. What you do after that is not recorded. These pages are hosted outside Canvas, and Canvas cannot see them.</li>
+    <li>To leave: <a href="https://faytechcc.instructure.com">return to Canvas</a>.</li>
+  </ol>
+  <p>The work you do in your own repository is yours and stays there. Module 5 is graded in Module 5, not here.</p>
+</div>
+
+<h2>What you change</h2>
+<p>You replace the text menu with a home page. The home route <code>/</code> shows <code>home.html</code>. That page has three links: Practice, Report and Memory Bank. Each link is built with <code>url_for</code>, which takes the name of a Python function and returns its path. You also add a <q>Back to menu</q> link to the other three templates.</p>
+<div class="csp"><span class="who">SHODANN &middot; Channel Success Partner</span>The Algorithm has reclassified the text menu as a legacy engagement surface. I will miss it. It never once dropped a connection.</div>
+<h2>The translation row</h2>
+<table>
+<thead><tr><th>Text menu (<code>menu.py</code>)</th><th>Flask (<code>app.py</code>)</th></tr></thead>
+<tbody>
+<tr><td><code>while True:</code> the menu loop</td><td>Flask's server. The loop is gone from your code.</td></tr>
+<tr><td><code>actions = {"practice": practice, ...}</code></td><td><code>@app.route("/practice")</code>. The URL map is the menu.</td></tr>
+</tbody>
+</table>
+
+<h2>Before and after</h2>
+<p>This is the menu loop in <code>menu.py</code>. The dictionary maps a typed word to a function. The loop asks again and again.</p>
+<p class="file">menu.py &middot; before &middot; excerpt</p>
+<pre id="s5-old" data-ref="template:app.py"><code>    actions = {"practice": practice, "report": report, "bank": bank}
+    while True:
+        choice = input("practice / report / bank / quit &gt; ").strip().lower()
+        if choice == "quit":
+            break
+        if choice in actions:
+            actions[choice](store)
+</code></pre>
+<p>In <code>app.py</code> you already wrote the dictionary's job. Each <code>@app.route(...)</code> line says <q>this path runs this function</q>. Flask keeps that map. Flask also owns the loop: it waits, and each request runs one function. Nothing is left for a <code>while True</code> or an <code>actions</code> dictionary to do in <code>app.py</code>. <code>menu.py</code> still has them, and it still runs.</p>
+<p>Only <code>home()</code> changes in <code>app.py</code>. Before:</p>
+<p class="file">app.py &middot; station 4 &middot; excerpt</p>
+<pre id="s5-before" data-ref="station-4/app.py"><code>@app.route("/")
+def home():
+    return "DataMan is running on the web."
+</code></pre>
+<p>After:</p>
+<p class="file">app.py &middot; station 5 &middot; excerpt <button class="copy" type="button" data-target="s5-after">Copy</button></p>
+<pre id="s5-after" data-ref="station-5/app.py"><code>@app.route("/")
+def home():
+    return render_template("home.html")
+</code></pre>
+<h2>Why url_for</h2>
+<p><code>url_for("practice")</code> takes the name of the function, not the path. Flask looks up the path for that function and returns it. If you change the path in one place, every link follows. A path typed by hand in a template does not follow.</p>
+<h2>Steps</h2>
+<ol>
+<li>Change <code>home()</code> in <code>app.py</code> as shown above.</li>
+<li>Create <code>templates/home.html</code>.</li>
+<li>Add the <q>Back to menu</q> line to <code>practice.html</code>, <code>report.html</code> and <code>bank.html</code>. The complete files are below.</li>
+</ol>
+<p class="file">templates/home.html &middot; new file <button class="copy" type="button" data-target="s5-home">Copy</button></p>
+<pre id="s5-home" data-ref="station-5/templates/home.html"><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;DataMan&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;DataMan&lt;/h1&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="{{ url_for('practice') }}"&gt;Practice&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="{{ url_for('report') }}"&gt;Report&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="{{ url_for('bank') }}"&gt;Memory Bank&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p class="file">templates/practice.html &middot; changed <button class="copy" type="button" data-target="s5-practice">Copy</button></p>
+<pre id="s5-practice" data-ref="station-5/templates/practice.html"><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Practice&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Practice&lt;/h1&gt;
+  {% if message %}&lt;p&gt;&lt;strong&gt;{{ message }}&lt;/strong&gt;&lt;/p&gt;{% endif %}
+  {% if finished %}
+    &lt;p&gt;This session is finished.&lt;/p&gt;
+  {% else %}
+    &lt;form method="post"&gt;
+      &lt;label for="answer"&gt;Try {{ try_number }}: {{ problem.prompt }} =&lt;/label&gt;
+      &lt;input id="answer" name="answer" required&gt;
+      &lt;button type="submit"&gt;Check&lt;/button&gt;
+    &lt;/form&gt;
+  {% endif %}
+  &lt;p&gt;&lt;a href="{{ url_for('home') }}"&gt;Back to menu&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p class="file">templates/report.html &middot; changed <button class="copy" type="button" data-target="s5-report">Copy</button></p>
+<pre id="s5-report" data-ref="station-5/templates/report.html"><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Report&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Curator report for {{ session_id }}: {{ rep.label }}&lt;/h1&gt;
+  &lt;ul&gt;
+    {% for r in rep.attempts %}
+      &lt;li&gt;try {{ r.try }}: answered {{ r.answer }} -&gt; {{ "correct" if r.correct else "wrong" }}&lt;/li&gt;
+    {% else %}
+      &lt;li&gt;No attempts yet.&lt;/li&gt;
+    {% endfor %}
+  &lt;/ul&gt;
+  &lt;p&gt;&lt;a href="{{ url_for('home') }}"&gt;Back to menu&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p class="file">templates/bank.html &middot; changed <button class="copy" type="button" data-target="s5-bank">Copy</button></p>
+<pre id="s5-bank" data-ref="station-5/templates/bank.html"><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Memory Bank&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Memory Bank: set-1&lt;/h1&gt;
+  {% if message %}&lt;p&gt;&lt;strong&gt;{{ message }}&lt;/strong&gt;&lt;/p&gt;{% endif %}
+  &lt;p&gt;Set holds {{ members|length }}: {{ members|join(", ") }}&lt;/p&gt;
+  &lt;form method="post"&gt;
+    &lt;label for="problem_id"&gt;Problem id to add (for example P11)&lt;/label&gt;
+    &lt;input id="problem_id" name="problem_id" required&gt;
+    &lt;button type="submit"&gt;Add&lt;/button&gt;
+  &lt;/form&gt;
+  &lt;p&gt;&lt;a href="{{ url_for('home') }}"&gt;Back to menu&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2>Run it</h2>
+<p>Save your files. The debug reloader restarts the server. If it is not running, start it.</p>
+<p class="file">Terminal <button class="copy" type="button" data-target="s5-run">Copy</button></p>
+<pre id="s5-run"><code>source .venv/bin/activate
+python -m flask --app app run --debug --host=0.0.0.0
+</code></pre>
+<p>In a second terminal, run the tests. Run <code>source .venv/bin/activate</code> in it first.</p>
+<p class="file">Terminal <button class="copy" type="button" data-target="s5-test">Copy</button></p>
+<pre id="s5-test"><code>source .venv/bin/activate
+python -m pytest -q
+</code></pre>
+<div class="check">
+<p><strong>Check</strong></p>
+<ol>
+<li>Open <code>/</code>. The page shows three links: Practice, Report and Memory Bank.</li>
+<li>Each link opens the right page. Each of those pages has a <q>Back to menu</q> link that returns to <code>/</code>.</li>
+<li><code>python menu.py --store json</code> still starts the old menu, and it still works against the same store file.</li>
+<li><code>python -m pytest -q</code> still passes.</li>
+</ol>
+</div>
+<div class="trap">
+<p><strong>Trap: a path where a function name belongs</strong></p>
+<p>You write <code>url_for('/practice')</code> with the path inside. <code>url_for</code> wants the function name, <code>'practice'</code>. The symptom is an error page when you open any page that has the link. The error says <code>werkzeug.routing.exceptions.BuildError: Could not build url for endpoint '/practice'. Did you mean 'practice' instead?</code> Remove the slash.</p>
+</div>
+<details>
+<summary>Predict first: you change @app.route("/practice") to @app.route("/drill"). Which links break?</summary>
+<p>None of them. <code>url_for("practice")</code> uses the function name, and the function is still called <code>practice</code>. The home page link now points to <code>/drill</code>. The practice form has no <code>action</code>, so it posts to the page it is on, and it also follows. A link you typed by hand as <code>/practice</code>, or a bookmark, would break and give a 404 page. That is why the templates use <code>url_for</code>.</p>
+</details>
+<h2>Commit</h2>
+<p class="file">Terminal <button class="copy" type="button" data-target="s5-commit">Copy</button></p>
+<pre id="s5-commit"><code>git add -A
+git commit -m "Station 5: Home page replaces the text menu"
+git push
+</code></pre>
+<h2>Read</h2>
+<p>Read the Flask Quickstart section <a href="https://flask.palletsprojects.com/en/stable/quickstart/#url-building">URL building</a>. Read only that section. The Flask tutorial is outside 5A.</p>
+
+
+<nav class="steps" aria-label="Directive stations">
+  <a href="station-4.html">&larr; Previous</a>
+  <a href="index.html">All stations</a>
+  <a href="station-6.html">Next &rarr;</a>
+</nav>
+
+<p class="prism">PRISM band: ORANGE. Clearance indicates the complexity and scope a reader is prepared to hold. It does not make public information private.</p>
+</main>
+<script>
+document.querySelectorAll('button.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.getElementById(b.getAttribute('data-target'));
+    if(!t||!navigator.clipboard)return;
+    navigator.clipboard.writeText(t.textContent).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)});
+  });
+});
+</script>
+</body>
+</html>

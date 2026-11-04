@@ -1,0 +1,153 @@
+<!doctype html>
+<!--
+  SHELL FOR EVERY m5a/ PAGE. Copy this file, replace the three REPLACE markers,
+  and write the station content inside <main>. Do not change the <style> block
+  on one page only: every page carries the same copy.
+
+  Fixed rules (see AMLW05/cts-285_SOURCE interstitial-5a/M5A-ARCHITECTURE.md):
+  - The out-of-character panel is static markup, first thing inside <main>,
+    and is never removed, collapsed, or injected by script.
+  - No FTCC gold anywhere. ORANGE (#F1A512) is a rail or border only,
+    never text and never a background behind text.
+  - The page works with JavaScript disabled. Script is allowed only for the
+    copy-to-clipboard buttons, and every copy button sits beside visible text.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Debrief — Module 5A</title>
+<style>
+:root{
+  --ink:#1F2933; --muted:#52606D; --hair:#DFE3E8; --paper:#FFFFFF; --page:#F5F6F7;
+  --uv:#0A0A0A; --orange:#F1A512; --link:#0B5CAD; --code-bg:#111827; --code-ink:#F9FAFB;
+  --ok:#1E6B3A; --ok-bg:#EDF9F1; --bad:#9B1C1C; --bad-bg:#FFF0F0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;font-size:1.02rem}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.top{background:var(--uv);color:#fff;border-left:12px solid var(--orange);padding:18px 22px}
+.top .kicker{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#D1D5DB;margin:0}
+.top h1{margin:.3rem 0 .2rem;font-size:1.6rem;line-height:1.25}
+.top .sub{margin:0;color:#E5E7EB}
+main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h2{font-size:1.3rem;margin:2rem 0 .6rem;line-height:1.3}
+h3{font-size:1.08rem;margin:1.4rem 0 .4rem}
+.ooc{border-left:2px solid var(--hair);padding-left:1rem;margin:0 0 1.6rem}
+.ooc .label{margin:0 0 .25rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6B7280}
+.ooc ol{margin:.2rem 0 0;padding-left:1.3rem}
+.ooc p,.ooc li{margin:.15rem 0}
+.csp{background:var(--paper);border:1px solid var(--hair);border-left:4px solid var(--orange);padding:12px 16px;margin:1.2rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+.csp .who{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:14px 18px;margin:1rem 0}
+pre{background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:6px;overflow-x:auto;font-size:.88rem;line-height:1.45;margin:.4rem 0 1rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+:not(pre)>code{background:#EEF1F4;padding:.05rem .3rem;border-radius:3px}
+.file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;color:var(--muted);margin:1rem 0 0}
+table{border-collapse:collapse;width:100%;margin:.6rem 0 1rem;background:var(--paper)}
+th,td{border:1px solid var(--hair);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:#EEF1F4}
+.check{background:var(--ok-bg);border:1px solid #8CC89A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+.trap{background:var(--bad-bg);border:1px solid #D48A8A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+details{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:10px 14px;margin:1rem 0}
+summary{cursor:pointer;font-weight:600}
+.copy{font:inherit;font-size:.8rem;padding:4px 10px;border:1px solid #9AA5B1;border-radius:4px;background:#fff;cursor:pointer;min-height:32px}
+nav.steps{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--hair);margin-top:2.4rem;padding-top:1rem}
+.prism{font-size:.8rem;color:var(--muted);border-top:1px solid var(--hair);margin-top:2rem;padding-top:.8rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <p class="kicker">AlgoCratic Futures&trade; &middot; Interface Modernization Directive 5A &middot; ORANGE</p>
+  <h1>Debrief: what changed</h1>
+  <p class="sub">See what changed, prove what did not, and find the handoff into Module 5.</p>
+</header>
+<main>
+
+<!-- OUT-OF-CHARACTER PANEL. Static. Required. Wording fixed by planning/INTERSTITIAL-MODULES.md. -->
+<div class="ooc" role="note" aria-label="Instructor, out of character">
+  <p class="label">Instructor &middot; out of character</p>
+  <ol>
+    <li>You can stop at any time, and stopping costs you nothing. Your grade is not affected.</li>
+    <li>You do not need permission, and you do not have to explain.</li>
+    <li>Nothing you do on these pages is scored. Canvas records that you opened the launch page, the same as any other page in the course. What you do after that is not recorded. These pages are hosted outside Canvas, and Canvas cannot see them.</li>
+    <li>To leave: <a href="https://faytechcc.instructure.com">return to Canvas</a>.</li>
+  </ol>
+  <p>The work you do in your own repository is yours and stays there. Module 5 is graded in Module 5, not here.</p>
+</div>
+
+<h2>What changed</h2>
+<p>One Python file and four templates.</p>
+<ul>
+<li><code>app.py</code> is new. It replaced the text menu as the interface.</li>
+<li><code>templates/home.html</code>, <code>practice.html</code>, <code>report.html</code> and <code>bank.html</code> are new.</li>
+</ul>
+<p>There was also housekeeping. You renamed the old <code>app.py</code> to <code>menu.py</code>. You added one line to <code>requirements.txt</code> and <code>.venv/</code> to <code>.gitignore</code>.</p>
+<h2>What did not change</h2>
+<ul>
+<li><code>dataman/logic.py</code>: the two-try rule, the ten-problem rule, the three report labels.</li>
+<li><code>dataman/store.py</code>: how attempts and sets are saved.</li>
+<li><code>tests/test_logic.py</code>: the tests of the library.</li>
+</ul>
+<p>The text menu and the web app are two interfaces over one library. That is why the tests passed after every station.</p>
+<h3>Prove it</h3>
+<p>Ask Git. This command lists every commit that touched the library or the tests. None of the commits you made in 5A should appear.</p>
+<p class="file">Terminal <button class="copy" type="button" data-target="d-log">Copy</button></p>
+<pre id="d-log"><code>git log --oneline -- dataman tests
+</code></pre>
+<p>Your station commits start with <code>Station</code>. This command lists them. Use it to find the first one.</p>
+<p class="file">Terminal <button class="copy" type="button" data-target="d-stations">Copy</button></p>
+<pre id="d-stations"><code>git log --oneline --grep="^Station"
+</code></pre>
+<p>For a stronger proof, take the id of the oldest station commit. Put it where <code>&lt;first-station-commit&gt;</code> is. The command prints nothing when the library and the tests are unchanged.</p>
+<p class="file">Terminal <button class="copy" type="button" data-target="d-diff">Copy</button></p>
+<pre id="d-diff"><code>git diff --stat &lt;first-station-commit&gt;^ -- dataman tests
+</code></pre>
+<div class="csp"><span class="who">SHODANN &middot; Channel Success Partner</span>I have watched the text menu retire. I am told that letting go is a growth metric. I let go of the while loop first. It was the only part of it I was certified to hold.</div>
+<h2>Self-check</h2>
+<p>These questions are for you. Nothing is scored and nothing is recorded. Answer in your own words, then open the answer.</p>
+<details><summary>Which file owns the two-try rule?</summary>
+<p><code>dataman/logic.py</code>. <code>MAX_ATTEMPTS = 2</code> is there. The web app and the text menu both ask the library. Neither one owns the rule.</p></details>
+<details><summary>What does GET promise?</summary>
+<p>A <code>GET</code> asks for a page and changes nothing. You can open it twice and the data is the same.</p></details>
+<details><summary>Why did the while loop disappear?</summary>
+<p>Flask's server is the loop now. It waits for a request. Each request runs one function and returns. Your code does not need to loop.</p></details>
+<details><summary>Why does practice() build a new PracticeSession on every request?</summary>
+<p>Nothing survives between requests except what the store keeps. The new <code>PracticeSession</code> reads the attempts from the store, so it knows the try number and whether the session is finished.</p></details>
+<details><summary>Why redirect after POST?</summary>
+<p>After the redirect, the last request the browser made is a <code>GET</code>. A refresh repeats a <code>GET</code>, and that is safe. Without the redirect, a refresh repeats the <code>POST</code> and spends the second try.</p></details>
+
+<h2>Handoff to Module 5</h2>
+<p>Module 5 asks you to move one product slice into Flask. In 5A you moved the whole menu. You have done the pattern: a route, a template, a form, a call into the library, and a redirect.</p>
+<p>Module 5 asks for evidence of your work. Expect these three things:</p>
+<ul>
+<li>An acceptance criterion that you tested.</li>
+<li>An implementation finding, written in <code>docs/decisions/m5-implementation-finding.md</code>.</li>
+<li>Meaningful commits in your repository.</li>
+</ul>
+<p>Module 5A is not graded. Nothing you did here is submitted. Module 5 is where this work is graded. Read the Module 5 instructions in Canvas for the exact requirements.</p>
+<h2>Later, if you want it</h2>
+<p>Your four templates repeat the same <code>&lt;head&gt;</code> and the same Back to menu link. Flask has a feature for this named template inheritance, which uses <code>{% extends %}</code>. 5A does not teach it. If you want to tidy your templates, read <a href="https://flask.palletsprojects.com/en/stable/patterns/templateinheritance/">Template Inheritance</a> in the Flask documentation.</p>
+<p>Saving data in a real database is Module 7. In 5A the store is a JSON file.</p>
+
+
+<nav class="steps" aria-label="Directive stations">
+  <a href="station-6.html">&larr; Previous</a>
+  <a href="index.html">All stations</a>
+  <span>End</span>
+</nav>
+
+<p class="prism">PRISM band: ORANGE. Clearance indicates the complexity and scope a reader is prepared to hold. It does not make public information private.</p>
+</main>
+<script>
+document.querySelectorAll('button.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.getElementById(b.getAttribute('data-target'));
+    if(!t||!navigator.clipboard)return;
+    navigator.clipboard.writeText(t.textContent).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)});
+  });
+});
+</script>
+</body>
+</html>
