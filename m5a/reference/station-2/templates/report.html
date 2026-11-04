@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Report</title></head>
+<body>
+  <h1>Curator report for {{ session_id }}: {{ rep.label }}</h1>
+  <ul>
+    {% for r in rep.attempts %}
+      <li>try {{ r.try }}: answered {{ r.answer }} -> {{ "correct" if r.correct else "wrong" }}</li>
+    {% else %}
+      <li>No attempts yet.</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
