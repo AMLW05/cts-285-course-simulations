@@ -29,12 +29,16 @@ def practice():
     msg = None
     if request.method == "POST":
         raw = request.form.get("answer", "")
+        try:
+            answer = int(raw)
+        except ValueError:
+            answer = None
         if session.is_finished():
             msg = "This session is finished. Choose report."
-        elif not raw.strip().lstrip("-").isdigit():
+        elif answer is None:
             msg = "Enter a whole number."
         else:
-            out = session.submit(int(raw))
+            out = session.submit(answer)
             if out.status == "correct":
                 msg = "Correct."
             elif out.status == "retry":

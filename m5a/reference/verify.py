@@ -66,6 +66,10 @@ def t_practice_post_inline(c, back):
     check("Try 1:" in text(r), "invalid did not spend a try")
     r = post(c, "/practice", answer="")
     check("Enter a whole number." in text(r), "empty invalid")
+    for bad in ("--56", "\u00b2"):
+        r = post(c, "/practice", answer=bad)
+        check(r.status_code == 200 and "Enter a whole number." in text(r),
+              f"invalid {bad!r} gives feedback, not an error")
     r = post(c, "/practice", answer="55")
     check(r.status_code == 200 and "Not yet. Try again." in text(r), "wrong 1")
     check("Try 2:" in text(r), "now try 2")
@@ -103,6 +107,10 @@ def t_practice_redirect(c):
     r = c.get("/practice")
     check("Enter a whole number." not in text(r), "flash not repeated")
     check("Try 1:" in text(r), "still try 1")
+    for bad in ("--56", "\u00b2"):
+        r = post(c, "/practice", answer=bad)
+        check(r.status_code == 302, f"invalid {bad!r} redirects, not an error")
+        check("Enter a whole number." in text(c.get("/practice")), f"invalid {bad!r} flashed")
     r = post(c, "/practice", answer="55")
     check(r.status_code == 302, "wrong redirects")
     check("Not yet. Try again." in text(c.get("/practice")), "wrong flash")

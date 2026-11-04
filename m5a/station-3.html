@@ -137,12 +137,16 @@ def practice():
     msg = None
     if request.method == "POST":
         raw = request.form.get("answer", "")
+        try:
+            answer = int(raw)
+        except ValueError:
+            answer = None
         if session.is_finished():
             msg = "This session is finished. Choose report."
-        elif not raw.strip().lstrip("-").isdigit():
+        elif answer is None:
             msg = "Enter a whole number."
         else:
-            out = session.submit(int(raw))
+            out = session.submit(answer)
             if out.status == "correct":
                 msg = "Correct."
             elif out.status == "retry":
@@ -195,25 +199,26 @@ def report():
 
 
 <h3>What stays in the interface and what stays in the library</h3>
-<p>The check <code>isdigit()</code> stays in <code>app.py</code>. It is about reading text from a form. The library takes an integer.</p>
+<p>Turning the typed text into a number stays in <code>app.py</code>. It is about reading text from a form. The library takes an integer. <code>int(raw)</code> does the work. If the text is not a whole number, <code>int()</code> raises <code>ValueError</code>, and the route shows a message instead of an error page. This is safer than testing the text with <code>isdigit()</code> first: <code>isdigit()</code> accepts text such as <code>²</code> that <code>int()</code> then refuses.</p>
 <p>The two-try rule stays in <code>dataman/logic.py</code>. <code>session.submit()</code> decides whether to retry or reveal the answer. The route only shows the result.</p>
 
 <h3>Why STORE is a JsonFileStore</h3>
 <p>The debug reloader restarts the program every time you save a file. A <code>MemoryStore</code> made at the top of <code>app.py</code> would be empty after each save. <code>JsonFileStore</code> writes to a file, so your attempts survive the restart.</p>
 
 <h2>Commands</h2>
-<p>The server from station 2 reloads when you save. If it is not running, start it.</p>
+<p>Station 2 left the session finished: you answered 55 and 56 in the old menu. The store kept that, and a restart does not clear it. So clear the store first. Stop the server with Ctrl+C. Delete the store file. Start the server again.</p>
 <p class="file">terminal</p>
-<pre id="c16"><code>python -m flask --app app run --debug --host=0.0.0.0
+<pre id="c16"><code>rm dataman_store.json
+python -m flask --app app run --debug --host=0.0.0.0
 </code></pre>
 
-<p>Open <code>/practice</code>. Answer 55. Answer 56. Then open <code>/report</code>. To start again, stop the server, delete <code>dataman_store.json</code>, and start the server.</p>
+<p>Open <code>/practice</code>. Type <code>abc</code> first, while the form is still there. Then answer 55. Then answer 56. Then open <code>/report</code>. To start again, stop the server, delete <code>dataman_store.json</code>, and start the server.</p>
 <p class="file">terminal</p>
 <pre id="c17"><code>python -m pytest -q
 </code></pre>
 
 
-<div class="check"><strong>Check.</strong> <code>/practice</code> shows <code>Try 1: 7 x 8 =</code> and a box. After 55 it shows <code>Not yet. Try again.</code> and <code>Try 2</code>. After 56 it shows <code>Correct.</code> and <code>This session is finished.</code> Typing <code>abc</code> shows <code>Enter a whole number.</code> and does not spend a try. <code>/report</code> shows both attempts. <code>python -m pytest -q</code> passes.</div>
+<div class="check"><strong>Check.</strong> <code>/practice</code> shows <code>Try 1: 7 x 8 =</code> and a box. Typing <code>abc</code> shows <code>Enter a whole number.</code> and the page still says <code>Try 1</code>. After 55 it shows <code>Not yet. Try again.</code> and <code>Try 2</code>. After 56 it shows <code>Correct.</code> and <code>This session is finished.</code> The form is gone, because the session is over. <code>/report</code> shows both attempts. <code>python -m pytest -q</code> passes.</div>
 
 <div class="trap"><strong>Trap.</strong> The template says <code>name="answer"</code> but the route reads a different key, or the other way round. <code>request.form.get("answer", "")</code> then returns the empty string. The symptom: every answer shows <code>Enter a whole number.</code> Make the two strings identical.</div>
 
