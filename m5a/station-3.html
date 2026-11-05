@@ -208,11 +208,12 @@ def report():
 <h2>Commands</h2>
 <p>Station 2 left the session finished: you answered 55 and 56 in the old menu. The store kept that, and a restart does not clear it. So clear the store first. Stop the server with Ctrl+C. Delete the store file. Start the server again.</p>
 <p class="file">terminal</p>
-<pre id="c16"><code>rm dataman_store.json
+<pre id="c16"><code>rm -f dataman_store.json
 python -m flask --app app run --debug --host=0.0.0.0
 </code></pre>
 
-<p>Open <code>/practice</code>. Type <code>abc</code> first, while the form is still there. Then answer 55. Then answer 56. Then open <code>/report</code>. To start again, stop the server, delete <code>dataman_store.json</code>, and start the server.</p>
+<p>Open <code>/practice</code>. Type <code>abc</code> first, while the form is still there. Then answer 55. Then answer 56. Then open <code>/report</code>. To start again, stop the server, delete <code>dataman_store.json</code>, and start the server. Deleting it also empties the Memory Bank set.</p>
+<p>Run the tests in a second terminal, because the server is using the first. Run <code>source .venv/bin/activate</code> in it first.</p>
 <p class="file">terminal</p>
 <pre id="c17"><code>python -m pytest -q
 </code></pre>

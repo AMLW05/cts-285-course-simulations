@@ -145,9 +145,10 @@ def report():
 
 
 <h2>Commands</h2>
-<p>Two interfaces will use one store file. First stop the server with Ctrl+C. Then make two attempts in the old menu. Answer 55, then 56.</p>
+<p>Two interfaces will use one store file. First stop the server with Ctrl+C. Delete any store file left from Module 4, so the session starts fresh. Then make two attempts in the old menu. Answer 55, then 56.</p>
 <p class="file">terminal</p>
-<pre id="c10"><code>python menu.py --store json
+<pre id="c10"><code>rm -f dataman_store.json
+python menu.py --store json
 </code></pre>
 
 <p>Type <code>practice</code>, then <code>55</code>, then <code>56</code>. Type <code>quit</code>. Then start the web app and open <code>/report</code> in the forwarded port.</p>
@@ -155,7 +156,7 @@ def report():
 <pre id="c11"><code>python -m flask --app app run --debug --host=0.0.0.0
 </code></pre>
 
-<p>To start with a clean slate, delete <code>dataman_store.json</code> before you make the attempts. Git ignores that file.</p>
+<p>Git ignores <code>dataman_store.json</code>, so deleting it loses nothing you commit. To run the tests, open a second terminal. Run <code>source .venv/bin/activate</code> in it first, then <code>python -m pytest -q</code>.</p>
 
 <div class="check"><strong>Check.</strong> The page at <code>/report</code> shows <code>Curator report for maya-1: second-try success</code>. It lists <code>try 1: answered 55 -&gt; wrong</code> and <code>try 2: answered 56 -&gt; correct</code>. Those attempts came from <code>menu.py</code>. <code>python -m pytest -q</code> passes.</div>
 

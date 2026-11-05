@@ -160,7 +160,7 @@ python -m pytest -q
 <li>Open <code>/bank</code>. The page shows the set and a form.</li>
 <li>Add <code>P1</code>, then <code>P2</code>, and so on up to <code>P10</code>. After each one the page shows <code>Added. Set holds N.</code> If the set already holds problems from earlier work, the count starts higher. That is correct. The store is a file.</li>
 <li>Add <code>P11</code>. The page shows <code>Refused: set-1 already holds 10 problems</code>. The set still holds ten.</li>
-<li>In another terminal, run <code>python menu.py --store json</code>, choose <code>bank</code>, and add <code>P12</code>. The menu gives the same refusal. One rule, two interfaces.</li>
+<li>Stop the server. Run <code>python menu.py --store json</code>, choose <code>bank</code>, and add <code>P12</code>. The menu gives the same refusal. One rule, two interfaces. Then quit the menu and start the server again. (Do not run both at once: each one saves its whole copy of the store, so the last to save erases the other's changes.)</li>
 <li><code>python -m pytest -q</code> still passes.</li>
 </ol>
 </div>
