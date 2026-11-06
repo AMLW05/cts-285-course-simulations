@@ -1,0 +1,195 @@
+<!doctype html>
+<!--
+  SHELL FOR EVERY m5a/ PAGE. Copy this file, replace the three REPLACE markers,
+  and write the station content inside <main>. Do not change the <style> block
+  on one page only: every page carries the same copy.
+
+  Fixed rules (see AMLW05/cts-285_SOURCE interstitial-5a/M5A-ARCHITECTURE.md):
+  - The out-of-character panel is static markup, first thing inside <main>,
+    and is never removed, collapsed, or injected by script.
+  - No FTCC gold (the FTCC gold hex) anywhere. ORANGE (#F1A512) is a rail or border only,
+    never text and never a background behind text.
+  - The page works with JavaScript disabled. Script is allowed only for the
+    copy-to-clipboard buttons, and every copy button sits beside visible text.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Station 1: Hello, route — Module 5A</title>
+<style>
+:root{
+  --ink:#1F2933; --muted:#52606D; --hair:#DFE3E8; --paper:#FFFFFF; --page:#F5F6F7;
+  --uv:#0A0A0A; --orange:#F1A512; --link:#0B5CAD; --code-bg:#111827; --code-ink:#F9FAFB;
+  --ok:#1E6B3A; --ok-bg:#EDF9F1; --bad:#9B1C1C; --bad-bg:#FFF0F0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;font-size:1.02rem}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.top{background:var(--uv);color:#fff;border-left:12px solid var(--orange);padding:18px 22px}
+.top .kicker{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#D1D5DB;margin:0}
+.top h1{margin:.3rem 0 .2rem;font-size:1.6rem;line-height:1.25}
+.top .sub{margin:0;color:#E5E7EB}
+main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h2{font-size:1.3rem;margin:2rem 0 .6rem;line-height:1.3}
+h3{font-size:1.08rem;margin:1.4rem 0 .4rem}
+.ooc{border-left:2px solid var(--hair);padding-left:1rem;margin:0 0 1.6rem}
+.ooc .label{margin:0 0 .25rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6B7280}
+.ooc ol{margin:.2rem 0 0;padding-left:1.3rem}
+.ooc p,.ooc li{margin:.15rem 0}
+.csp{background:var(--paper);border:1px solid var(--hair);border-left:4px solid var(--orange);padding:12px 16px;margin:1.2rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+.csp .who{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:14px 18px;margin:1rem 0}
+pre{background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:6px;overflow-x:auto;font-size:.88rem;line-height:1.45;margin:.4rem 0 1rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+:not(pre)>code{background:#EEF1F4;padding:.05rem .3rem;border-radius:3px}
+.file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;color:var(--muted);margin:1rem 0 0}
+table{border-collapse:collapse;width:100%;margin:.6rem 0 1rem;background:var(--paper)}
+th,td{border:1px solid var(--hair);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:#EEF1F4}
+.check{background:var(--ok-bg);border:1px solid #8CC89A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+.trap{background:var(--bad-bg);border:1px solid #D48A8A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+details{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:10px 14px;margin:1rem 0}
+summary{cursor:pointer;font-weight:600}
+.copy{font:inherit;font-size:.8rem;padding:4px 10px;border:1px solid #9AA5B1;border-radius:4px;background:#fff;cursor:pointer;min-height:32px}
+nav.steps{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--hair);margin-top:2.4rem;padding-top:1rem}
+.prism{font-size:.8rem;color:var(--muted);border-top:1px solid var(--hair);margin-top:2rem;padding-top:.8rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <p class="kicker">AlgoCratic Futures&trade; &middot; Interface Modernization Directive 5A &middot; ORANGE</p>
+  <h1>Station 1: Hello, route</h1>
+  <p class="sub">Install Flask and return one string from one route.</p>
+</header>
+<main>
+
+<!-- OUT-OF-CHARACTER PANEL. Static. Required. Wording fixed by planning/INTERSTITIAL-MODULES.md. -->
+<div class="ooc" role="note" aria-label="Instructor, out of character">
+  <p class="label">Instructor &middot; out of character</p>
+  <ol>
+    <li>You can stop at any time, and stopping costs you nothing. Your grade is not affected.</li>
+    <li>You do not need permission, and you do not have to explain.</li>
+    <li>Nothing you do on these pages is scored. Canvas records that you opened the launch page, the same as any other page in the course. What you do after that is not recorded. These pages are hosted outside Canvas, and Canvas cannot see them.</li>
+    <li>To leave: <a href="https://faytechcc.instructure.com">return to Canvas</a>.</li>
+  </ol>
+  <p>The work you do in your own repository is yours and stays there. Module 5 is graded in Module 5, not here.</p>
+</div>
+
+
+<h2>What you change</h2>
+<p>You add Flask to the project. You rename <code>app.py</code> to <code>menu.py</code>. You create a new <code>app.py</code> with one route. Then you run it and look at it in the browser.</p>
+<div class="card"><strong>Translation row.</strong> <code>actions = {"practice": practice, ...}</code> becomes <code>@app.route("/practice")</code>. The dict mapped a typed word to a function. The decorator maps a URL to a function.</div>
+
+<h2>Steps</h2>
+<ol>
+<li>Open your repository in a Codespace.</li>
+<li>Add one line to <code>requirements.txt</code>. The file already holds <code>pytest&gt;=8</code>.</li>
+<li>Add one line to <code>.gitignore</code>. It keeps the virtual environment out of git.</li>
+<li>Rename the old text interface.</li>
+<li>Create the new <code>app.py</code>.</li>
+</ol>
+<p class="file">requirements.txt (add the second line)</p>
+<pre id="c1"><code>pytest&gt;=8
+Flask&gt;=3.0,&lt;4.0
+</code></pre>
+
+<p class="file">.gitignore (add the last line)</p>
+<pre id="c2"><code>__pycache__/
+.pytest_cache/
+dataman_store.json
+.venv/
+</code></pre>
+
+<p class="file">terminal</p>
+<pre id="c3"><code>git mv app.py menu.py
+</code></pre>
+
+<p class="file">app.py (new file) <button class="copy" data-target="c4">Copy</button></p>
+<pre id="c4"><code>"""Station 1: Hello, route. This file replaces the text menu in menu.py.
+
+It is the only file that knows about Flask, requests, or HTML.
+dataman/logic.py and dataman/store.py did not change.
+
+Run:  python -m flask --app app run --debug --host=0.0.0.0
+"""
+from flask import Flask
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def home():
+    return "DataMan is running on the web."
+</code></pre>
+
+
+<h2>How the new file works</h2>
+<p><code>app = Flask(__name__)</code> makes the web application. <code>__name__</code> tells Flask where this file is, so it can find the <code>templates/</code> folder later.</p>
+<p><code>@app.route("/")</code> is a decorator. It sits on the line above a function. It tells Flask: when a browser asks for <code>/</code>, call the function below.</p>
+<p>The function returns a string. Flask sends that string to the browser. The return value is what the browser shows. There is no <code>print()</code>.</p>
+<p>This file has no <code>while</code> loop and no <code>input()</code>. Flask runs the loop. Your code only answers requests.</p>
+<div class="csp"><span class="who">Channel Success Partner &middot; SHODANN</span>I see you have a decorator now. I have flagged it as a milestone. It is not a score. Nothing here is a score.</div>
+
+
+<h2>Commands</h2>
+<p>Run these from the repository root. <code>python3</code> creates the environment. <code>python</code> runs everything after that.</p>
+<p class="file">terminal</p>
+<pre id="c5"><code>python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m flask --app app run --debug --host=0.0.0.0
+</code></pre>
+
+<p>Codespaces offers to open a forwarded port. Open it. Flask shows the home page. To stop the server, press Ctrl+C in the terminal.</p>
+<p>A new terminal needs <code>source .venv/bin/activate</code> again.</p>
+<p>Now prove that the library and the old menu still work.</p>
+<p class="file">terminal</p>
+<pre id="c6"><code>python -m pytest -q
+python menu.py --store json
+</code></pre>
+
+<p>The Module 4 bonus <code>check.py</code> now reports that <code>app.py</code> changed. That is expected. That bonus is finished.</p>
+
+<div class="check"><strong>Check.</strong> The browser shows <code>DataMan is running on the web.</code> <code>python -m pytest -q</code> passes. <code>python menu.py --store json</code> shows the same menu as before. Type <code>quit</code> to leave it.</div>
+
+<div class="trap"><strong>Trap.</strong> You run <code>python app.py</code> and nothing happens. Flask apps start with <code>python -m flask --app app run</code>. A second symptom is <code>No module named flask</code>. You did not activate the environment. Run <code>source .venv/bin/activate</code>.</div>
+
+<details><summary>Predict first</summary>
+<p>The server is running. You change the returned string in <code>app.py</code> and save the file. What do you do to see the new string?</p>
+<p><strong>Answer.</strong> Reload the browser page. The debug reloader restarts the program when you save. You do not restart the server yourself.</p>
+</details>
+
+<h2>Commit</h2>
+<p class="file">terminal</p>
+<pre id="c7"><code>git add -A
+git commit -m "Station 1: Hello, route"
+git push
+</code></pre>
+
+<h2>Read</h2>
+<p>Read only these parts of the Flask Quickstart.</p>
+<ul><li><a href="https://flask.palletsprojects.com/en/stable/quickstart/#a-minimal-application">Flask Quickstart: A minimal application</a></li><li><a href="https://flask.palletsprojects.com/en/stable/quickstart/#debug-mode">Flask Quickstart: Debug mode</a></li></ul>
+
+
+
+<nav class="steps" aria-label="Directive stations">
+  <a href="index.html">&larr; Previous</a>
+  <a href="index.html">All stations</a>
+  <a href="station-2.html">Next &rarr;</a>
+</nav>
+
+<p class="prism">PRISM band: ORANGE. Clearance indicates the complexity and scope a reader is prepared to hold. It does not make public information private.</p>
+</main>
+<script>
+document.querySelectorAll('button.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.getElementById(b.getAttribute('data-target'));
+    if(!t||!navigator.clipboard)return;
+    navigator.clipboard.writeText(t.textContent).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)});
+  });
+});
+</script>
+</body>
+</html>

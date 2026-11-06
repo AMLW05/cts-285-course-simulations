@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Practice</title></head>
+<body>
+  <h1>Practice</h1>
+  {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+  {% if finished %}
+    <p>This session is finished.</p>
+  {% else %}
+    <form method="post">
+      <label for="answer">Try {{ try_number }}: {{ problem.prompt }} =</label>
+      <input id="answer" name="answer" required>
+      <button type="submit">Check</button>
+    </form>
+  {% endif %}
+  <p><a href="{{ url_for('home') }}">Back to menu</a></p>
+</body>
+</html>

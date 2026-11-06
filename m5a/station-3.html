@@ -1,0 +1,262 @@
+<!doctype html>
+<!--
+  SHELL FOR EVERY m5a/ PAGE. Copy this file, replace the three REPLACE markers,
+  and write the station content inside <main>. Do not change the <style> block
+  on one page only: every page carries the same copy.
+
+  Fixed rules (see AMLW05/cts-285_SOURCE interstitial-5a/M5A-ARCHITECTURE.md):
+  - The out-of-character panel is static markup, first thing inside <main>,
+    and is never removed, collapsed, or injected by script.
+  - No FTCC gold (the FTCC gold hex) anywhere. ORANGE (#F1A512) is a rail or border only,
+    never text and never a background behind text.
+  - The page works with JavaScript disabled. Script is allowed only for the
+    copy-to-clipboard buttons, and every copy button sits beside visible text.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Station 3: Practice — Module 5A</title>
+<style>
+:root{
+  --ink:#1F2933; --muted:#52606D; --hair:#DFE3E8; --paper:#FFFFFF; --page:#F5F6F7;
+  --uv:#0A0A0A; --orange:#F1A512; --link:#0B5CAD; --code-bg:#111827; --code-ink:#F9FAFB;
+  --ok:#1E6B3A; --ok-bg:#EDF9F1; --bad:#9B1C1C; --bad-bg:#FFF0F0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;font-size:1.02rem}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.top{background:var(--uv);color:#fff;border-left:12px solid var(--orange);padding:18px 22px}
+.top .kicker{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#D1D5DB;margin:0}
+.top h1{margin:.3rem 0 .2rem;font-size:1.6rem;line-height:1.25}
+.top .sub{margin:0;color:#E5E7EB}
+main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h2{font-size:1.3rem;margin:2rem 0 .6rem;line-height:1.3}
+h3{font-size:1.08rem;margin:1.4rem 0 .4rem}
+.ooc{border-left:2px solid var(--hair);padding-left:1rem;margin:0 0 1.6rem}
+.ooc .label{margin:0 0 .25rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6B7280}
+.ooc ol{margin:.2rem 0 0;padding-left:1.3rem}
+.ooc p,.ooc li{margin:.15rem 0}
+.csp{background:var(--paper);border:1px solid var(--hair);border-left:4px solid var(--orange);padding:12px 16px;margin:1.2rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+.csp .who{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:14px 18px;margin:1rem 0}
+pre{background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:6px;overflow-x:auto;font-size:.88rem;line-height:1.45;margin:.4rem 0 1rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+:not(pre)>code{background:#EEF1F4;padding:.05rem .3rem;border-radius:3px}
+.file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;color:var(--muted);margin:1rem 0 0}
+table{border-collapse:collapse;width:100%;margin:.6rem 0 1rem;background:var(--paper)}
+th,td{border:1px solid var(--hair);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:#EEF1F4}
+.check{background:var(--ok-bg);border:1px solid #8CC89A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+.trap{background:var(--bad-bg);border:1px solid #D48A8A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+details{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:10px 14px;margin:1rem 0}
+summary{cursor:pointer;font-weight:600}
+.copy{font:inherit;font-size:.8rem;padding:4px 10px;border:1px solid #9AA5B1;border-radius:4px;background:#fff;cursor:pointer;min-height:32px}
+nav.steps{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--hair);margin-top:2.4rem;padding-top:1rem}
+.prism{font-size:.8rem;color:var(--muted);border-top:1px solid var(--hair);margin-top:2rem;padding-top:.8rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <p class="kicker">AlgoCratic Futures&trade; &middot; Interface Modernization Directive 5A &middot; ORANGE</p>
+  <h1>Station 3: Practice, GET and POST</h1>
+  <p class="sub">Handle a form with one route that answers both GET and POST.</p>
+</header>
+<main>
+
+<!-- OUT-OF-CHARACTER PANEL. Static. Required. Wording fixed by planning/INTERSTITIAL-MODULES.md. -->
+<div class="ooc" role="note" aria-label="Instructor, out of character">
+  <p class="label">Instructor &middot; out of character</p>
+  <ol>
+    <li>You can stop at any time, and stopping costs you nothing. Your grade is not affected.</li>
+    <li>You do not need permission, and you do not have to explain.</li>
+    <li>Nothing you do on these pages is scored. Canvas records that you opened the launch page, the same as any other page in the course. What you do after that is not recorded. These pages are hosted outside Canvas, and Canvas cannot see them.</li>
+    <li>To leave: <a href="https://faytechcc.instructure.com">return to Canvas</a>.</li>
+  </ol>
+  <p>The work you do in your own repository is yours and stays there. Module 5 is graded in Module 5, not here.</p>
+</div>
+
+
+<h2>What you change</h2>
+<p>You replace the typed <code>input()</code> with a form. You add a <code>/practice</code> route that handles both GET and POST. You add <code>templates/practice.html</code>. This is the core page of the module. Read it slowly.</p>
+<div class="card"><strong>Translation rows.</strong> <code>input("...")</code> becomes a <code>GET</code> that shows a form and a <code>POST</code> that receives <code>request.form["answer"]</code>. <code>while not session.is_finished():</code> becomes one request per try.</div>
+
+<h2>Before: the loop in menu.py</h2>
+<p>This is the old function. One call runs the whole practice. The loop waits for each typed line.</p>
+<p class="file">menu.py (old practice function, excerpt)</p>
+<pre id="c13"><code>def practice(store):
+    session = PracticeSession(store, SESSION, PROBLEM)
+    if session.is_finished():
+        print("This session is finished. Choose 'report'.")
+        return
+    while not session.is_finished():
+        raw = input(f"Try {session.next_try()}: {PROBLEM.prompt} = ")
+        if not raw.strip().lstrip("-").isdigit():
+            print("Enter a whole number.")
+            continue
+        out = session.submit(int(raw))
+        if out.status == "correct":
+            print("Correct.")
+        elif out.status == "retry":
+            print("Not yet. Try again.")
+        else:
+            print(f"The answer is {out.revealed_answer}.")
+</code></pre>
+
+
+<h2>After: one route in app.py</h2>
+<p class="file">app.py <button class="copy" data-target="c14">Copy</button></p>
+<pre id="c14"><code>"""Station 3: Practice, GET and POST. This file replaces the text menu in menu.py.
+
+It is the only file that knows about Flask, requests, or HTML.
+dataman/logic.py and dataman/store.py did not change.
+
+Run:  python -m flask --app app run --debug --host=0.0.0.0
+"""
+from flask import Flask, render_template, request
+
+from dataman.logic import PracticeSession, Problem, curator_report
+from dataman.store import JsonFileStore
+
+app = Flask(__name__)
+
+STORE = JsonFileStore()     # one store for the whole program, made once
+PROBLEM = Problem("P1", "7 x 8", 56)
+SESSION = "maya-1"
+
+
+@app.route("/")
+def home():
+    return "DataMan is running on the web."
+
+
+@app.route("/practice", methods=["GET", "POST"])
+def practice():
+    session = PracticeSession(STORE, SESSION, PROBLEM)
+    msg = None
+    if request.method == "POST":
+        raw = request.form.get("answer", "")
+        try:
+            answer = int(raw)
+        except ValueError:
+            answer = None
+        if session.is_finished():
+            msg = "This session is finished. Choose report."
+        elif answer is None:
+            msg = "Enter a whole number."
+        else:
+            out = session.submit(answer)
+            if out.status == "correct":
+                msg = "Correct."
+            elif out.status == "retry":
+                msg = "Not yet. Try again."
+            else:
+                msg = f"The answer is {out.revealed_answer}."
+    return render_template("practice.html", problem=PROBLEM,
+                           try_number=session.next_try(),
+                           finished=session.is_finished(), message=msg)
+
+
+@app.route("/report")
+def report():
+    rep = curator_report(STORE, SESSION, PROBLEM.id)
+    return render_template("report.html", session_id=SESSION, rep=rep)
+</code></pre>
+
+<p class="file">templates/practice.html <button class="copy" data-target="c15">Copy</button></p>
+<pre id="c15"><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Practice&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Practice&lt;/h1&gt;
+  {% if message %}&lt;p&gt;&lt;strong&gt;{{ message }}&lt;/strong&gt;&lt;/p&gt;{% endif %}
+  {% if finished %}
+    &lt;p&gt;This session is finished.&lt;/p&gt;
+  {% else %}
+    &lt;form method="post"&gt;
+      &lt;label for="answer"&gt;Try {{ try_number }}: {{ problem.prompt }} =&lt;/label&gt;
+      &lt;input id="answer" name="answer" required&gt;
+      &lt;button type="submit"&gt;Check&lt;/button&gt;
+    &lt;/form&gt;
+  {% endif %}
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p><code>templates/report.html</code> does not change.</p>
+
+<h2>How it works</h2>
+<ul>
+<li><code>methods=["GET", "POST"]</code> tells Flask that this route accepts both. Without it, Flask accepts only GET.</li>
+<li><code>request.method</code> tells you which one this request is. The <code>if request.method == "POST":</code> branch runs only when someone submits the form.</li>
+<li>A GET skips that branch. It shows the form and changes nothing.</li>
+<li>The form has <code>name="answer"</code>. <code>request.form.get("answer", "")</code> reads the same string. The name in the template and the key in the route must match exactly.</li>
+<li><code>&lt;form method="post"&gt;</code> has no <code>action</code>. The browser posts to the same URL it came from.</li>
+<li>The <code>while</code> loop is gone. Each submit is one request. A request answers one try. The route asks the store which try is next: <code>session.next_try()</code>. The store keeps the attempts. The route keeps nothing.</li>
+</ul>
+<div class="csp"><span class="who">Channel Success Partner &middot; SHODANN</span>Before, you waited on a loop. Now the browser waits for you. I count this as a growth in patience. For the browser.</div>
+
+
+<h3>What stays in the interface and what stays in the library</h3>
+<p>Turning the typed text into a number stays in <code>app.py</code>. It is about reading text from a form. The library takes an integer. <code>int(raw)</code> does the work. If the text is not a whole number, <code>int()</code> raises <code>ValueError</code>, and the route shows a message instead of an error page. This is safer than testing the text with <code>isdigit()</code> first: <code>isdigit()</code> accepts text such as <code>²</code> that <code>int()</code> then refuses.</p>
+<p>The two-try rule stays in <code>dataman/logic.py</code>. <code>session.submit()</code> decides whether to retry or reveal the answer. The route only shows the result.</p>
+
+<h3>Why STORE is a JsonFileStore</h3>
+<p>The debug reloader restarts the program every time you save a file. A <code>MemoryStore</code> made at the top of <code>app.py</code> would be empty after each save. <code>JsonFileStore</code> writes to a file, so your attempts survive the restart.</p>
+
+<h2>Commands</h2>
+<p>Station 2 left the session finished: you answered 55 and 56 in the old menu. The store kept that, and a restart does not clear it. So clear the store first. Stop the server with Ctrl+C. Delete the store file. Start the server again.</p>
+<p class="file">terminal</p>
+<pre id="c16"><code>rm -f dataman_store.json
+python -m flask --app app run --debug --host=0.0.0.0
+</code></pre>
+
+<p>Open <code>/practice</code>. Type <code>abc</code> first, while the form is still there. Then answer 55. Then answer 56. Then open <code>/report</code>. To start again, stop the server, delete <code>dataman_store.json</code>, and start the server. Deleting it also empties the Memory Bank set.</p>
+<p>Run the tests in a second terminal, because the server is using the first. Run <code>source .venv/bin/activate</code> in it first.</p>
+<p class="file">terminal</p>
+<pre id="c17"><code>python -m pytest -q
+</code></pre>
+
+
+<div class="check"><strong>Check.</strong> <code>/practice</code> shows <code>Try 1: 7 x 8 =</code> and a box. Typing <code>abc</code> shows <code>Enter a whole number.</code> and the page still says <code>Try 1</code>. After 55 it shows <code>Not yet. Try again.</code> and <code>Try 2</code>. After 56 it shows <code>Correct.</code> and <code>This session is finished.</code> The form is gone, because the session is over. <code>/report</code> shows both attempts. <code>python -m pytest -q</code> passes.</div>
+
+<div class="trap"><strong>Trap.</strong> The template says <code>name="answer"</code> but the route reads a different key, or the other way round. <code>request.form.get("answer", "")</code> then returns the empty string. The symptom: every answer shows <code>Enter a whole number.</code> Make the two strings identical.</div>
+
+<details><summary>Predict first</summary>
+<p>You answer 55. Then you press the browser's refresh button. What happens?</p>
+<p><strong>Answer.</strong> The browser offers to resend the form. If you accept, the same POST runs again. The route reads the same answer and spends the second try. The wrong answer 55 is a second miss, so the page shows <code>The answer is 56.</code> and the session is finished. You did not choose to answer twice. Station 6 fixes this.</p>
+</details>
+
+<h2>Commit</h2>
+<p class="file">terminal</p>
+<pre id="c18"><code>git add -A
+git commit -m "Station 3: Practice with GET and POST"
+git push
+</code></pre>
+
+<h2>Read</h2>
+<p>Read only these parts of the Flask Quickstart.</p>
+<ul><li><a href="https://flask.palletsprojects.com/en/stable/quickstart/#http-methods">Flask Quickstart: HTTP methods</a></li><li><a href="https://flask.palletsprojects.com/en/stable/quickstart/#the-request-object">Flask Quickstart: The request object</a></li></ul>
+
+
+
+<nav class="steps" aria-label="Directive stations">
+  <a href="station-2.html">&larr; Previous</a>
+  <a href="index.html">All stations</a>
+  <a href="station-4.html">Next &rarr;</a>
+</nav>
+
+<p class="prism">PRISM band: ORANGE. Clearance indicates the complexity and scope a reader is prepared to hold. It does not make public information private.</p>
+</main>
+<script>
+document.querySelectorAll('button.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.getElementById(b.getAttribute('data-target'));
+    if(!t||!navigator.clipboard)return;
+    navigator.clipboard.writeText(t.textContent).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)});
+  });
+});
+</script>
+</body>
+</html>

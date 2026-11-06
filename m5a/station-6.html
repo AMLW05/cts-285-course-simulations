@@ -1,0 +1,281 @@
+<!doctype html>
+<!--
+  SHELL FOR EVERY m5a/ PAGE. Copy this file, replace the three REPLACE markers,
+  and write the station content inside <main>. Do not change the <style> block
+  on one page only: every page carries the same copy.
+
+  Fixed rules (see AMLW05/cts-285_SOURCE interstitial-5a/M5A-ARCHITECTURE.md):
+  - The out-of-character panel is static markup, first thing inside <main>,
+    and is never removed, collapsed, or injected by script.
+  - No FTCC gold anywhere. ORANGE (#F1A512) is a rail or border only,
+    never text and never a background behind text.
+  - The page works with JavaScript disabled. Script is allowed only for the
+    copy-to-clipboard buttons, and every copy button sits beside visible text.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Station 6: The refresh problem — Module 5A</title>
+<style>
+:root{
+  --ink:#1F2933; --muted:#52606D; --hair:#DFE3E8; --paper:#FFFFFF; --page:#F5F6F7;
+  --uv:#0A0A0A; --orange:#F1A512; --link:#0B5CAD; --code-bg:#111827; --code-ink:#F9FAFB;
+  --ok:#1E6B3A; --ok-bg:#EDF9F1; --bad:#9B1C1C; --bad-bg:#FFF0F0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;font-size:1.02rem}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.top{background:var(--uv);color:#fff;border-left:12px solid var(--orange);padding:18px 22px}
+.top .kicker{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#D1D5DB;margin:0}
+.top h1{margin:.3rem 0 .2rem;font-size:1.6rem;line-height:1.25}
+.top .sub{margin:0;color:#E5E7EB}
+main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h2{font-size:1.3rem;margin:2rem 0 .6rem;line-height:1.3}
+h3{font-size:1.08rem;margin:1.4rem 0 .4rem}
+.ooc{border-left:2px solid var(--hair);padding-left:1rem;margin:0 0 1.6rem}
+.ooc .label{margin:0 0 .25rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6B7280}
+.ooc ol{margin:.2rem 0 0;padding-left:1.3rem}
+.ooc p,.ooc li{margin:.15rem 0}
+.csp{background:var(--paper);border:1px solid var(--hair);border-left:4px solid var(--orange);padding:12px 16px;margin:1.2rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+.csp .who{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:14px 18px;margin:1rem 0}
+pre{background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:6px;overflow-x:auto;font-size:.88rem;line-height:1.45;margin:.4rem 0 1rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+:not(pre)>code{background:#EEF1F4;padding:.05rem .3rem;border-radius:3px}
+.file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;color:var(--muted);margin:1rem 0 0}
+table{border-collapse:collapse;width:100%;margin:.6rem 0 1rem;background:var(--paper)}
+th,td{border:1px solid var(--hair);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:#EEF1F4}
+.check{background:var(--ok-bg);border:1px solid #8CC89A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+.trap{background:var(--bad-bg);border:1px solid #D48A8A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+details{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:10px 14px;margin:1rem 0}
+summary{cursor:pointer;font-weight:600}
+.copy{font:inherit;font-size:.8rem;padding:4px 10px;border:1px solid #9AA5B1;border-radius:4px;background:#fff;cursor:pointer;min-height:32px}
+nav.steps{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--hair);margin-top:2.4rem;padding-top:1rem}
+.prism{font-size:.8rem;color:var(--muted);border-top:1px solid var(--hair);margin-top:2rem;padding-top:.8rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <p class="kicker">AlgoCratic Futures&trade; &middot; Interface Modernization Directive 5A &middot; ORANGE</p>
+  <h1>Station 6: The refresh problem</h1>
+  <p class="sub">Find the refresh defect, then fix it with Post/Redirect/Get and flash messages.</p>
+</header>
+<main>
+
+<!-- OUT-OF-CHARACTER PANEL. Static. Required. Wording fixed by planning/INTERSTITIAL-MODULES.md. -->
+<div class="ooc" role="note" aria-label="Instructor, out of character">
+  <p class="label">Instructor &middot; out of character</p>
+  <ol>
+    <li>You can stop at any time, and stopping costs you nothing. Your grade is not affected.</li>
+    <li>You do not need permission, and you do not have to explain.</li>
+    <li>Nothing you do on these pages is scored. Canvas records that you opened the launch page, the same as any other page in the course. What you do after that is not recorded. These pages are hosted outside Canvas, and Canvas cannot see them.</li>
+    <li>To leave: <a href="https://faytechcc.instructure.com">return to Canvas</a>.</li>
+  </ol>
+  <p>The work you do in your own repository is yours and stays there. Module 5 is graded in Module 5, not here.</p>
+</div>
+
+<h2>What you change</h2>
+<p>You find a defect first, then fix it. When you refresh the page after a wrong answer, the browser sends the answer again and spends the learner's second try. You fix this with Post/Redirect/Get. After a <code>POST</code>, the route does not draw a page. It sends the browser to a <code>GET</code> of the same page. The message travels to that next request with <code>flash()</code>.</p>
+<h2>The translation row</h2>
+<table>
+<thead><tr><th>Text menu (<code>menu.py</code>)</th><th>Flask (<code>app.py</code>)</th></tr></thead>
+<tbody>
+<tr><td>Local variables that live while the loop runs</td><td>Nothing survives between requests except what the store keeps. A message to show on the next page needs a way to travel. <code>flash()</code> is that way.</td></tr>
+</tbody>
+</table>
+
+<h2>Part 1: see the defect</h2>
+<p>Do this with your station 5 code. Do not change any code yet.</p>
+<ol>
+<li>Stop the server with Ctrl+C. Delete the file <code>dataman_store.json</code>. This gives you a clean session with no attempts. (The file is not committed, and the delete also empties the Memory Bank set. You can add problems again later.) Start the server again.</li>
+<li>Open <code>/practice</code>. The page shows <code>Try 1</code>. Type <code>5</code> and press Check.</li>
+<li>The page shows <code>Not yet. Try again.</code> and <code>Try 2</code>. You answered once.</li>
+<li>Press the refresh button of the browser. The browser asks whether to send the form again. Accept.</li>
+<li>The page shows <code>The answer is 56.</code> The session is finished. Open <code>/report</code>. It lists two attempts. You typed one answer.</li>
+</ol>
+<p>The rule in <code>logic.py</code> did its work: two tries. The page spent a try that the learner did not choose. A refresh repeats the last request, and the last request was a <code>POST</code>. A <code>GET</code> is safe to repeat. A <code>POST</code> is not.</p>
+<div class="csp"><span class="who">SHODANN &middot; Channel Success Partner</span>I can see the second try was spent. I am measuring it. I am pleased to report the measurement is accurate.</div>
+<h2>Part 2: the fix</h2>
+<p>Four things change in <code>app.py</code>.</p>
+<ul>
+<li>The import line brings in <code>flash</code>, <code>redirect</code> and <code>url_for</code>.</li>
+<li><code>app.secret_key</code> is set. <code>flash()</code> keeps the message in a signed cookie. Flask cannot sign the cookie without a key. The value in the file is for development only and it is not a real secret. Never put a real secret in a repository.</li>
+<li>Each <code>msg = ...</code> becomes <code>flash(...)</code>. The two routes end their <code>POST</code> branch with <code>return redirect(url_for("..."))</code>.</li>
+<li>The templates read the messages with <code>get_flashed_messages()</code>. You do not pass <code>message</code> to <code>render_template</code> any more.</li>
+</ul>
+<p>The browser's last request is now a <code>GET</code> of <code>/practice</code>. A refresh repeats the <code>GET</code>. A message is removed when <code>get_flashed_messages()</code> returns it, so a refresh shows no message.</p>
+<p class="file">app.py &middot; station 6 &middot; complete file <button class="copy" type="button" data-target="s6-app">Copy</button></p>
+<pre id="s6-app" data-ref="station-6/app.py"><code>"""Station 6: The refresh problem. This file replaces the text menu in menu.py.
+
+It is the only file that knows about Flask, requests, or HTML.
+dataman/logic.py and dataman/store.py did not change.
+
+Run:  python -m flask --app app run --debug --host=0.0.0.0
+"""
+from flask import Flask, flash, redirect, render_template, request, url_for
+
+from dataman.logic import (MemoryBank, PracticeSession, Problem, SetFull,
+                           curator_report)
+from dataman.store import JsonFileStore
+
+app = Flask(__name__)
+app.secret_key = "dev-only-change-me"   # signs flash messages; not a real secret
+
+STORE = JsonFileStore()     # one store for the whole program, made once
+PROBLEM = Problem("P1", "7 x 8", 56)
+SESSION = "maya-1"
+
+
+@app.route("/")
+def home():
+    return render_template("home.html")
+
+
+@app.route("/practice", methods=["GET", "POST"])
+def practice():
+    session = PracticeSession(STORE, SESSION, PROBLEM)
+    if request.method == "POST":
+        raw = request.form.get("answer", "")
+        try:
+            answer = int(raw)
+        except ValueError:
+            answer = None
+        if session.is_finished():
+            flash("This session is finished. Choose report.")
+        elif answer is None:
+            flash("Enter a whole number.")
+        else:
+            out = session.submit(answer)
+            if out.status == "correct":
+                flash("Correct.")
+            elif out.status == "retry":
+                flash("Not yet. Try again.")
+            else:
+                flash(f"The answer is {out.revealed_answer}.")
+        return redirect(url_for("practice"))
+    return render_template("practice.html", problem=PROBLEM,
+                           try_number=session.next_try(),
+                           finished=session.is_finished())
+
+
+@app.route("/report")
+def report():
+    rep = curator_report(STORE, SESSION, PROBLEM.id)
+    return render_template("report.html", session_id=SESSION, rep=rep)
+
+
+@app.route("/bank", methods=["GET", "POST"])
+def bank():
+    memory_bank = MemoryBank(STORE, "set-1")
+    if request.method == "POST":
+        pid = request.form.get("problem_id", "").strip()
+        try:
+            memory_bank.add_problem(pid)
+            flash(f"Added. Set holds {len(memory_bank.members())}.")
+        except SetFull as err:
+            flash(f"Refused: {err}")
+        return redirect(url_for("bank"))
+    return render_template("bank.html", members=memory_bank.members())
+</code></pre>
+<p class="file">templates/practice.html &middot; changed <button class="copy" type="button" data-target="s6-practice">Copy</button></p>
+<pre id="s6-practice" data-ref="station-6/templates/practice.html"><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Practice&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Practice&lt;/h1&gt;
+  {% for message in get_flashed_messages() %}
+    &lt;p&gt;&lt;strong&gt;{{ message }}&lt;/strong&gt;&lt;/p&gt;
+  {% endfor %}
+  {% if finished %}
+    &lt;p&gt;This session is finished.&lt;/p&gt;
+  {% else %}
+    &lt;form method="post"&gt;
+      &lt;label for="answer"&gt;Try {{ try_number }}: {{ problem.prompt }} =&lt;/label&gt;
+      &lt;input id="answer" name="answer" required&gt;
+      &lt;button type="submit"&gt;Check&lt;/button&gt;
+    &lt;/form&gt;
+  {% endif %}
+  &lt;p&gt;&lt;a href="{{ url_for('home') }}"&gt;Back to menu&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p class="file">templates/bank.html &middot; changed <button class="copy" type="button" data-target="s6-bank">Copy</button></p>
+<pre id="s6-bank" data-ref="station-6/templates/bank.html"><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;&lt;meta charset="utf-8"&gt;&lt;title&gt;Memory Bank&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Memory Bank: set-1&lt;/h1&gt;
+  {% for message in get_flashed_messages() %}
+    &lt;p&gt;&lt;strong&gt;{{ message }}&lt;/strong&gt;&lt;/p&gt;
+  {% endfor %}
+  &lt;p&gt;Set holds {{ members|length }}: {{ members|join(", ") }}&lt;/p&gt;
+  &lt;form method="post"&gt;
+    &lt;label for="problem_id"&gt;Problem id to add (for example P11)&lt;/label&gt;
+    &lt;input id="problem_id" name="problem_id" required&gt;
+    &lt;button type="submit"&gt;Add&lt;/button&gt;
+  &lt;/form&gt;
+  &lt;p&gt;&lt;a href="{{ url_for('home') }}"&gt;Back to menu&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><code>home.html</code> and <code>report.html</code> do not change from station 5.</p>
+<h2>Run it</h2>
+<p>Save your files. The debug reloader restarts the server. To repeat the experiment from Part 1, stop the server, delete <code>dataman_store.json</code> and start the server again.</p>
+<p class="file">Terminal <button class="copy" type="button" data-target="s6-run">Copy</button></p>
+<pre id="s6-run"><code>source .venv/bin/activate
+python -m flask --app app run --debug --host=0.0.0.0
+</code></pre>
+<p>In a second terminal, run the tests. Run <code>source .venv/bin/activate</code> in it first.</p>
+<p class="file">Terminal <button class="copy" type="button" data-target="s6-test">Copy</button></p>
+<pre id="s6-test"><code>source .venv/bin/activate
+python -m pytest -q
+</code></pre>
+<div class="check">
+<p><strong>Check</strong></p>
+<ol>
+<li>Start with a clean store. Open <code>/practice</code> and answer <code>5</code>. The page shows <code>Not yet. Try again.</code> and <code>Try 2</code>.</li>
+<li>Press refresh. The page shows the practice page with no message, and it still says <code>Try 2</code>. The browser does not ask to send a form again.</li>
+<li>Open <code>/report</code>. It lists one attempt.</li>
+<li><code>python -m pytest -q</code> still passes.</li>
+</ol>
+</div>
+<div class="trap">
+<p><strong>Trap: no secret key</strong></p>
+<p>You add <code>flash()</code> and forget <code>app.secret_key</code>. The first <code>POST</code> fails. The browser shows <code>Internal Server Error</code>. In the terminal, and on the debug page, the error is <code>RuntimeError: The session is unavailable because no secret key was set.</code> followed by <code>Set the secret_key on the application to something unique and secret.</code> The failure happens when <code>flash()</code> runs. The answer was already saved before that. The learner's try is spent, and the page shows an error. Add the <code>app.secret_key</code> line below the line that creates <code>app</code>.</p>
+</div>
+<details>
+<summary>Predict first: after the redirect, you refresh the practice page. Does the flashed message show again?</summary>
+<p>No. The template calls <code>get_flashed_messages()</code>. That call returns the messages and removes them. The refresh is a new <code>GET</code>, and no message is waiting. The page shows the form and the try number from the store.</p>
+</details>
+<h2>Commit</h2>
+<p class="file">Terminal <button class="copy" type="button" data-target="s6-commit">Copy</button></p>
+<pre id="s6-commit"><code>git add -A
+git commit -m "Station 6: Redirect after POST so refresh is safe"
+git push
+</code></pre>
+<h2>Read</h2>
+<p>Read the Flask Quickstart sections <a href="https://flask.palletsprojects.com/en/stable/quickstart/#redirects-and-errors">Redirects and errors</a> and <a href="https://flask.palletsprojects.com/en/stable/quickstart/#message-flashing">Message flashing</a>. Read only those sections. The Flask tutorial is outside 5A.</p>
+
+
+<nav class="steps" aria-label="Directive stations">
+  <a href="station-5.html">&larr; Previous</a>
+  <a href="index.html">All stations</a>
+  <a href="debrief.html">Next &rarr;</a>
+</nav>
+
+<p class="prism">PRISM band: ORANGE. Clearance indicates the complexity and scope a reader is prepared to hold. It does not make public information private.</p>
+</main>
+<script>
+document.querySelectorAll('button.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.getElementById(b.getAttribute('data-target'));
+    if(!t||!navigator.clipboard)return;
+    navigator.clipboard.writeText(t.textContent).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)});
+  });
+});
+</script>
+</body>
+</html>

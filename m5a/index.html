@@ -1,0 +1,153 @@
+<!doctype html>
+<!--
+  SHELL FOR EVERY m5a/ PAGE. Copy this file, replace the three REPLACE markers,
+  and write the station content inside <main>. Do not change the <style> block
+  on one page only: every page carries the same copy.
+
+  Fixed rules (see AMLW05/cts-285_SOURCE interstitial-5a/M5A-ARCHITECTURE.md):
+  - The out-of-character panel is static markup, first thing inside <main>,
+    and is never removed, collapsed, or injected by script.
+  - No FTCC gold (the FTCC gold hex) anywhere. ORANGE (#F1A512) is a rail or border only,
+    never text and never a background behind text.
+  - The page works with JavaScript disabled. Script is allowed only for the
+    copy-to-clipboard buttons, and every copy button sits beside visible text.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Briefing — Module 5A</title>
+<style>
+:root{
+  --ink:#1F2933; --muted:#52606D; --hair:#DFE3E8; --paper:#FFFFFF; --page:#F5F6F7;
+  --uv:#0A0A0A; --orange:#F1A512; --link:#0B5CAD; --code-bg:#111827; --code-ink:#F9FAFB;
+  --ok:#1E6B3A; --ok-bg:#EDF9F1; --bad:#9B1C1C; --bad-bg:#FFF0F0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55;font-size:1.02rem}
+a{color:var(--link)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--link);outline-offset:2px}
+.top{background:var(--uv);color:#fff;border-left:12px solid var(--orange);padding:18px 22px}
+.top .kicker{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#D1D5DB;margin:0}
+.top h1{margin:.3rem 0 .2rem;font-size:1.6rem;line-height:1.25}
+.top .sub{margin:0;color:#E5E7EB}
+main{max-width:860px;margin:0 auto;padding:20px 16px 40px}
+h2{font-size:1.3rem;margin:2rem 0 .6rem;line-height:1.3}
+h3{font-size:1.08rem;margin:1.4rem 0 .4rem}
+.ooc{border-left:2px solid var(--hair);padding-left:1rem;margin:0 0 1.6rem}
+.ooc .label{margin:0 0 .25rem;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#6B7280}
+.ooc ol{margin:.2rem 0 0;padding-left:1.3rem}
+.ooc p,.ooc li{margin:.15rem 0}
+.csp{background:var(--paper);border:1px solid var(--hair);border-left:4px solid var(--orange);padding:12px 16px;margin:1.2rem 0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9rem}
+.csp .who{display:block;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.card{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:14px 18px;margin:1rem 0}
+pre{background:var(--code-bg);color:var(--code-ink);padding:14px;border-radius:6px;overflow-x:auto;font-size:.88rem;line-height:1.45;margin:.4rem 0 1rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+:not(pre)>code{background:#EEF1F4;padding:.05rem .3rem;border-radius:3px}
+.file{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.78rem;color:var(--muted);margin:1rem 0 0}
+table{border-collapse:collapse;width:100%;margin:.6rem 0 1rem;background:var(--paper)}
+th,td{border:1px solid var(--hair);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+th{background:#EEF1F4}
+.check{background:var(--ok-bg);border:1px solid #8CC89A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+.trap{background:var(--bad-bg);border:1px solid #D48A8A;border-radius:6px;padding:12px 16px;margin:1rem 0}
+details{background:var(--paper);border:1px solid var(--hair);border-radius:6px;padding:10px 14px;margin:1rem 0}
+summary{cursor:pointer;font-weight:600}
+.copy{font:inherit;font-size:.8rem;padding:4px 10px;border:1px solid #9AA5B1;border-radius:4px;background:#fff;cursor:pointer;min-height:32px}
+nav.steps{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--hair);margin-top:2.4rem;padding-top:1rem}
+.prism{font-size:.8rem;color:var(--muted);border-top:1px solid var(--hair);margin-top:2rem;padding-top:.8rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <p class="kicker">AlgoCratic Futures&trade; &middot; Interface Modernization Directive 5A &middot; ORANGE</p>
+  <h1>Briefing: replace the text menu, keep the library</h1>
+  <p class="sub">You will replace your text menu with a Flask app, one menu choice at a time.</p>
+</header>
+<main>
+
+<!-- OUT-OF-CHARACTER PANEL. Static. Required. Wording fixed by planning/INTERSTITIAL-MODULES.md. -->
+<div class="ooc" role="note" aria-label="Instructor, out of character">
+  <p class="label">Instructor &middot; out of character</p>
+  <ol>
+    <li>You can stop at any time, and stopping costs you nothing. Your grade is not affected.</li>
+    <li>You do not need permission, and you do not have to explain.</li>
+    <li>Nothing you do on these pages is scored. Canvas records that you opened the launch page, the same as any other page in the course. What you do after that is not recorded. These pages are hosted outside Canvas, and Canvas cannot see them.</li>
+    <li>To leave: <a href="https://faytechcc.instructure.com">return to Canvas</a>.</li>
+  </ol>
+  <p>The work you do in your own repository is yours and stays there. Module 5 is graded in Module 5, not here.</p>
+</div>
+
+
+<h2>Interface Modernization Directive 5A</h2>
+<div class="csp"><span class="who">Channel Success Partner &middot; SHODANN</span>The Algorithm has classified your text menu as a &ldquo;legacy engagement surface.&rdquo; I am told this is a promotion for the menu. I am monitoring your progress with great enthusiasm. I measure only how much you have grown since you started.</div>
+<p>AlgoCratic Futures&trade; asks you to web-enable DataMan without disrupting core value logic. In plain words: you replace the text menu with a web app. The rules of DataMan do not change.</p>
+
+<h2>What changes and what does not</h2>
+<p>One file changes: <code>app.py</code>. You also add a <code>templates/</code> folder with HTML files.</p>
+<p>Three files do not change. The tests prove the library stayed the same. They do not run your web pages, so each station also has a browser check. Use each page and compare it with what the old menu did.</p>
+<ul>
+<li><code>dataman/logic.py</code> &mdash; the business rules.</li>
+<li><code>dataman/store.py</code> &mdash; the data layer.</li>
+<li><code>tests/test_logic.py</code> &mdash; the tests. They pass after every station.</li>
+</ul>
+<p>You rename the old <code>app.py</code> to <code>menu.py</code> and keep it. The text menu then keeps working beside the web app. Both use the same library and the same store file. You never have half a menu and half a web app.</p>
+
+<h2>The translation table</h2>
+<p>Every station uses one row of this table. Return to it often.</p>
+<table>
+<tr><th>Text menu (<code>menu.py</code>)</th><th>Flask (<code>app.py</code>)</th></tr>
+<tr><td><code>while True:</code> the menu loop</td><td>Flask's server. <strong>The loop is gone from your code.</strong> Flask waits. Each request runs one function and returns.</td></tr>
+<tr><td><code>actions = {"practice": practice, ...}</code></td><td><code>@app.route("/practice")</code>. This is the URL map.</td></tr>
+<tr><td><code>input("...")</code> that waits for a typed line</td><td>A <code>GET</code> that <strong>shows</strong> a form. A <code>POST</code> that <strong>receives</strong> what was typed: <code>request.form["answer"]</code>.</td></tr>
+<tr><td><code>print(...)</code></td><td><code>return</code> a string, or <code>render_template("x.html", ...)</code>.</td></tr>
+<tr><td>Local variables that live while the loop runs</td><td>Nothing survives between requests except what the <strong>store</strong> keeps.</td></tr>
+<tr><td><code>while not session.is_finished():</code> inside <code>practice()</code></td><td>One request per try. The page shows the try number the store reports.</td></tr>
+<tr><td><code>except SetFull as err: print(...)</code></td><td>The same <code>except</code>. The message goes into the page.</td></tr>
+</table>
+
+<h2>GET and POST</h2>
+<ul>
+<li><strong>GET</strong> asks for a page. It must not change anything. You can open it twice safely.</li>
+<li><strong>POST</strong> sends data that changes something. In DataMan it saves an attempt or adds a problem.</li>
+<li>One route can handle both: <code>methods=["GET", "POST"]</code> and <code>if request.method == "POST":</code>.</li>
+<li>The form's <code>name="answer"</code> is the key in <code>request.form</code>. The string is the same in both files.</li>
+</ul>
+
+<h2>Stations</h2>
+<ul>
+<li><a href="station-1.html">Station 1: Hello, route</a> &mdash; install Flask and show one string in the browser.</li>
+<li><a href="station-2.html">Station 2: Report</a> &mdash; a GET page that reads the store and fills a template.</li>
+<li><a href="station-3.html">Station 3: Practice</a> &mdash; GET and POST. The <code>while</code> loop disappears.</li>
+<li><a href="station-4.html">Station 4: Memory Bank</a> &mdash; show a library error in the page.</li>
+<li><a href="station-5.html">Station 5: The menu becomes a page</a> &mdash; a home page with links.</li>
+<li><a href="station-6.html">Station 6: The refresh problem</a> &mdash; see a double POST and fix it.</li>
+<li><a href="debrief.html">Debrief</a> &mdash; what changed, what did not, and the way into Module 5.</li>
+</ul>
+<div class="csp"><span class="who">Channel Success Partner &middot; SHODANN</span>I have placed the stations in order. Each one builds on the one before, so please visit them in that order. I will note that you did, because I note everything, warmly.</div>
+
+<h2>What to bring</h2>
+<p>Bring your Module 4 repository, built from the course template. Open it in a Codespace. If your prototype differs from the template, use the same pattern with your own file and function names.</p>
+
+<h2>Scope</h2>
+<p>Read only the <a href="https://flask.palletsprojects.com/en/stable/quickstart/#a-minimal-application">Flask Quickstart</a>. Do not read the Flask tutorial. The tutorial covers application factories, click commands and database setup. This course does not use them yet.</p>
+
+
+<nav class="steps" aria-label="Directive stations">
+  <span>Start</span>
+  <a href="index.html">All stations</a>
+  <a href="station-1.html">Next &rarr;</a>
+</nav>
+
+<p class="prism">PRISM band: ORANGE. Clearance indicates the complexity and scope a reader is prepared to hold. It does not make public information private.</p>
+</main>
+<script>
+document.querySelectorAll('button.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=document.getElementById(b.getAttribute('data-target'));
+    if(!t||!navigator.clipboard)return;
+    navigator.clipboard.writeText(t.textContent).then(function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)});
+  });
+});
+</script>
+</body>
+</html>
